@@ -1,0 +1,137 @@
+<div class="auth-shell">
+    <div class="auth-background"></div>
+
+    <div class="auth-panel shadow-6">
+        <div class="auth-branding">
+            <img src="assets/logo/logo.png" alt="TramiYa" class="auth-logo" />
+            <span class="auth-kicker">Portal de servicios</span>
+            <h1>TramiYa</h1>
+            <p>Tu pides, nosotros nos encargamos.</p>
+
+            <div class="auth-pills">
+                <span>Gestion operativa</span>
+                <span>Registro rapido</span>
+                <span>Experiencia alineada a la APK</span>
+            </div>
+        </div>
+
+        <div class="auth-card surface-card">
+            <div class="auth-tabs" *ngIf="mode !== 'change-password'">
+                <button type="button" class="auth-tab" [class.active]="mode === 'login'" (click)="switchMode('login')">
+                    Ingresar
+                </button>
+                <button type="button" class="auth-tab" [class.active]="mode === 'register'" (click)="switchMode('register')">
+                    Crear cuenta
+                </button>
+            </div>
+
+            <div *ngIf="mode === 'login'" class="auth-form">
+                <div>
+                    <h2>Acceso al portal</h2>
+                    <p>Ingresa con tu usuario para administrar servicios o seguir tus solicitudes.</p>
+                </div>
+
+                <div class="field-block">
+                    <label>Usuario</label>
+                    <input pInputText [(ngModel)]="loginData.username" (input)="onInputChange()" class="w-full" placeholder="Ej. Tony" />
+                </div>
+
+                <div class="field-block">
+                    <label>Contrasena</label>
+                    <p-password [(ngModel)]="loginData.password" (onInput)="onInputChange()" placeholder="Tu contrasena" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full"></p-password>
+                </div>
+
+                <div class="auth-meta">
+                    <div class="flex align-items-center gap-2">
+                        <p-checkbox [(ngModel)]="remember" [binary]="true"></p-checkbox>
+                        <label>Recordar usuario</label>
+                    </div>
+                    <small class="text-500">Sesion de 8 horas</small>
+                </div>
+
+                <button pButton type="button" label="Entrar" class="w-full auth-submit" (click)="login()" [loading]="loading"></button>
+            </div>
+
+            <div *ngIf="mode === 'register'" class="auth-form">
+                <div>
+                    <h2>Crear cuenta customer</h2>
+                    <p>El registro publico se asigna automaticamente a TramiYa y se activa con contrasena temporal.</p>
+                </div>
+
+                <div class="grid form-grid">
+                    <div class="col-12 md:col-6 field-block">
+                        <label>Usuario</label>
+                        <input pInputText [(ngModel)]="registerData.username" (input)="onInputChange()" class="w-full" />
+                    </div>
+                    <div class="col-12 md:col-6 field-block">
+                        <label>Telefono</label>
+                        <div class="phone-row">
+                            <p-dropdown
+                                [options]="countryOptions"
+                                [(ngModel)]="registerData.country"
+                                optionLabel="label"
+                                optionValue="value"
+                                styleClass="w-full"
+                                appendTo="body">
+                                <ng-template pTemplate="selectedItem" let-option>
+                                    <span>{{ option?.label }}</span>
+                                </ng-template>
+                                <ng-template pTemplate="item" let-option>
+                                    <span>{{ option.label }}</span>
+                                </ng-template>
+                            </p-dropdown>
+                            <input pInputText [(ngModel)]="registerData.phone" (input)="onInputChange()" class="w-full" placeholder="Solo numeros" />
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-6 field-block">
+                        <label>Nombre</label>
+                        <input pInputText [(ngModel)]="registerData.firstName" (input)="onInputChange()" class="w-full" />
+                    </div>
+                    <div class="col-12 md:col-6 field-block">
+                        <label>Apellido</label>
+                        <input pInputText [(ngModel)]="registerData.lastName" (input)="onInputChange()" class="w-full" />
+                    </div>
+                    <div class="col-12 field-block">
+                        <label>Email</label>
+                        <input pInputText type="email" [(ngModel)]="registerData.email" (input)="onInputChange()" class="w-full" />
+                    </div>
+                </div>
+
+                <div class="auth-note">
+                    <i class="pi pi-info-circle"></i>
+                    <span>La contrasena inicial sera <strong>123456</strong> y se solicitara el cambio en el primer acceso.</span>
+                </div>
+
+                <button pButton type="button" label="Crear cuenta" class="w-full auth-submit" (click)="register()" [loading]="loading"></button>
+            </div>
+
+            <div *ngIf="mode === 'change-password'" class="auth-form">
+                <div>
+                    <h2>Actualiza tu contrasena</h2>
+                    <p>Antes de continuar, debes reemplazar la contrasena temporal.</p>
+                </div>
+
+                <div class="field-block">
+                    <label>Contrasena actual</label>
+                    <p-password [(ngModel)]="changePasswordData.currentPassword" (onInput)="onInputChange()" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full"></p-password>
+                </div>
+
+                <div class="field-block">
+                    <label>Nueva contrasena</label>
+                    <p-password [(ngModel)]="changePasswordData.newPassword" (onInput)="onInputChange()" [toggleMask]="true" [feedback]="true" styleClass="w-full" inputStyleClass="w-full"></p-password>
+                    <small class="text-500">Minimo 8 caracteres, una mayuscula, un numero y un caracter especial.</small>
+                </div>
+
+                <div class="field-block">
+                    <label>Confirmar nueva contrasena</label>
+                    <p-password [(ngModel)]="changePasswordData.confirmPassword" (onInput)="onInputChange()" [toggleMask]="true" [feedback]="false" styleClass="w-full" inputStyleClass="w-full"></p-password>
+                </div>
+
+                <button pButton type="button" label="Guardar y continuar" class="w-full auth-submit" (click)="changePassword()" [loading]="loading"></button>
+            </div>
+
+            <small class="p-error block mt-3" *ngIf="error">{{ error }}</small>
+            <small class="text-green-600 block mt-3" *ngIf="success">{{ success }}</small>
+        </div>
+    </div>
+</div>

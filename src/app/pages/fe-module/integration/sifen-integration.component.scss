@@ -1,0 +1,61 @@
+@use '../styles/sifen-theme' as sifen;
+
+.sifen-page {
+    display: grid;
+    gap: 1rem;
+}
+
+.sifen-panel {
+    padding: 1.5rem;
+    @include sifen.sifen-panel-card;
+}
+
+.sifen-page__eyebrow {
+    @include sifen.sifen-eyebrow;
+}
+
+.sifen-panel p,
+.sifen-panel li {
+    color: sifen.$sifen-muted;
+}
+
+.sifen-dashboard__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.sifen-dashboard__alert {
+    display: grid;
+    gap: 0.3rem;
+    margin-top: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    background: rgba(245, 158, 11, 0.06);
+    border: 1px solid rgba(245, 158, 11, 0.16);
+}
+
+.sifen-dashboard__alert--info {
+    background: rgba(37, 99, 235, 0.05);
+    border-color: rgba(37, 99, 235, 0.16);
+}
+
+.sifen-integration__wide {
+    grid-column: 1 / -1;
+}
+
+pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: rgba(15, 23, 42, 0.04);
+    border-radius: 1rem;
+    padding: 1rem;
+    border: 1px solid sifen.$sifen-border-color;
+}
+
+@media (max-width: 900px) {
+    .sifen-dashboard__grid {
+        grid-template-columns: 1fr;
+    }
+}

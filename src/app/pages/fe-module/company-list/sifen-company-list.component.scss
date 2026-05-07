@@ -1,0 +1,130 @@
+@use '../styles/sifen-theme' as sifen;
+
+:host {
+  display: block;
+}
+
+.sifen-page {
+  position: relative;
+  z-index: 1;
+}
+
+.sifen-panel {
+  padding: 1.5rem;
+  @include sifen.sifen-panel-card;
+}
+
+.sifen-page__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sifen-page__eyebrow {
+  display: inline-flex;
+  margin-bottom: 0.5rem;
+  color: sifen.$sifen-primary;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sifen-page__header h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.sifen-page__header p,
+.sifen-page__muted {
+  margin: 0.45rem 0 0;
+  color: sifen.$sifen-muted;
+}
+
+.sifen-page__error {
+  display: block;
+  margin-bottom: 1rem;
+  color: sifen.$sifen-danger;
+}
+
+.sifen-page__header h2,
+.sifen-panel strong {
+  color: sifen.$sifen-text;
+}
+
+:host ::ng-deep .sifen-table {
+  background: transparent;
+}
+
+:host ::ng-deep .sifen-table .p-datatable-wrapper {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .sifen-table th,
+:host ::ng-deep .sifen-table td {
+  background: rgba(255, 255, 255, 0.86);
+  color: sifen.$sifen-text;
+  border-color: rgba(100, 181, 246, 0.12);
+}
+
+td small {
+  display: block;
+  margin-top: 0.35rem;
+  color: sifen.$sifen-muted;
+}
+
+:host ::ng-deep .p-tag {
+  border-radius: 999px;
+}
+
+.sifen-company-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sifen-company-summary article {
+  padding: 1rem 1.1rem;
+  border-radius: 20px;
+  border: 1px solid sifen.$sifen-border-color;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.sifen-company-summary span,
+.sifen-company-summary strong {
+  display: block;
+}
+
+.sifen-company-summary span {
+  color: sifen.$sifen-muted;
+  font-size: 0.82rem;
+}
+
+.sifen-company-summary strong {
+  margin-top: 0.25rem;
+  font-size: 1.2rem;
+}
+
+:host ::ng-deep .p-button {
+  @include sifen.sifen-button-skin;
+  border-radius: 16px;
+}
+
+:host ::ng-deep .p-button.p-button-text {
+  background: rgba(255, 255, 255, 0.74);
+  color: sifen.$sifen-primary;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .sifen-company-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .sifen-page__header {
+    flex-direction: column;
+  }
+}

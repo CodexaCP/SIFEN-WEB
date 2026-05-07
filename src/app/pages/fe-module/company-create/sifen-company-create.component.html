@@ -1,0 +1,56 @@
+<section class="sifen-form-page">
+    <div class="sifen-form-card">
+        <span class="sifen-form-card__eyebrow">Nueva compania</span>
+        <h2>Crear tenant comercial SIFEN</h2>
+        <p>Configura plan, limites y admin principal dentro de una vista mas clara para onboarding SaaS.</p>
+
+        <div class="sifen-form-grid">
+            <label>
+                <span>Slug</span>
+                <input pInputText [(ngModel)]="model.slug" placeholder="acme-py" />
+            </label>
+
+            <label>
+                <span>Nombre comercial</span>
+                <input pInputText [(ngModel)]="model.businessName" placeholder="ACME Paraguay" />
+            </label>
+
+            <label>
+                <span>Nombre del plan</span>
+                <input pInputText [(ngModel)]="model.planName" placeholder="Plan 5 usuarios" />
+            </label>
+
+            <label>
+                <span>Limite facturas mes</span>
+                <p-inputNumber [(ngModel)]="model.invoiceLimitPerMonth" [min]="1"></p-inputNumber>
+            </label>
+
+            <label>
+                <span>Limite usuarios</span>
+                <p-inputNumber [(ngModel)]="model.userLimit" [min]="1"></p-inputNumber>
+            </label>
+
+            <label>
+                <span>Admin principal</span>
+                <input pInputText [(ngModel)]="model.adminFullName" placeholder="Maria Lopez" />
+            </label>
+
+            <label>
+                <span>Email admin</span>
+                <input pInputText [(ngModel)]="model.adminEmail" placeholder="admin@empresa.com" />
+            </label>
+
+            <label>
+                <span>Password inicial</span>
+                <input pInputText [(ngModel)]="model.adminPassword" type="password" placeholder="Admin123!" />
+            </label>
+        </div>
+
+        <small class="sifen-form-card__error" *ngIf="errorMessage">{{ errorMessage }}</small>
+
+        <div class="sifen-form-card__actions">
+            <button pButton type="button" label="Volver" class="p-button-text" routerLink="/sifen/admin/companies"></button>
+            <button pButton type="button" label="Crear compania" [loading]="loading" (click)="save()"></button>
+        </div>
+    </div>
+</section>

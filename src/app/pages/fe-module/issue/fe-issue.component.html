@@ -1,0 +1,256 @@
+<section class="issue-shell">
+    <article class="issue-card">
+        <div class="issue-header">
+            <div>
+                <span class="issue-eyebrow">Emitir factura TEST</span>
+                <h2>Wizard premium de facturación</h2>
+                <p>Completa los datos, arma los ítems, revisa el KuDE premium y prepara la factura en modo TEST.</p>
+            </div>
+            <div class="issue-transport">
+                <strong>{{ diagnostic?.mode || 'TEST_INTERNAL' }}</strong>
+                <small>{{ activeTenantId || 'Sin tenant activo' }}</small>
+            </div>
+        </div>
+
+        <div class="issue-alert" *ngIf="diagnostic?.mode === 'TEST_INTERNAL'">
+            <strong>Entorno TEST interno.</strong>
+            <span>No se llama a SOAP, no se firma XML real y no se usa SET.</span>
+        </div>
+        <div class="issue-alert issue-alert--danger" *ngIf="isDiagnosticBlocked">
+            <strong>Configuración pendiente.</strong>
+            <span>El tenant todavía tiene checks bloqueantes en diagnóstico.</span>
+        </div>
+        <div class="issue-alert issue-alert--danger" *ngIf="isReadOnlyMode || planMessage">
+            <strong *ngIf="isReadOnlyMode">Plan vencido.</strong>
+            <span *ngIf="!isReadOnlyMode">{{ planMessage }}</span>
+        </div>
+
+        <div class="issue-steps">
+            <button type="button" [class.is-active]="currentStep === 1" (click)="goToStep(1)">1. Datos factura</button>
+            <button type="button" [class.is-active]="currentStep === 2" (click)="goToStep(2)">2. Ítems</button>
+            <button type="button" [class.is-active]="currentStep === 3" (click)="goToStep(3)">3. Vista previa KuDE TEST</button>
+            <button type="button" [class.is-active]="currentStep === 4" (click)="goToStep(4)">4. Confirmación TEST</button>
+        </div>
+
+        <form class="fe-form" [formGroup]="form" (ngSubmit)="submit()">
+            <section class="issue-panel" *ngIf="currentStep === 1">
+                <div class="issue-section-title">
+                    <div>
+                        <span class="issue-eyebrow">Paso 1</span>
+                        <h3>Datos factura</h3>
+                    </div>
+                </div>
+
+                <div class="fe-grid">
+                    <label>
+                        <span>Tipo documento</span>
+                        <select formControlName="documentType">
+                            <option *ngFor="let option of documentTypes" [value]="option">{{ option }}</option>
+                        </select>
+                        <small class="fe-errors" *ngIf="fieldError('documentType', 'Tipo documento')">{{ fieldError('documentType', 'Tipo documento') }}</small>
+                    </label>
+
+                    <label>
+                        <span>Establecimiento</span>
+                        <input pInputText formControlName="establishment" />
+                        <small class="fe-errors" *ngIf="fieldError('establishment', 'Establecimiento')">{{ fieldError('establishment', 'Establecimiento') }}</small>
+                    </label>
+
+                    <label>
+                        <span>Punto expedición</span>
+                        <input pInputText formControlName="expeditionPoint" />
+                        <small class="fe-errors" *ngIf="fieldError('expeditionPoint', 'Punto expedición')">{{ fieldError('expeditionPoint', 'Punto expedición') }}</small>
+                    </label>
+
+                    <label>
+                        <span>Número documento TEST</span>
+                        <input pInputText formControlName="documentNumber" />
+                        <small class="fe-errors" *ngIf="fieldError('documentNumber', 'Número documento TEST')">{{ fieldError('documentNumber', 'Número documento TEST') }}</small>
+                    </label>
+
+                    <label>
+                        <span>Fecha emisión</span>
+                        <input type="date" formControlName="issueDate" />
+                        <small class="fe-errors" *ngIf="fieldError('issueDate', 'Fecha emisión')">{{ fieldError('issueDate', 'Fecha emisión') }}</small>
+                    </label>
+
+                    <label>
+                        <span>Condición venta</span>
+                        <select formControlName="saleCondition">
+                            <option *ngFor="let option of saleConditions" [value]="option">{{ option }}</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Tipo contribuyente</span>
+                        <select formControlName="contributorType">
+                            <option *ngFor="let option of contributorTypes" [value]="option">{{ option }}</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>Moneda</span>
+                        <select formControlName="currency">
+                            <option *ngFor="let option of currencies" [value]="option">{{ option }}</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="issue-subcard">
+                    <div class="issue-subcard__head">
+                        <h4>Cliente</h4>
+                    </div>
+                    <div class="fe-grid">
+                        <label>
+                            <span>Nombre / Razón social</span>
+                            <input pInputText formControlName="customerName" />
+                            <small class="fe-errors" *ngIf="fieldError('customerName', 'Nombre / Razón social')">{{ fieldError('customerName', 'Nombre / Razón social') }}</small>
+                        </label>
+
+                        <label>
+                            <span>RUC / CI</span>
+                            <input pInputText formControlName="customerDocument" />
+                            <small class="fe-errors" *ngIf="fieldError('customerDocument', 'RUC / CI')">{{ fieldError('customerDocument', 'RUC / CI') }}</small>
+                        </label>
+
+                        <label class="full">
+                            <span>Dirección</span>
+                            <input pInputText formControlName="customerAddress" />
+                            <small class="fe-errors" *ngIf="fieldError('customerAddress', 'Dirección')">{{ fieldError('customerAddress', 'Dirección') }}</small>
+                        </label>
+
+                        <label>
+                            <span>Email</span>
+                            <input pInputText formControlName="customerEmail" />
+                            <small class="fe-errors" *ngIf="fieldError('customerEmail', 'Email')">{{ fieldError('customerEmail', 'Email') }}</small>
+                        </label>
+
+                        <label>
+                            <span>Teléfono</span>
+                            <input pInputText formControlName="customerPhone" />
+                            <small class="fe-errors" *ngIf="fieldError('customerPhone', 'Teléfono')">{{ fieldError('customerPhone', 'Teléfono') }}</small>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <section class="issue-panel" *ngIf="currentStep === 2">
+                <div class="issue-section-title">
+                    <div>
+                        <span class="issue-eyebrow">Paso 2</span>
+                        <h3>Ítems</h3>
+                    </div>
+                    <button pButton type="button" icon="pi pi-plus" label="Agregar línea" class="p-button-text" (click)="addItem()"></button>
+                </div>
+
+                <div formArrayName="items" class="fe-items-list">
+                    <div class="fe-item-row" *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+                        <label class="full">
+                            <span>Descripción</span>
+                            <input pInputText formControlName="description" />
+                            <small class="fe-errors" *ngIf="itemError(i, 'description', 'Descripción')">{{ itemError(i, 'description', 'Descripción') }}</small>
+                        </label>
+
+                        <label>
+                            <span>Cantidad</span>
+                            <p-inputNumber formControlName="quantity" [min]="1"></p-inputNumber>
+                            <small class="fe-errors" *ngIf="itemError(i, 'quantity', 'Cantidad')">{{ itemError(i, 'quantity', 'Cantidad') }}</small>
+                        </label>
+
+                        <label>
+                            <span>Precio unitario</span>
+                            <p-inputNumber formControlName="unitPrice" [min]="1"></p-inputNumber>
+                            <small class="fe-errors" *ngIf="itemError(i, 'unitPrice', 'Precio unitario')">{{ itemError(i, 'unitPrice', 'Precio unitario') }}</small>
+                        </label>
+
+                        <label>
+                            <span>IVA</span>
+                            <select formControlName="vatType">
+                                <option *ngFor="let option of vatOptions" [value]="option">{{ option }}</option>
+                            </select>
+                        </label>
+
+                        <div class="fe-item-row__subtotal">
+                            <span>Subtotal</span>
+                            <strong>{{ rowSubtotal(i) | number:'1.0-0' }}</strong>
+                        </div>
+
+                        <div class="fe-item-row__actions">
+                            <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-danger" (click)="removeItem(i)" [disabled]="items.length === 1"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="issue-totals-strip">
+                    <div><span>Subtotal</span><strong>{{ subtotal | number:'1.0-0' }}</strong></div>
+                    <div><span>IVA total</span><strong>{{ vatTotal | number:'1.0-0' }}</strong></div>
+                    <div><span>Total general</span><strong>{{ total | number:'1.0-0' }}</strong></div>
+                </div>
+            </section>
+
+            <section class="issue-panel" *ngIf="currentStep === 3">
+                <div class="issue-section-title">
+                    <div>
+                        <span class="issue-eyebrow">Paso 3</span>
+                        <h3>Vista previa KuDE TEST</h3>
+                    </div>
+                </div>
+
+                <app-sifen-kude-preview [model]="previewModel"></app-sifen-kude-preview>
+            </section>
+
+            <section class="issue-panel" *ngIf="currentStep === 4">
+                <div class="issue-section-title">
+                    <div>
+                        <span class="issue-eyebrow">Paso 4</span>
+                        <h3>Confirmación TEST</h3>
+                    </div>
+                </div>
+
+                <div class="issue-confirm">
+                    <div>
+                        <span>Cliente</span>
+                        <strong>{{ form.get('customerName')?.value }}</strong>
+                    </div>
+                    <div>
+                        <span>Total</span>
+                        <strong>{{ total | number:'1.0-0' }}</strong>
+                    </div>
+                    <div>
+                        <span>Cantidad ítems</span>
+                        <strong>{{ itemCount }}</strong>
+                    </div>
+                    <div>
+                        <span>Estado esperado</span>
+                        <strong>{{ expectedStatusLabel }}</strong>
+                    </div>
+                </div>
+
+                <div class="fe-errors" *ngIf="submitError">{{ submitError }}</div>
+
+                <div class="issue-result" *ngIf="prepareResult || createdInvoice" [class]="resultSeverityClass">
+                    <div class="issue-result__head">
+                        <i class="pi pi-check-circle"></i>
+                        <strong>{{ resultTitle }}</strong>
+                    </div>
+                    <p>{{ prepareResult?.message || 'La factura fue creada y quedó lista para el flujo TEST interno.' }}</p>
+                    <small *ngIf="createdInvoice">Factura ID: {{ createdInvoice.id }}</small>
+                    <small *ngIf="prepareResult">CorrelationId: {{ prepareResult.correlationId }}</small>
+
+                    <div class="issue-result__actions">
+                        <button pButton type="button" label="Ver detalle factura" class="p-button-outlined" (click)="openDetail()" [disabled]="!createdInvoice"></button>
+                        <button pButton type="button" label="Volver listado" class="p-button-outlined" (click)="goToList()"></button>
+                        <button pButton type="button" label="Nueva factura" (click)="startNewInvoice()"></button>
+                    </div>
+                </div>
+            </section>
+
+            <div class="fe-actions">
+                <button pButton type="button" label="Cancelar" class="p-button-outlined" (click)="cancel()" *ngIf="currentStep === 1"></button>
+                <button pButton type="button" label="Anterior" class="p-button-outlined" (click)="previousStep()" [disabled]="currentStep === 1"></button>
+                <button *ngIf="currentStep < 4" pButton type="button" label="Siguiente" (click)="nextStep()"></button>
+                <button *ngIf="currentStep === 4" pButton type="submit" label="Preparar en modo TEST" icon="pi pi-play" [loading]="submitting" [disabled]="isReadOnlyMode || !canIssueInvoices || isDiagnosticBlocked"></button>
+            </div>
+        </form>
+    </article>
+</section>

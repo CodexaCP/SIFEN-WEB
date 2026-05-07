@@ -1,0 +1,147 @@
+<section class="fe-shell">
+    <div class="fe-header">
+        <div class="fe-header__copy">
+            <span class="fe-eyebrow">Facturas</span>
+            <h2>Panel operativo FE TEST</h2>
+            <p>Listado seguro por tenant para revisar facturas, estados internos, eventos y errores sin usar SIFEN real.</p>
+        </div>
+
+        <button pButton type="button" label="Nueva factura" icon="pi pi-plus" (click)="openIssue()" [disabled]="isReadOnlyMode || !canIssueInvoices"></button>
+    </div>
+
+    <div class="fe-banner fe-banner--info" *ngIf="diagnostic?.transportMode === 'Diagnostic'">
+        <strong>Modo diagnostico.</strong>
+        <span>No se llamara a SIFEN real.</span>
+    </div>
+    <div class="fe-banner fe-banner--warning" *ngIf="planSummary?.limitReached">
+        <strong>Limite mensual alcanzado.</strong>
+        <span>La operacion queda restringida hasta ajustar el plan.</span>
+    </div>
+    <div class="fe-banner fe-banner--danger" *ngIf="planSummary && !planSummary.active">
+        <strong>Plan vencido.</strong>
+        <span>La cuenta queda en solo lectura.</span>
+    </div>
+    <div class="fe-banner" *ngIf="!planSummary && planMessage">{{ planMessage }}</div>
+
+    <div class="fe-summary" *ngIf="planSummary">
+        <article>
+            <span>Facturas del mes</span>
+            <strong>{{ invoiceUsageLabel }}</strong>
+            <div class="fe-progress"><div [style.width.%]="usagePercent"></div></div>
+        </article>
+        <article>
+            <span>Usuarios</span>
+            <strong>{{ usersLabel }}</strong>
+            <small>{{ planSummary.usersMessage || 'Control comercial cargado.' }}</small>
+        </article>
+        <article>
+            <span>Estado de operacion</span>
+            <strong>{{ isReadOnlyMode ? 'Solo lectura' : 'Operativo' }}</strong>
+            <small>{{ activeTenantId || 'No disponible todavia' }}</small>
+        </article>
+    </div>
+
+    <div class="fe-feedback-group">
+        <small *ngIf="!canIssueInvoices" class="fe-feedback">Tu rol es solo consulta. No puedes emitir facturas.</small>
+        <small *ngIf="feedbackMessage" class="fe-feedback">{{ feedbackMessage }}</small>
+        <small *ngIf="errorMessage" class="fe-feedback fe-feedback--error">{{ errorMessage }}</small>
+    </div>
+
+    <article class="fe-card">
+        <div class="fe-card__top">
+            <div>
+                <span class="fe-eyebrow">Explorador</span>
+                <h3>Facturas del tenant</h3>
+            </div>
+        </div>
+
+        <div class="fe-filters">
+            <label>
+                <span>Cliente</span>
+                <input pInputText [(ngModel)]="filters.customerName" placeholder="Nombre del cliente" />
+            </label>
+
+            <label>
+                <span>Estado</span>
+                <select [(ngModel)]="filters.status">
+                    <option value="">Todos</option>
+                    <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
+                </select>
+            </label>
+
+            <label>
+                <span>Desde</span>
+                <input type="date" [(ngModel)]="filters.from" />
+            </label>
+
+            <label>
+                <span>Hasta</span>
+                <input type="date" [(ngModel)]="filters.to" />
+            </label>
+
+            <div class="fe-filters__actions">
+                <button pButton type="button" label="Buscar" icon="pi pi-search" (click)="applyFilters()"></button>
+                <button pButton type="button" label="Limpiar filtros" class="p-button-outlined" (click)="clearFilters()"></button>
+            </div>
+        </div>
+
+        <div class="fe-empty" *ngIf="!invoices.length && !loading">No hay facturas FE para los filtros seleccionados.</div>
+        <p *ngIf="loading" class="fe-muted">Cargando facturas...</p>
+        <small class="fe-muted" *ngIf="!loading">Total: {{ totalCount }} · Página {{ page }} de {{ totalPages || 1 }}</small>
+
+        <p-table [value]="invoices" responsiveLayout="scroll" styleClass="fe-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Numero</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th>Moneda</th>
+                    <th>Estado</th>
+                    <th>CorrelationId</th>
+                    <th>Reintentos</th>
+                    <th>Ultimo error</th>
+                    <th>Acciones</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-invoice>
+                <tr>
+                    <td>{{ invoice.number }}</td>
+                    <td>{{ invoice.issuedAt | date:'short' }}</td>
+                    <td>
+                        <strong>{{ invoice.customerName }}</strong>
+                        <small *ngIf="invoice.customerDocument">{{ invoice.customerDocument }}</small>
+                    </td>
+                    <td>{{ invoice.total | number:'1.0-0' }}</td>
+                    <td>{{ invoice.currency || 'PYG' }}</td>
+                    <td>
+                        <div class="fe-status">
+                            <p-tag [severity]="internalStatusSeverity(invoice.internalStatus)" [value]="internalStatusLabel(invoice.internalStatus)"></p-tag>
+                            <small class="fe-status__message">{{ internalStatusMessage(invoice.internalStatus) }}</small>
+                        </div>
+                    </td>
+                    <td class="fe-cdc">{{ invoice.correlationId || 'Sin correlationId' }}</td>
+                    <td>{{ invoice.retryCount || 0 }}</td>
+                    <td>{{ invoice.lastErrorMessage || 'Sin error' }}</td>
+                    <td>
+                        <div class="fe-actions">
+                            <button pButton type="button" label="Ver" class="p-button-text p-button-sm" (click)="openDetail(invoice)"></button>
+                            <button pButton type="button" label="XML" class="p-button-text p-button-sm" (click)="downloadXml(invoice)" [disabled]="!invoice.canDownloadXml"></button>
+                            <button pButton type="button" label="KuDE" class="p-button-text p-button-sm" (click)="downloadKude(invoice)" [disabled]="!invoice.canDownloadKude"></button>
+                            <button *ngIf="invoice.canRetry && !isReadOnlyMode" pButton type="button" label="Reintentar" class="p-button-text p-button-sm p-button-warning" (click)="retry(invoice)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <p-paginator
+            [rows]="pageSize"
+            [first]="(page - 1) * pageSize"
+            [totalRecords]="totalCount"
+            [rowsPerPageOptions]="pageSizeOptions"
+            (onPageChange)="changePage($event)">
+        </p-paginator>
+    </article>
+</section>

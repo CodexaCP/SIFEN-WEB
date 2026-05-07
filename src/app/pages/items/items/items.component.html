@@ -1,0 +1,237 @@
+<div class="card">
+
+    <!-- TOOLBAR -->
+    <div class="flex align-items-center justify-content-between mb-3">
+
+        <!-- LEFT -->
+        <div class="flex align-items-center gap-2">
+
+            <button
+                pButton
+                icon="pi pi-filter-slash"
+                class="p-button-outlined"
+                (click)="clear()"
+                pTooltip="Clear Filters">
+            </button>
+
+        </div>
+
+        <!-- CENTER -->
+        <div>
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+
+                <input
+                    pInputText
+                    type="text"
+                    (input)="onGlobalFilter($event)"
+                    placeholder="Search items"
+                    style="width:220px">
+            </span>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="flex align-items-center gap-2">
+
+            <!-- VIEW SELECTOR -->
+            <p-selectButton
+            [options]="viewOptions"
+            [(ngModel)]="viewMode"
+            optionValue="value">
+
+            <ng-template let-item pTemplate="item">
+                <i [class]="item.icon"></i>
+            </ng-template>
+
+            </p-selectButton>
+
+            <button 
+                pButton
+                icon="pi pi-arrow-up"
+                class="p-button-outlined"
+                pTooltip="Export"
+                (click)="exportItems()">
+            </button>
+
+            <button
+                pButton
+                icon="pi pi-arrow-down"
+                class="p-button-outlined"
+                pTooltip="Import"
+                (click)="fileInput.click()">
+            </button>
+
+            <input
+                type="file"
+                #fileInput
+                accept=".xlsx"
+                style="display:none"
+                (change)="importItems($event)"/>
+
+            <button  
+             pButton    
+             icon="pi pi-plus"    
+             class="p-button-outlined"   
+             pTooltip="Create"   
+             tooltipPosition="top"   
+             routerLink="create_item">     
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- TABLE VIEW -->
+
+    <p-table 
+        *ngIf="viewMode === 'table'"
+        #dt1
+        [value]="items"
+        [rows]="13"
+        [paginator]="true"
+        [lazy]="true"
+        [totalRecords]="totalRecords"
+        (onLazyLoad)="loadItemsLazy($event)"
+        [loading]="loading"
+        responsiveLayout="scroll">
+
+        <ng-template pTemplate="header">
+            <tr>
+
+                <th pSortableColumn="itemNo">
+                    Item No
+                    
+                </th>
+
+                <th pSortableColumn="itemDescription">
+                    Description
+                </th>
+
+                <th pSortableColumn="itemUOM">
+                    UOM
+                </th>
+
+                <th pSortableColumn="itemType">
+                    Type
+                </th> 
+                
+                <th pSortableColumn="itemCategoryCode">
+                    Category
+                </th>
+
+                <th pSortableColumn="stockQty">
+                    Stock Qty
+                </th>
+
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-s>
+    <tr>
+
+        <td>
+            <a class="qty-link" (click)="openItem(s); $event.stopPropagation()">
+              {{ s.itemNo }}  
+            </a></td>
+        <td>{{ s.itemDescription }}</td>
+        <td>{{ s.itemUOM }}</td>
+        <td>{{ s.itemType }}</td>
+        <td>{{ s.itemCategoryCode }}</td>
+
+        <td>
+            <a class="qty-link" (click)="openMovements(s); $event.stopPropagation()">
+                {{ s.stockQty }}
+            </a>
+        </td>
+
+    </tr>
+</ng-template>
+
+    </p-table>
+
+
+    <!-- GRID VIEW -->
+
+    <p-dataView 
+    *ngIf="viewMode === 'grid'"
+    [value]="items"
+    layout="grid"
+    [lazy]="true"
+    [paginator]="true"
+    [rows]="6"
+    [totalRecords]="totalRecords"    
+    (onLazyLoad)="loadItemsLazy($event)"
+    [loading]="loading">
+
+    <ng-template pTemplate="gridItem" let-item>
+
+        <div class="col-12 md:col-4 lg:col-4">
+
+            <div class="card p-3 text-center">
+
+                <!-- HEADER: TYPE + STOCK -->
+                <div class="flex justify-content-between align-items-center mb-3">
+
+                    <div class="flex align-items-center text-600">
+                        <i class="pi pi-tag mr-2"></i>
+                        <span>{{ item.itemType }}</span>
+                    </div>
+
+                    <p-tag 
+                        [value]="item.stockQty > 0 ? 'INSTOCK' : 'OUT'"
+                        [severity]="item.stockQty > 0 ? 'success' : 'danger'">
+                    </p-tag>
+
+                </div>
+
+                <!-- IMAGE -->
+                <div class="item-image">
+
+                    <img 
+                        *ngIf="item.imageUrl; else noImage"
+                        [src]="serverUrl + item.imageUrl"
+                        alt="item"
+                    />
+
+                    <ng-template #noImage>
+                        <div class="no-image">
+                            <i class="pi pi-image"></i>
+                        </div>
+                    </ng-template>
+
+                </div>
+
+
+                <!-- TITLE -->
+                <div class="text-xl font-bold mb-2">
+                    <a class="qty-link" (click)="openItem(item); $event.stopPropagation()">
+              {{ item.itemNo }}  
+            </a>
+                </div>
+
+                <!-- DESCRIPTION -->
+                <div class="text-600 mb-2">
+                    {{ item.itemDescription }}
+                </div>
+
+                <!-- DETAILS 
+                <div class="text-500">
+                    UOM: {{ item.itemUOM }}
+                </div>   -->
+                
+                <div class="flex flex-row md:flex-column justify-content-between w-full md:w-auto align-items-center md:align-items-end mt-5 md:mt-0">
+                    <span class="text-2xl font-semibold mb-2 align-self-center md:align-self-end">Stock  <a class="qty-link" (click)="openMovements(item); $event.stopPropagation()">
+                {{ item.stockQty }}
+            </a></span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </ng-template>
+
+</p-dataView>
+
+</div>

@@ -1,0 +1,67 @@
+<div class="sifen-page">
+    <section class="sifen-panel">
+        <div class="sifen-page__header">
+            <div>
+                <span class="sifen-page__eyebrow">Companias</span>
+                <h2>Administracion global SIFEN</h2>
+                <p>Supervisa empresas, plan, estado SIFEN y acceso operativo sin romper el arbol actual.</p>
+            </div>
+
+            <button pButton type="button" label="Crear compania" icon="pi pi-plus" (click)="openCreate()"></button>
+        </div>
+
+        <div class="sifen-company-summary">
+            <article>
+                <span>Clientes activos</span>
+                <strong>{{ companies.length }}</strong>
+            </article>
+            <article>
+                <span>Estado SIFEN global</span>
+                <strong>{{ companies.length ? 'Monitoreado' : 'No disponible todavia' }}</strong>
+            </article>
+            <article>
+                <span>Alertas</span>
+                <strong>{{ companies.length ? 'Revisar tabla' : '0' }}</strong>
+            </article>
+            <article>
+                <span>Facturas mes</span>
+                <strong>No disponible todavia</strong>
+            </article>
+        </div>
+
+        <small class="sifen-page__error" *ngIf="errorMessage">{{ errorMessage }}</small>
+        <p *ngIf="loading" class="sifen-page__muted">Cargando companias...</p>
+
+        <p-table [value]="companies" responsiveLayout="scroll" styleClass="sifen-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Empresa</th>
+                    <th>Plan</th>
+                    <th>Estado SIFEN</th>
+                    <th>Facturas mes</th>
+                    <th>Limite</th>
+                    <th>Acciones</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-company>
+                <tr>
+                    <td>
+                        <strong>{{ company.businessName }}</strong>
+                        <small>{{ company.tenantId }}</small>
+                    </td>
+                    <td>
+                        <strong>{{ company.planName || 'Plan base' }}</strong>
+                        <small>{{ company.slug }}</small>
+                    </td>
+                    <td><p-tag [severity]="statusSeverity(company.status)" [value]="company.status"></p-tag></td>
+                    <td>No disponible todavia</td>
+                    <td>{{ company.invoiceLimitPerMonth || 0 }} / {{ company.userLimit || 0 }}</td>
+                    <td>
+                        <button pButton type="button" class="p-button-text p-button-sm" icon="pi pi-arrow-right" label="Detalle" (click)="openDetail(company)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </section>
+</div>

@@ -1,0 +1,183 @@
+/* =====================================================
+   PAGE
+===================================================== */
+
+.page{
+    background:#f4f6f8;
+    min-height:100vh;
+    padding:30px;
+}
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.item-card{
+    max-width:1200px;
+    margin:auto;
+    padding:30px;
+
+    background:white;
+    border-radius:8px;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,0.08),
+        0 10px 25px rgba(0,0,0,0.06);
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.item-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+/* LEFT SIDE */
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.header-left h2{
+    margin:0;
+    font-weight:600;
+}
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+/* TOOLBAR BUTTONS */
+
+.actions button{
+    width:36px;
+    height:36px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:transparent !important;
+    border:none !important;
+
+    color:#1f2937 !important;
+
+    box-shadow:none !important;
+}
+
+/* ICON SIZE */
+
+.actions button .pi{
+    font-size:16px;
+}
+
+/* HOVER */
+
+.actions button:hover{
+    background:#e5e7eb !important;
+    border-radius:6px;
+}
+
+/* =====================================================
+   BACK BUTTON
+===================================================== */
+
+.nav-button{
+    width:38px;
+    height:38px;
+
+    border-radius:50% !important;
+
+    background:#e5e7eb !important;
+    border:none !important;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    color:#111827 !important;
+}
+
+.nav-button:hover{
+    background:#d1d5db !important;
+}
+
+/* =====================================================
+   SECTIONS
+===================================================== */
+
+.section{
+    margin-bottom:35px;
+}
+
+.section-title{
+    font-size:18px;
+    font-weight:600;
+    border-bottom:2px solid #3f4a5a;
+    padding-bottom:6px;
+    margin-bottom:20px;
+}
+
+/* =====================================================
+   GRID LAYOUT
+===================================================== */
+
+.section-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap:80px;
+}
+
+/* =====================================================
+   FORM ROW
+===================================================== */
+
+.form-row{
+    display:flex;
+    align-items:center;
+    margin-bottom:14px;
+}
+
+.form-row label{
+    width:220px;
+    color:#555;
+    font-size:14px;
+}
+
+.form-row input,
+.form-row .p-dropdown{
+    flex:1;
+}
+
+.qty-bold {
+  font-weight: bold;
+}
+
+
+.card{
+    height:220px; 
+    display:flex;
+    flex-direction:column;
+}
+
+/* contenedor imagen */
+.item-image{
+    height:90px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:10px;
+}
+

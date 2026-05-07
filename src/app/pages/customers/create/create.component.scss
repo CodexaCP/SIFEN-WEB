@@ -1,0 +1,47 @@
+.portal-card {
+  border: 1px solid rgba(15, 47, 70, 0.06);
+}
+
+.portal-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.section-kicker {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+  color: #17a96b;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.portal-card-header h4 {
+  margin: 0;
+  color: #11324a;
+}
+
+.portal-card-header p {
+  margin: 0.45rem 0 0;
+  color: #5e7687;
+}
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.field-block label {
+  font-weight: 700;
+  color: #275166;
+}
+
+.portal-card-actions {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+}

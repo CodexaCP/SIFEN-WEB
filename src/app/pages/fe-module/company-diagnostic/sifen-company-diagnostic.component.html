@@ -1,0 +1,69 @@
+<section class="sifen-diagnostic">
+    <div class="sifen-diagnostic__card">
+        <div class="sifen-diagnostic__header" *ngIf="diagnostic as currentDiagnostic; else pendingHeader">
+            <div>
+                <span class="sifen-diagnostic__eyebrow">Diagnostico FE</span>
+                <h2>Diagnóstico rápido del tenant</h2>
+                <p>{{ guidedSummary }}</p>
+                <small class="sifen-diagnostic__muted">{{ nextAction }}</small>
+            </div>
+
+            <div class="sifen-diagnostic__status">
+                <p-tag [severity]="overallSeverity" [value]="overallLabel"></p-tag>
+                <a [routerLink]="['/sifen/admin/companies', tenantId, 'sifen-config']">Ir a configuracion</a>
+            </div>
+        </div>
+        <ng-template #pendingHeader>
+            <div class="sifen-diagnostic__header">
+                <div>
+                    <span class="sifen-diagnostic__eyebrow">Diagnostico FE</span>
+                    <h2>Revision guiada de emision</h2>
+                </div>
+            </div>
+        </ng-template>
+
+        <small class="sifen-diagnostic__error" *ngIf="errorMessage">{{ errorMessage }}</small>
+        <p *ngIf="loading" class="sifen-diagnostic__muted">Cargando diagnostico...</p>
+        <div class="sifen-diagnostic__status" *ngIf="tenantId">
+            <button pButton type="button" label="Ejecutar diagnostico" icon="pi pi-sync" class="p-button-text" (click)="loadDiagnostic()"></button>
+        </div>
+
+        <div class="sifen-diagnostic__grid" *ngIf="diagnostic as currentDiagnostic">
+            <article>
+                <h3>Estado global</h3>
+                <p><strong>Modo:</strong> {{ currentDiagnostic.mode }}</p>
+                <p><strong>Resultado:</strong> {{ currentDiagnostic.globalStatus }}</p>
+                <p><strong>Base segura:</strong> no se llama a SIFEN real ni se exponen secretos.</p>
+            </article>
+
+            <article>
+                <h3>Lo que falta</h3>
+                <ul>
+                    <li *ngFor="let item of currentDiagnostic.missingItems">{{ item }}</li>
+                    <li *ngIf="!currentDiagnostic.missingItems.length">No hay faltantes pendientes.</li>
+                </ul>
+                <small>Esto bloquea emision real.</small>
+            </article>
+
+            <article>
+                <h3>Advertencias</h3>
+                <ul>
+                    <li *ngFor="let item of currentDiagnostic.warnings">{{ item }}</li>
+                    <li *ngIf="!currentDiagnostic.warnings.length">No hay advertencias activas.</li>
+                </ul>
+                <small>Esto no bloquea la base TEST, pero deja readiness parcial.</small>
+            </article>
+
+            <article>
+                <h3>Checklist</h3>
+                <div *ngFor="let check of currentDiagnostic.checks" class="sifen-diagnostic__check">
+                    <p-tag [severity]="getCheckSeverity(check.status)" [value]="check.status"></p-tag>
+                    <div>
+                        <strong>{{ check.label }}</strong>
+                        <p>{{ check.message }}</p>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>

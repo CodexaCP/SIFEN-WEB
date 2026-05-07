@@ -1,0 +1,259 @@
+@use '../styles/sifen-theme' as sifen;
+
+.fe-shell,
+.fe-summary,
+.fe-filters {
+  display: grid;
+  gap: 1rem;
+}
+
+.fe-header,
+.fe-summary,
+.fe-card {
+  @include sifen.sifen-panel-card;
+}
+
+.fe-header,
+.fe-summary {
+  padding: 1.4rem;
+}
+
+.fe-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(6, 182, 212, 0.08), rgba(124, 58, 237, 0.08));
+}
+
+.fe-eyebrow {
+  @include sifen.sifen-eyebrow;
+}
+
+.fe-header h2 {
+  margin: 0.4rem 0 0;
+}
+
+.fe-header p,
+.fe-muted,
+.fe-summary small,
+.fe-status__message {
+  color: sifen.$sifen-muted;
+}
+
+.fe-banner {
+  padding: 0.95rem 1rem;
+  border-radius: 18px;
+  border: 1px solid sifen.$sifen-border-color;
+  background: #fff;
+}
+
+.fe-banner--info {
+  border-color: rgba(37, 99, 235, 0.18);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.fe-banner--warning {
+  border-color: rgba(245, 158, 11, 0.2);
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.fe-banner--danger {
+  border-color: rgba(239, 68, 68, 0.18);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.fe-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fe-summary span,
+.fe-summary strong,
+.fe-summary small {
+  display: block;
+}
+
+.fe-summary span {
+  color: sifen.$sifen-muted;
+  font-size: 0.82rem;
+}
+
+.fe-summary strong {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1.3rem;
+}
+
+.fe-progress {
+  height: 8px;
+  margin-bottom: 0.45rem;
+  border-radius: 999px;
+  background: #e5edf8;
+  overflow: hidden;
+}
+
+.fe-progress div {
+  height: 100%;
+  background: sifen.$sifen-gradient;
+}
+
+.fe-feedback-group {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.fe-feedback {
+  color: sifen.$sifen-primary;
+}
+
+.fe-feedback--error {
+  color: sifen.$sifen-danger;
+}
+
+.fe-card {
+  padding: 1.4rem;
+}
+
+.fe-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.fe-card__top h3 {
+  margin: 0.35rem 0 0;
+}
+
+.fe-filters {
+  grid-template-columns: minmax(220px, 1.5fr) repeat(3, minmax(150px, 0.8fr)) minmax(220px, auto);
+  align-items: end;
+  margin-bottom: 1rem;
+}
+
+.fe-filters label {
+  display: grid;
+  gap: 0.45rem;
+  font-weight: 700;
+}
+
+.fe-filters :is(input, select) {
+  @include sifen.sifen-input;
+}
+
+.fe-empty {
+  padding: 1.25rem;
+  border-radius: 18px;
+  background: sifen.$sifen-soft-gradient;
+  color: sifen.$sifen-muted;
+}
+
+.fe-filters__actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+:host ::ng-deep .fe-table .p-datatable-wrapper {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+:host ::ng-deep .fe-table th {
+  background: #f8fbff;
+  color: sifen.$sifen-muted;
+  border-color: sifen.$sifen-border-color;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+:host ::ng-deep .fe-table td {
+  background: #fff;
+  border-color: sifen.$sifen-border-color;
+  color: sifen.$sifen-text;
+}
+
+:host ::ng-deep .p-tag {
+  border-radius: 999px;
+}
+
+:host ::ng-deep .p-tag.p-tag-success {
+  background: rgba(34, 197, 94, 0.12);
+  color: sifen.$sifen-success;
+}
+
+:host ::ng-deep .p-tag.p-tag-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: sifen.$sifen-danger;
+}
+
+:host ::ng-deep .p-tag.p-tag-info {
+  background: rgba(37, 99, 235, 0.12);
+  color: sifen.$sifen-primary;
+}
+
+:host ::ng-deep .p-tag.p-tag-warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: sifen.$sifen-warning;
+}
+
+:host ::ng-deep .p-tag.p-tag-secondary {
+  background: rgba(100, 116, 139, 0.12);
+  color: sifen.$sifen-muted;
+}
+
+.fe-status {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.fe-cdc {
+  max-width: 16rem;
+  word-break: break-all;
+  color: sifen.$sifen-primary;
+  font-size: 0.82rem;
+}
+
+.fe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+td strong,
+td small {
+  display: block;
+}
+
+td small {
+  margin-top: 0.2rem;
+  color: sifen.$sifen-muted;
+}
+
+:host ::ng-deep .p-button {
+  @include sifen.sifen-button-skin;
+  border-radius: 16px;
+}
+
+:host ::ng-deep .p-button.p-button-text,
+:host ::ng-deep .p-button.p-button-outlined {
+  @include sifen.sifen-secondary-button;
+}
+
+:host ::ng-deep .p-paginator {
+  margin-top: 1rem;
+  border: 0;
+  background: transparent;
+}
+
+@media (max-width: 1100px) {
+  .fe-summary,
+  .fe-filters,
+  .fe-header {
+    grid-template-columns: 1fr;
+  }
+
+  .fe-header {
+    display: grid;
+  }
+}

@@ -1,0 +1,348 @@
+<div class="Codexa-page">
+    <header class="Codexa-header">
+        <a class="Codexa-brand" (click)="scrollTo('home')">
+            <span class="Codexa-brand__mark">&lt;X&gt;</span>
+            <div class="Codexa-brand__copy">
+                <strong>Codexa<span>X</span></strong>
+                <small>Desarrollo de Software</small>
+                <em>Codigo que transforma. Soluciones que impulsan.</em>
+            </div>
+        </a>
+
+        <nav class="Codexa-nav">
+            <a (click)="scrollTo('services')">Soluciones</a>
+            <a (click)="scrollTo('future-module')">Proximamente</a>
+            <a (click)="scrollTo('why-Codexa')">Por que Codexa</a>
+            <a (click)="scrollTo('companies')">Companias</a>
+            <a (click)="scrollTo('contact')">Contacto</a>
+        </nav>
+
+        <div class="Codexa-header__actions">
+            <button pButton type="button" label="Entrar a TramiYa" class="p-button-sm p-button-outlined" (click)="goToCompany('TramiYa')"></button>
+            <button pButton type="button" label="Entrar a SIFEN" class="p-button-sm p-button-info" (click)="goToCompany('sifen')"></button>
+            <button pButton type="button" label="Ver soluciones" class="p-button-sm" (click)="viewSolutions()"></button>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero-section">
+            <div class="hero-section__backdrop">
+                <span class="glow glow-a"></span>
+                <span class="glow glow-b"></span>
+                <span class="grid-mask"></span>
+            </div>
+
+            <div class="hero-section__content">
+                <div class="hero-copy">
+                    <span class="hero-kicker">Codexa Software Studio</span>
+                    <h1>Codigo que transforma. Soluciones que impulsan.</h1>
+                    <p>
+                        Creamos software moderno para negocios que quieren crecer, automatizar procesos y vender mejor.
+                    </p>
+
+                    <div class="hero-actions">
+                        <button pButton type="button" label="Quiero cotizar mi proyecto" icon="pi pi-send" (click)="openQuoteRequest()"></button>
+                        <button pButton type="button" label="Ver soluciones" class="p-button-outlined" icon="pi pi-th-large" (click)="viewSolutions()"></button>
+                    </div>
+
+                    <div class="hero-pill-list">
+                        <span>Software a medida</span>
+                        <span>Automatizacion</span>
+                        <span>Web + mobile</span>
+                        <span>Escalable desde el inicio</span>
+                    </div>
+                </div>
+
+                <aside class="hero-panel">
+                    <div class="hero-panel__window">
+                        <div class="hero-panel__window-top">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                        <div class="hero-panel__stats">
+                            <article>
+                                <small>Modelo</small>
+                                <strong>Software que vende</strong>
+                            </article>
+                            <article>
+                                <small>Arquitectura</small>
+                                <strong>Lista para escalar</strong>
+                            </article>
+                            <article>
+                                <small>Canales</small>
+                                <strong>Web + Android</strong>
+                            </article>
+                        </div>
+
+                        <div class="hero-panel__modules">
+                            <div *ngFor="let item of heroModules" class="module-chip">
+                                <i [class]="item.icon"></i>
+                                <span>{{ item.label }}</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-panel__footer">
+                            <span>Modulos activos</span>
+                            <div class="hero-panel__footer-actions">
+                                <button type="button" (click)="goToCompany('TramiYa')">TramiYa</button>
+                                <button type="button" (click)="goToCompany('sifen')">SIFEN</button>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section id="services" class="section-shell section-shell--light">
+            <div class="section-heading">
+                <span class="section-kicker">Soluciones Codexa</span>
+                <h2>Construimos productos digitales listos para operar, crecer y diferenciar tu negocio.</h2>
+                <p>
+                    Unimos estrategia, experiencia de usuario y tecnologia para llevar tus procesos a una solucion moderna,
+                    visualmente potente y preparada para evolucionar.
+                </p>
+            </div>
+
+            <div class="service-grid service-grid--expanded">
+                <article class="service-card" *ngFor="let item of serviceCards">
+                    <div class="service-card__top">
+                        <div class="service-card__icon">
+                            <i [class]="item.icon"></i>
+                        </div>
+                        <div class="service-card__badge">{{ item.badge }}</div>
+                    </div>
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="future-module" class="section-shell section-shell--dark">
+            <div class="section-heading section-heading--upcoming">
+                <span class="section-kicker">Proximamente</span>
+                <h2>Soluciones futuras que ya estamos convirtiendo en producto.</h2>
+                <p>
+                    Aqui presentamos modulos en desarrollo con potencial comercial claro, pensados para convertirse en nuevas
+                    experiencias SaaS dentro del ecosistema Codexa.
+                </p>
+
+                <div class="upcoming-selector">
+                    <button type="button" *ngFor="let tab of upcomingTabs" (click)="scrollTo(tab.id)">{{ tab.label }}</button>
+                </div>
+            </div>
+
+            <div id="future-sifen" class="future-banner future-banner--sifen">
+                <div class="future-copy">
+                    <div class="future-badges">
+                        <span *ngFor="let badge of sifenBadges">{{ badge }}</span>
+                    </div>
+                    <span class="section-kicker">Modulo promocional</span>
+                    <h2>Proximamente: facturacion electronica SIFEN para empresas que quieren operar con orden y crecer con confianza.</h2>
+                    <p>
+                        Una plataforma pensada para ofrecer facturacion electronica a multiples clientes con una experiencia
+                        profesional, confiable y preparada para acompanar el crecimiento de cada contribuyente.
+                    </p>
+                    <p>
+                        Convertimos una necesidad critica en una solucion clara, estable y lista para escalar comercialmente.
+                    </p>
+
+                    <div class="future-actions">
+                        <button pButton type="button" label="Solicitar informacion" icon="pi pi-envelope" (click)="requestSifenInfo('Solicitar informacion')"></button>
+                        <button pButton type="button" label="Probar demo" class="p-button-secondary" icon="pi pi-play" (click)="goToSifenDemo()"></button>
+                        <button pButton type="button" label="Quiero cotizar este SaaS" class="p-button-outlined" icon="pi pi-arrow-right" (click)="requestSifenInfo('Quiero cotizar este SaaS')"></button>
+                    </div>
+
+                    <div class="future-feedback" *ngIf="sifenInfoMessage">
+                        <div class="future-feedback__header">
+                            <i class="pi pi-check-circle"></i>
+                            <strong>Interes registrado</strong>
+                        </div>
+                        <p>{{ sifenInfoMessage }}</p>
+                        <small *ngIf="lastSifenRequest">Tipo: {{ lastSifenRequest.type }} | Fecha: {{ lastSifenRequest.timestamp | date:'short' }}</small>
+                    </div>
+                </div>
+
+                <div class="future-panel">
+                    <article class="future-feature" *ngFor="let item of sifenBenefits">
+                        <i class="pi pi-check-circle"></i>
+                        <span>{{ item }}</span>
+                    </article>
+                </div>
+            </div>
+
+            <div id="future-encomiendas" class="future-banner future-banner--spaced">
+                <div class="future-copy">
+                    <div class="future-badges">
+                        <span *ngFor="let badge of courierBadges">{{ badge }}</span>
+                    </div>
+                    <span class="section-kicker">Modulo promocional</span>
+                    <h2>Proximamente: modulo para encomiendas y paqueteria</h2>
+                    <p>
+                        Una solucion pensada para empresas de encomiendas, courier y negocios que gestionan envios de paquetes,
+                        documentos, entregas puerta a puerta y seguimiento de pedidos.
+                    </p>
+
+                    <div class="future-actions">
+                        <button pButton type="button" label="Solicitar informacion" icon="pi pi-envelope" (click)="requestFutureModule('Solicitar informacion')"></button>
+                        <button pButton type="button" label="Quiero este modulo" class="p-button-outlined" icon="pi pi-arrow-right" (click)="requestFutureModule('Quiero este modulo')"></button>
+                    </div>
+                </div>
+
+                <div class="future-panel">
+                    <article class="future-feature" *ngFor="let item of futureCourierFeatures">
+                        <i class="pi pi-check-circle"></i>
+                        <span>{{ item }}</span>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="why-Codexa" class="section-shell section-shell--light">
+            <div class="section-heading">
+                <span class="section-kicker">Por que elegir Codexa</span>
+                <h2>Diseno, criterio tecnico y una ejecucion pensada para convertir ideas en producto real.</h2>
+            </div>
+
+            <div class="vision-grid vision-grid--four">
+                <article class="vision-card" *ngFor="let item of whyCodexa">
+                    <div class="vision-card__icon">
+                        <i [class]="item.icon"></i>
+                    </div>
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="companies" class="section-shell section-shell--companies">
+            <div class="section-heading">
+                <span class="section-kicker">Acceso por compania</span>
+                <h2>Elige tu empresa y entra a su entorno.</h2>
+                <p>
+                    Hoy ya hay dos modulos activos dentro del hub: TramiYa y SIFEN. La plataforma mantiene un tercer
+                    espacio listo para la siguiente empresa o producto.
+                </p>
+            </div>
+
+            <div class="company-grid company-grid--compact company-grid--hub">
+                <article class="company-card company-card--featured">
+                    <div class="company-card__header">
+                        <div>
+                            <span class="company-tag">Disponible ahora</span>
+                            <h3>TramiYa</h3>
+                        </div>
+                        <span class="company-status">Tenant 01</span>
+                    </div>
+
+                    <p>
+                        Modulo de servicios, solicitudes, validacion de pagos, seguimiento web y experiencia movil.
+                    </p>
+
+                    <div class="company-meta">
+                        <span>Web operativa</span>
+                        <span>APK dedicada</span>
+                        <span>Modelo multitenant</span>
+                    </div>
+
+                    <div class="company-actions">
+                        <button pButton type="button" label="Entrar a TramiYa" icon="pi pi-arrow-right" (click)="goToCompany('tramiya')"></button>
+                    </div>
+                </article>
+
+                <article class="company-card company-card--sifen">
+                    <div class="company-card__header">
+                        <div>
+                            <span class="company-tag">Disponible ahora</span>
+                            <h3>SIFEN</h3>
+                        </div>
+                        <span class="company-status">Tenant FE</span>
+                    </div>
+
+                    <p>
+                        Modulo SaaS de facturacion electronica con login propio, administracion de companias, diagnostico
+                        por tenant y base lista para configuracion SIFEN empresarial.
+                    </p>
+
+                    <div class="company-meta">
+                        <span>Admin SuperAdmin</span>
+                        <span>Diagnostico tenant</span>
+                        <span>Setup FE</span>
+                    </div>
+
+                    <div class="company-actions">
+                        <button pButton type="button" label="Entrar a SIFEN" icon="pi pi-arrow-right" (click)="goToCompany('sifen')"></button>
+                    </div>
+                </article>
+
+                <article class="company-card company-card--ghost">
+                    <div class="company-card__header">
+                        <div>
+                            <span class="company-tag">Siguiente espacio</span>
+                            <h3>Tu empresa puede ser la proxima</h3>
+                        </div>
+                        <span class="company-status">Tenant 02+</span>
+                    </div>
+
+                    <p>
+                        Un espacio preparado para lanzar una nueva marca, modulo o negocio digital sobre la base Codexa.
+                    </p>
+
+                    <div class="company-meta">
+                        <span>Marca propia</span>
+                        <span>Base reutilizable</span>
+                        <span>Escalable por modulos</span>
+                    </div>
+
+                    <div class="company-actions">
+                        <button pButton type="button" label="Quiero mi tenant" class="p-button-outlined" icon="pi pi-send" (click)="requestTenantSlot()"></button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section-shell section-shell--proof">
+            <div class="proof-banner">
+                <div>
+                    <span class="section-kicker">Base para crecer</span>
+                    <h2>Una presencia que genera confianza y una base tecnica lista para lanzar nuevos modulos.</h2>
+                    <p>
+                        Codexa combina marca, producto y arquitectura para que cada solucion tenga fuerza comercial,
+                        claridad visual y crecimiento sostenible.
+                    </p>
+                </div>
+
+                <div class="proof-metrics">
+                    <article *ngFor="let stat of proofStats">
+                        <strong>{{ stat.value }}</strong>
+                        <span>{{ stat.label }}</span>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section-shell section-shell--contact">
+            <div class="contact-card">
+                <div class="contact-copy">
+                    <span class="section-kicker">Hablemos de tu proyecto</span>
+                    <h2>Si quieres una solucion moderna, clara y lista para crecer, empecemos a conversar.</h2>
+                    <p>
+                        Esta seccion es demostrativa y funciona solo a nivel frontend. Podemos usarla para presentar una
+                        futura cotizacion, una demo o el siguiente modulo que quieras lanzar.
+                    </p>
+
+                    <div class="contact-note" *ngIf="interestMessage">
+                        <i class="pi pi-info-circle"></i>
+                        <span>{{ interestMessage }}</span>
+                    </div>
+                </div>
+
+                <div class="contact-actions">
+                    <button pButton type="button" label="Quiero cotizar mi proyecto" icon="pi pi-send" (click)="openQuoteRequest()"></button>
+                    <button pButton type="button" label="Ver companias" class="p-button-outlined" icon="pi pi-building" (click)="scrollTo('companies')"></button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>

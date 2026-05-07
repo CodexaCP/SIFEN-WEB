@@ -1,0 +1,46 @@
+.portal-card {
+  border: 1px solid rgba(15, 47, 70, 0.06);
+}
+
+.portal-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.detail-item label {
+  color: #6a8090;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.detail-item strong {
+  color: #12344c;
+  font-size: 1rem;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.badge.active {
+  background: rgba(85, 184, 83, 0.14);
+  color: #2f8e3b;
+}
+
+.badge.inactive {
+  background: rgba(245, 158, 11, 0.16);
+  color: #a56a00;
+}

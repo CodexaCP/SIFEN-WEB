@@ -1,0 +1,108 @@
+<div class="page">
+    <div class="card">
+        <!-- HEADER -->
+        <div class="bc-header">
+            <div class="left">
+                <button class="bc-back-btn" (click)="goBack()">
+                    <i class="pi pi-arrow-left"></i>
+                </button>
+                <h2>Receipt Document</h2>
+            </div>
+
+            <div class="actions">
+                <button class="bc-icon-btn">
+                    <i class="pi pi-check"></i>
+                </button>
+
+                <button class="bc-icon-btn danger">
+                    <i class="pi pi-trash"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- GENERAL SECTION -->
+        <div class="section">
+            <div class="section-title">General</div>
+
+            <div class="section-grid">
+                <!-- LEFT -->
+                <div>
+                    <div class="form-row">
+                        <label>No.</label>
+                        <input pInputText [(ngModel)]="receiptNo" readonly class="qty-bold"/>
+                    </div>
+
+                    <div class="form-row">
+                        <label>Location Code</label>
+                        <input pInputText [(ngModel)]="header.locationCode" />
+                    </div>                    
+
+                    <div class="form-row">
+                        <label>Document Status</label>
+                        <input pInputText [(ngModel)]="status" readonly class="qty-bold" />
+                    </div>
+                </div>
+
+                <!-- RIGHT -->
+                <div>
+                    <div class="form-row">
+                        <label>Vendor Name.</label>
+                        <input pInputText [(ngModel)]="vendorName" readonly class="qty-bold" />
+                    </div>
+
+                    <div class="form-row">
+                        <label>Assignment Date</label>
+                        <input
+                            pInputText
+                            [(ngModel)]="header.assignmentDate"
+                            readonly
+                        />
+                    </div>
+
+                    <div class="form-row">
+                        <label>Document Date</label>
+                        <input pInputText [(ngModel)]="receiptDate" readonly class="qty-bold"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LINES SECTION -->
+        <div class="section">
+            <div class="section-title">Lines                
+            </div>
+
+            <p-table
+                [value]="lines"
+                [scrollable]="true"
+                scrollHeight="500px"
+                styleClass="bc-table"
+            >
+                <ng-template pTemplate="header">
+                    <tr>                       
+                        <th>Item No.</th>
+                        <th>Description</th>
+                        <th>Bin Code</th>
+                        <th>Quantity</th>                        
+                        <th>Qty Received</th>
+                        <!--<th>Qty. to Receive</th>-->
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-line>
+                    <tr>                        
+                        <td>{{ line.itemCode }}</td>
+                        <td>{{ line.description }}</td>
+                        <td>{{ line.binCode }}</td>
+                        <td>{{ line.quantityExpected }}</td>
+                        
+                        <td>{{ line.postedQty }}</td>
+                        <!--<td>
+                            <input pInputText [(ngModel)]="line.qtyToReceive" />
+                        </td>-->
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

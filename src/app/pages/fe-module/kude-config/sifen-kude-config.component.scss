@@ -1,0 +1,128 @@
+@use '../styles/sifen-theme' as sifen;
+
+:host {
+  display: block;
+}
+
+.sifen-kude__hero,
+.sifen-kude__card {
+  @include sifen.sifen-panel-card;
+}
+
+.sifen-kude__hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.sifen-kude__eyebrow {
+  color: sifen.$sifen-primary;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sifen-kude__hero h2 {
+  margin: 0.45rem 0;
+}
+
+.sifen-kude__hero p,
+.sifen-kude__muted {
+  color: sifen.$sifen-muted;
+}
+
+.sifen-kude__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.sifen-kude__feedback {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: sifen.$sifen-primary;
+}
+
+.sifen-kude__feedback--error {
+  color: sifen.$sifen-danger;
+}
+
+.sifen-kude__grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.sifen-kude__card {
+  padding: 1.5rem;
+}
+
+.sifen-kude__card--preview {
+  min-width: 0;
+}
+
+.sifen-kude__card label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+  font-weight: 700;
+}
+
+.sifen-kude__card input,
+.sifen-kude__card select {
+  @include sifen.sifen-input;
+}
+
+.sifen-kude__toggle {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.sifen-kude__toggle input {
+  width: auto;
+}
+
+.sifen-kude__preview-banner {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: rgba(45, 156, 219, 0.12);
+  color: sifen.$sifen-text;
+  font-weight: 700;
+}
+
+.sifen-kude__preview-frame {
+  overflow: auto;
+  border-radius: 22px;
+  background: #fff;
+}
+
+:host ::ng-deep .sifen-kude__preview-frame > * {
+  min-width: 940px;
+}
+
+:host ::ng-deep .p-button {
+  @include sifen.sifen-button-skin;
+  border-radius: 16px;
+}
+
+:host ::ng-deep .p-button.p-button-text {
+  background: rgba(255, 255, 255, 0.82);
+  color: sifen.$sifen-primary;
+  box-shadow: none;
+}
+
+@media (max-width: 1100px) {
+  .sifen-kude__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sifen-kude__hero {
+    flex-direction: column;
+  }
+}

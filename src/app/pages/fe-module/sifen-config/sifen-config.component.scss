@@ -1,0 +1,98 @@
+@use '../styles/sifen-theme' as sifen;
+
+:host {
+  display: block;
+}
+
+.sifen-config {
+  position: relative;
+  z-index: 1;
+}
+
+.sifen-config__card {
+  padding: 1.75rem;
+  @include sifen.sifen-panel-card;
+}
+
+.sifen-config__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sifen-config__eyebrow {
+  color: sifen.$sifen-primary;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sifen-config__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.sifen-config__grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  color: sifen.$sifen-text;
+  font-weight: 700;
+}
+
+.sifen-config__status {
+  display: block;
+  margin-bottom: 1rem;
+  color: #2196f3;
+}
+
+.sifen-config__status--error {
+  color: #dc2626;
+}
+
+.sifen-config__grid :is(input, select) {
+  @include sifen.sifen-input;
+}
+
+.sifen-config__todo {
+  margin-top: 1.5rem;
+  padding: 1rem 1.1rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(66, 165, 245, 0.18);
+}
+
+.sifen-config__todo p {
+  margin-bottom: 0;
+  color: sifen.$sifen-muted;
+}
+
+.sifen-form-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+:host ::ng-deep .p-button {
+  @include sifen.sifen-button-skin;
+  border-radius: 16px;
+}
+
+:host ::ng-deep .p-tag {
+  border-radius: 999px;
+}
+
+@media (max-width: 900px) {
+  .sifen-config__header,
+  .sifen-config__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sifen-config__header {
+    display: grid;
+  }
+}

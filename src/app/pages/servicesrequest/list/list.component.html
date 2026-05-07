@@ -1,0 +1,91 @@
+<p-toast></p-toast>
+
+<div class="list-shell card">
+    <div class="list-hero">
+        <div>
+            <span>{{ isCustomer ? 'Portal customer' : 'Operacion de solicitudes' }}</span>
+            <h3>{{ isCustomer ? 'Mis solicitudes' : 'Solicitudes de servicios' }}</h3>
+            <p>{{ isCustomer ? 'Consulta tus gestiones y crea nuevas solicitudes.' : 'Revisa pagos, estados y movimiento operativo.' }}</p>
+        </div>
+
+        <button pButton icon="pi pi-plus" label="Nueva solicitud" (click)="goCreate()"></button>
+    </div>
+
+    <p-table
+        [value]="requests"
+        dataKey="requestID"
+        [rows]="pageSize"
+        [loading]="loading"
+        [paginator]="true"
+        [lazy]="true"
+        [totalRecords]="totalRows"
+        (onLazyLoad)="onLazyLoad($event)"
+        responsiveLayout="scroll"
+    >
+        <ng-template pTemplate="caption">
+            <div class="table-toolbar">
+                <button pButton class="p-button-outlined" icon="pi pi-filter-slash" label="Limpiar" (click)="clear()"></button>
+
+                <span class="p-input-icon-left toolbar-search">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="onSearch($event)" placeholder="Buscar por servicio, categoria, estado o pago" class="w-full" />
+                </span>
+
+                <p-dropdown
+                    [options]="paymentStatusOptions"
+                    [(ngModel)]="paymentStatus"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Estado de pago"
+                    styleClass="w-full md:w-14rem"
+                    (onChange)="onPaymentStatusChange($event.value)">
+                </p-dropdown>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Servicio</th>
+                <th>Estado</th>
+                <th>Categoria</th>
+                <th>Pago</th>
+                <th>Precio</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-r>
+            <tr>
+                <td>
+                    <a class="link text-truncate" (click)="openRequest(r)" [title]="r.serviceName">
+                        {{ r.serviceName }}
+                    </a>
+                </td>
+
+                <td>
+                    <span class="sy-status" [ngClass]="statusClass(r.status)">{{ r.status }}</span>
+                </td>
+
+                <td>
+                    <span class="sy-chip">{{ r.category || "Sin categoria" }}</span>
+                </td>
+
+                <td>
+                    <span class="sy-status" [ngClass]="paymentClass(r.paymentStatus)">{{ r.paymentStatus || 'PENDIENTE' }}</span>
+                </td>
+
+                <td>Gs {{ formatPrice(r.price) }}</td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="5">
+                    <div class="empty-state">
+                        <i class="pi pi-inbox"></i>
+                        <span>No hay solicitudes para mostrar.</span>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

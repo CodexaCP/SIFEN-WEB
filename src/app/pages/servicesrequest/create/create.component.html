@@ -1,0 +1,105 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <div class="flex align-items-center justify-content-between mb-4">
+        <div class="flex align-items-center gap-2">
+            <button pButton icon="pi pi-arrow-left" class="p-button-text text-500" (click)="goBack()" pTooltip="Volver"></button>
+            <h4 class="m-0">Crear Solicitud</h4>
+        </div>
+
+        <div class="flex align-items-center gap-3">
+            <span class="px-2 py-1 border-round text-xs font-medium bg-blue-100 text-blue-700">NUEVA</span>
+            <button pButton icon="pi pi-check" label="Crear" class="p-button-sm" (click)="submit()" [loading]="loadingSave"></button>
+        </div>
+    </div>
+
+    <h5 class="mb-4 text-600">Datos de la solicitud</h5>
+
+    <div class="grid">
+        <div class="col-12 md:col-6">
+            <label class="block mb-2 font-medium">Servicio *</label>
+
+            <p-dropdown
+                [options]="services"
+                optionLabel="name"
+                optionValue="serviceID"
+                placeholder="Seleccione un servicio"
+                class="w-full"
+                appendTo="body"
+                [filter]="true"
+                filterBy="name,category,referenceCode"
+                emptyMessage="No hay servicios disponibles"
+                emptyFilterMessage="No se encontraron servicios"
+                (onFilter)="onServiceFilter($event)"
+                (onChange)="onServiceChange($event.value)">
+                <ng-template let-service pTemplate="item">
+                    <div class="flex justify-content-between w-full">
+                        <span>{{ service.name }}</span>
+                        <span class="text-500">Gs {{ formatPrice(service.price) }}</span>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <label class="block mb-2 font-medium">Comprobante de pago *</label>
+
+            <div class="flex flex-column gap-2">
+                <button pButton type="button" icon="pi pi-upload" label="Seleccionar archivo" class="p-button-outlined w-fit" (click)="fileInput.click()"></button>
+
+                <input #fileInput type="file" hidden (change)="onFileSelect($event)" />
+
+                <small class="text-500">Formatos permitidos: JPG, PNG - Max 10MB</small>
+                <small *ngIf="selectedFileName" class="text-700">{{ selectedFileName }}</small>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <div class="flex align-items-center gap-2 mb-2">
+                <p-checkbox [(ngModel)]="requiresInvoice" [binary]="true" inputId="requiresInvoice"></p-checkbox>
+                <label for="requiresInvoice" class="font-medium">Requiero factura</label>
+            </div>
+
+            <div class="grid" *ngIf="requiresInvoice">
+                <div class="col-12">
+                    <label class="block mb-2 font-medium">Razon social *</label>
+                    <input pInputText [(ngModel)]="razonSocial" class="w-full" />
+                </div>
+                <div class="col-12">
+                    <label class="block mb-2 font-medium">RUC *</label>
+                    <input pInputText [(ngModel)]="ruc" class="w-full" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6" *ngIf="selectedService?.permiteAdjunto">
+            <label class="block mb-2 font-medium">Adjuntar archivo opcional</label>
+
+            <div class="flex flex-column gap-2">
+                <button pButton type="button" icon="pi pi-paperclip" label="Seleccionar archivo" class="p-button-outlined w-fit" (click)="fileInputAdjunto.click()"></button>
+
+                <input #fileInputAdjunto type="file" hidden (change)="onAttachmentSelect($event)" />
+
+                <small class="text-500">Max 10MB - PDF, JPG, PNG</small>
+                <small *ngIf="attachmentFile" class="text-700">{{ attachmentFile.name }}</small>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6" *ngIf="selectedService">
+            <label class="block mb-2 font-medium">Informacion</label>
+
+            <div class="p-3 border-round surface-100 text-sm">
+                <div class="mb-2">
+                    <span class="text-500">Categoria:</span>
+                    <span class="ml-2 font-medium">{{ selectedService.category || '-' }}</span>
+                </div>
+
+                <div>
+                    <span class="text-500">Precio:</span>
+                    <span class="ml-2 font-semibold text-primary">Gs {{ formatPrice(selectedService.price) }}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

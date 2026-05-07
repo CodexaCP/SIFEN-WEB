@@ -1,0 +1,52 @@
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.toolbar-search,
+.toolbar-filters {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.portal-tag {
+  display: inline-flex;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(20, 184, 166, 0.12);
+  color: #107d8c;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.link {
+  color: #0f8da3;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.muted {
+  color: #6f8796;
+}
+
+.badge {
+  display: inline-flex;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.badge.active {
+  background: rgba(85, 184, 83, 0.14);
+  color: #2f8e3b;
+}
+
+.badge.inactive {
+  background: rgba(245, 158, 11, 0.16);
+  color: #a56a00;
+}

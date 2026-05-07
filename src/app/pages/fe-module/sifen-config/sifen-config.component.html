@@ -1,0 +1,103 @@
+<section class="sifen-config">
+    <div class="sifen-config__card">
+        <div class="sifen-config__header">
+            <div>
+                <span class="sifen-config__eyebrow">Configuracion SIFEN</span>
+                <h2>Preparacion operacional del tenant {{ tenantId }}</h2>
+                <p>Configura identidad fiscal, ambiente y referencias seguras del tenant para el flujo SIFEN.</p>
+            </div>
+
+            <p-tag [severity]="model.readySummary ? 'info' : 'warning'" [value]="model.readySummary ? 'Configurado' : 'Pendiente'"></p-tag>
+        </div>
+
+        <small class="sifen-config__status" *ngIf="successMessage">{{ successMessage }}</small>
+        <small class="sifen-config__status sifen-config__status--error" *ngIf="errorMessage">{{ errorMessage }}</small>
+        <p *ngIf="loading">Cargando configuracion...</p>
+
+        <div class="sifen-config__grid">
+            <label>
+                <span>RUC</span>
+                <input pInputText [(ngModel)]="model.ruc" placeholder="80012345" />
+            </label>
+            <label>
+                <span>Digito verificador</span>
+                <input pInputText [(ngModel)]="model.rucCheckDigit" placeholder="6" />
+            </label>
+            <label>
+                <span>Razon social</span>
+                <input pInputText [(ngModel)]="model.legalName" placeholder="Empresa Demo S.A." />
+            </label>
+            <label>
+                <span>Ambiente</span>
+                <select [(ngModel)]="model.environment">
+                    <option value="Test">Test</option>
+                    <option value="Production">Production</option>
+                </select>
+            </label>
+            <label>
+                <span>CSC identifier</span>
+                <input pInputText [(ngModel)]="model.cscIdentifier" placeholder="0001" />
+            </label>
+            <label>
+                <span>CSC secret reference</span>
+                <input pInputText [(ngModel)]="model.cscSecretReference" placeholder="vault://sifen/csc" />
+            </label>
+            <label>
+                <span>Establecimiento</span>
+                <input pInputText [(ngModel)]="model.establishment" />
+            </label>
+            <label>
+                <span>Punto de expedicion</span>
+                <input pInputText [(ngModel)]="model.expeditionPoint" />
+            </label>
+            <label>
+                <span>Numeracion actual</span>
+                <input pInputText [(ngModel)]="model.currentNumber" placeholder="0000001" />
+            </label>
+            <label>
+                <span>Timbrado</span>
+                <input pInputText [(ngModel)]="model.stampingNumber" placeholder="12345678" />
+            </label>
+            <label>
+                <span>Certificado secret reference</span>
+                <input pInputText [(ngModel)]="model.certificateSecretReference" placeholder="vault://sifen/cert" />
+            </label>
+            <label>
+                <span>Certificado password reference</span>
+                <input pInputText [(ngModel)]="model.certificatePasswordSecretReference" placeholder="vault://sifen/cert-password" />
+            </label>
+            <label>
+                <span>Certificado alias</span>
+                <input pInputText [(ngModel)]="model.certificateAlias" placeholder="cert-prod-01" />
+            </label>
+            <label>
+                <span>XSD root path</span>
+                <input pInputText [(ngModel)]="model.xmlSchemaRootPath" placeholder="C:\\sifen\\xsd" />
+            </label>
+            <label>
+                <span>Endpoint URL</span>
+                <input pInputText [(ngModel)]="model.endpointUrl" placeholder="https://..." />
+            </label>
+            <label>
+                <span>Transport mode</span>
+                <select [(ngModel)]="model.transportMode">
+                    <option value="Diagnostic">Diagnostic</option>
+                    <option value="Live">Live</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="sifen-config__todo" *ngIf="model.readySummary">
+            <strong>{{ model.readySummary }}</strong>
+            <p>Los secretos se guardan como referencias seguras. Nunca se expone password real ni contenido del certificado.</p>
+        </div>
+        <div class="sifen-config__todo">
+            <strong>Ayuda corta</strong>
+            <p>Si el transporte queda en <code>Diagnostic</code>, la emision hara validacion interna y no llamara a SIFEN real.</p>
+        </div>
+
+        <div class="sifen-form-card__actions">
+            <button pButton type="button" label="Guardar configuracion" [loading]="saving" (click)="save()"></button>
+        </div>
+    </div>
+</section>

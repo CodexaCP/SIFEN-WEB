@@ -1,0 +1,10 @@
+<router-outlet></router-outlet>
+<button
+    *ngIf="whatsAppLink"
+    type="button"
+    class="whatsapp-fab"
+    (click)="openWhatsApp()"
+    aria-label="Abrir soporte por WhatsApp">
+    <i class="pi pi-whatsapp"></i>
+    <span>WhatsApp</span>
+</button>

@@ -1,0 +1,247 @@
+@use '../styles/sifen-theme' as sifen;
+
+.sifen-dashboard {
+    display: grid;
+    gap: 1rem;
+}
+
+.sifen-dashboard__hero,
+.sifen-dashboard__metric,
+.sifen-dashboard__card,
+.sifen-dashboard__status-card {
+    @include sifen.sifen-panel-card;
+}
+
+.sifen-dashboard__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(6, 182, 212, 0.08) 48%, rgba(124, 58, 237, 0.08));
+}
+
+.sifen-dashboard__eyebrow {
+    @include sifen.sifen-eyebrow;
+}
+
+.sifen-dashboard__hero h2,
+.sifen-dashboard__card h3 {
+    margin: 0.4rem 0 0;
+}
+
+.sifen-dashboard__hero p,
+.sifen-dashboard__status-card small,
+.sifen-dashboard__metric small,
+.sifen-dashboard__summary p,
+.sifen-dashboard__empty {
+    color: sifen.$sifen-muted;
+}
+
+.sifen-dashboard__status-card {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1.25rem;
+    background: #fff;
+}
+
+.sifen-dashboard__status-card strong {
+    font-size: 1.45rem;
+}
+
+.sifen-dashboard__alert {
+    padding: 1rem 1.15rem;
+    border-radius: 18px;
+    border: 1px solid rgba(245, 158, 11, 0.22);
+    background: rgba(245, 158, 11, 0.08);
+    color: sifen.$sifen-text;
+}
+
+.sifen-dashboard__metrics,
+.sifen-dashboard__content,
+.sifen-dashboard__quick-grid,
+.sifen-dashboard__super-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.sifen-dashboard__metrics {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.sifen-dashboard__metric {
+    padding: 1.25rem;
+}
+
+.sifen-dashboard__metric span,
+.sifen-dashboard__super-grid span {
+    display: block;
+    color: sifen.$sifen-muted;
+    font-size: 0.85rem;
+}
+
+.sifen-dashboard__metric strong,
+.sifen-dashboard__super-grid strong {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 1.55rem;
+}
+
+.sifen-dashboard__metric--wide {
+    grid-column: span 2;
+}
+
+.sifen-dashboard__metric-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.sifen-dashboard__progress {
+    height: 10px;
+    margin: 0.85rem 0;
+    border-radius: 999px;
+    background: #e5edf8;
+    overflow: hidden;
+}
+
+.sifen-dashboard__progress div {
+    height: 100%;
+    border-radius: inherit;
+    background: sifen.$sifen-gradient;
+}
+
+.sifen-dashboard__content {
+    grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.95fr);
+}
+
+.sifen-dashboard__card {
+    padding: 1.5rem;
+}
+
+.sifen-dashboard__card--table {
+    min-width: 0;
+}
+
+.sifen-dashboard__card-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.sifen-dashboard__card-head a,
+.sifen-dashboard__quick-grid a,
+.sifen-dashboard__card table a {
+    color: sifen.$sifen-primary;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.sifen-dashboard__quick-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.sifen-dashboard__quick-grid button {
+    padding: 1rem;
+    border: 1px solid sifen.$sifen-border-color;
+    border-radius: 18px;
+    background: #fff;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sifen-dashboard__quick-grid button i,
+.sifen-dashboard__quick-grid button strong,
+.sifen-dashboard__quick-grid button span {
+    display: block;
+}
+
+.sifen-dashboard__quick-grid button i {
+    margin-bottom: 0.7rem;
+    color: sifen.$sifen-primary;
+    font-size: 1.2rem;
+}
+
+.sifen-dashboard__quick-grid button strong {
+    color: sifen.$sifen-text;
+}
+
+.sifen-dashboard__quick-grid button span {
+    margin-top: 0.35rem;
+    color: sifen.$sifen-muted;
+    font-size: 0.86rem;
+}
+
+.sifen-dashboard__checklist {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.sifen-dashboard__checklist div {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: sifen.$sifen-danger;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+}
+
+.dot.is-ok {
+    background: sifen.$sifen-success;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+}
+
+.sifen-dashboard__summary {
+    margin-top: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 18px;
+    background: rgba(239, 68, 68, 0.06);
+}
+
+.sifen-dashboard__summary.is-success {
+    background: rgba(34, 197, 94, 0.08);
+}
+
+.sifen-dashboard__card table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.sifen-dashboard__card th,
+.sifen-dashboard__card td {
+    padding: 0.85rem 0.6rem;
+    border-bottom: 1px solid sifen.$sifen-border-color;
+    text-align: left;
+}
+
+.sifen-dashboard__super-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sifen-dashboard__status-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.08);
+    color: sifen.$sifen-primary;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+@media (max-width: 1100px) {
+    .sifen-dashboard__metrics,
+    .sifen-dashboard__content,
+    .sifen-dashboard__hero {
+        grid-template-columns: 1fr;
+    }
+
+    .sifen-dashboard__metric--wide {
+        grid-column: auto;
+    }
+}

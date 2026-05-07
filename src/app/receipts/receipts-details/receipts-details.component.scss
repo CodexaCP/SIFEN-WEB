@@ -1,0 +1,206 @@
+/* BASE */
+.page {
+  padding: 1rem;
+  background: #f5f5f5;
+  
+}
+
+.card {
+  background: white;
+  border: 1px solid #d6d6d6;
+    
+}
+
+.section-title{
+    font-size:18px;
+    font-weight:600;
+    border-bottom:2px solid #3f4a5a;
+    padding-bottom:6px;
+    margin-bottom:20px;
+}
+
+/* HEADER (ligero como Item) */
+.bc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #ffffff;
+  
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* BACK */
+.bc-back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f3f2f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.bc-back-btn:hover {
+  background: #e1dfdd;
+}
+
+/* ACTION ICONS */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.bc-icon-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.bc-icon-btn:hover {
+  background: #f3f2f1;
+}
+
+.bc-icon-btn i {
+  font-size: 16px;
+}
+
+.bc-icon-btn.danger i {
+  color: #d13438;
+}
+
+/* SECTIONS */
+.section {
+  padding: 16px 20px;
+  
+}
+
+.section-title {
+  font-weight: 600;  
+  font-size: 18px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* GRID */
+.section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+/* FORM */
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form-row label {
+  width: 180px;
+  font-size: 13px;
+  color: #605e5c;
+}
+
+/* INPUTS estilo limpio */
+input[pInputText],
+.p-dropdown,
+.p-calendar {
+  width: 100%;
+  height: 32px;
+  border-radius: 4px !important;
+  border: 1px solid #d6d6d6 !important;
+}
+
+/* TABLE */
+.bc-table .p-datatable-thead > tr > th {
+  background: #f3f2f1;
+  font-weight: 600;
+  border-bottom: 1px solid #d6d6d6;
+}
+
+.bc-table .p-datatable-tbody > tr:hover {
+  background: #f3f2f1;
+}
+
+/* 🔵 LINKS (igual Item) */
+.qty-link {
+  color: #2563eb;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.qty-link:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* 🟢 BADGES (copiado de Item) */
+.product-badge {
+  border-radius: 2px;
+  padding: .25em .5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.status-instock {
+  background: #C8E6C9;
+  color: #256029;
+}
+
+.status-lowstock {
+  background: #FEEDAF;
+  color: #8A5340;
+}
+
+.status-outofstock {
+  background: #FFCDD2;
+  color: #C63737;
+}
+
+/* 🖼 IMAGES (por si luego usas en lineas) */
+.item-image {
+  height: 110px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.item-image img {
+  max-height: 100px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.no-image {
+  height: 90px;
+  width: 90px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 24px;
+}
+
+
+.qty-bold {
+  font-weight: bold;
+}

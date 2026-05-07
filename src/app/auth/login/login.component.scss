@@ -1,0 +1,227 @@
+:host {
+    display: block;
+}
+
+.auth-shell {
+    position: relative;
+    min-height: 100vh;
+    padding: 2rem;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #eef9f5 0%, #ffffff 45%, #eef4ff 100%);
+}
+
+.auth-background {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at top left, rgba(19, 182, 176, 0.22), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(86, 200, 99, 0.18), transparent 26%),
+        linear-gradient(120deg, rgba(10, 92, 145, 0.07), transparent 60%);
+}
+
+.auth-panel {
+    position: relative;
+    z-index: 1;
+    width: min(1120px, 100%);
+    display: grid;
+    grid-template-columns: 1.15fr 0.95fr;
+    border-radius: 32px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid rgba(19, 182, 176, 0.12);
+    backdrop-filter: blur(14px);
+}
+
+.auth-branding {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    color: #0f2f46;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.3), rgba(19, 182, 176, 0.08));
+}
+
+.auth-logo {
+    width: min(420px, 100%);
+}
+
+.auth-kicker {
+    color: #17a96b;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.auth-branding h1 {
+    margin: 0;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+}
+
+.auth-branding p {
+    margin: 0;
+    max-width: 32rem;
+    color: #4a6475;
+    font-size: 1.02rem;
+    line-height: 1.7;
+}
+
+.auth-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.auth-pills span {
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.8);
+    color: #136f68;
+    font-size: 0.92rem;
+    font-weight: 600;
+    border: 1px solid rgba(19, 182, 176, 0.14);
+}
+
+.auth-card {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.auth-tabs {
+    display: inline-flex;
+    padding: 0.4rem;
+    margin-bottom: 1.5rem;
+    border-radius: 999px;
+    background: #ecf8f4;
+}
+
+.auth-tab {
+    border: none;
+    background: transparent;
+    border-radius: 999px;
+    padding: 0.8rem 1.2rem;
+    font-weight: 700;
+    color: #4a6475;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.auth-tab.active {
+    background: linear-gradient(135deg, #14b8a6, #4fbe66);
+    color: white;
+    box-shadow: 0 10px 24px rgba(19, 182, 176, 0.18);
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.auth-form h2 {
+    margin: 0;
+    font-size: 1.55rem;
+    color: #0f2f46;
+}
+
+.auth-form p {
+    margin: 0.35rem 0 0;
+    color: #5b7384;
+    line-height: 1.6;
+}
+
+.field-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.field-block label {
+    color: #285066;
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.phone-row {
+    display: grid;
+    grid-template-columns: minmax(7.25rem, 0.55fr) minmax(0, 1.45fr);
+    gap: 0.75rem;
+}
+
+.auth-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.form-grid {
+    margin-top: -0.5rem;
+}
+
+.auth-note {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    background: #f1fbf7;
+    color: #1c6b5f;
+    border: 1px solid rgba(79, 190, 102, 0.18);
+}
+
+:host ::ng-deep .auth-submit.p-button {
+    border: none;
+    border-radius: 18px;
+    padding: 1rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #14b8a6, #4fbe66);
+    box-shadow: 0 16px 28px rgba(19, 182, 176, 0.18);
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-password-input,
+:host ::ng-deep .p-dropdown {
+    border-radius: 16px;
+    border-color: rgba(15, 47, 70, 0.12);
+}
+
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-password-input {
+    padding: 0.95rem 1rem;
+}
+
+:host ::ng-deep .p-inputtext:enabled:focus,
+:host ::ng-deep .p-password-input:enabled:focus {
+    box-shadow: 0 0 0 0.2rem rgba(20, 184, 166, 0.12);
+    border-color: #14b8a6;
+}
+
+@media (max-width: 960px) {
+    .auth-shell {
+        padding: 1rem;
+    }
+
+    .auth-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-branding {
+        padding: 2rem 2rem 1rem;
+    }
+
+    .auth-card {
+        padding: 1.5rem;
+    }
+
+    .phone-row {
+        grid-template-columns: 1fr;
+    }
+}

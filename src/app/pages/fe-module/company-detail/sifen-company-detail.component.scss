@@ -1,0 +1,144 @@
+@use '../styles/sifen-theme' as sifen;
+
+:host {
+  display: block;
+}
+
+.sifen-detail {
+  position: relative;
+  z-index: 1;
+}
+
+.sifen-detail__hero,
+.sifen-detail__card {
+  @include sifen.sifen-panel-card;
+}
+
+.sifen-detail__hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.sifen-detail__eyebrow {
+  color: sifen.$sifen-primary;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sifen-detail__hero h2 {
+  margin: 0.5rem 0 0;
+}
+
+.sifen-detail__hero p {
+  margin: 0.35rem 0 0;
+  color: sifen.$sifen-muted;
+}
+
+.sifen-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+}
+
+.sifen-detail__feedback {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: sifen.$sifen-primary;
+}
+
+.sifen-detail__feedback--error {
+  color: sifen.$sifen-danger;
+}
+
+.sifen-detail__muted {
+  color: sifen.$sifen-muted;
+}
+
+.sifen-detail__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.sifen-detail__card {
+  padding: 1.5rem;
+}
+
+.sifen-detail__card h3 {
+  margin-top: 0;
+}
+
+.sifen-detail__card dl {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.sifen-detail__card dl div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.sifen-detail__card dt {
+  color: sifen.$sifen-muted;
+  font-size: 0.85rem;
+}
+
+.sifen-detail__card dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.sifen-detail__card label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+  font-weight: 700;
+}
+
+.sifen-detail__card input,
+:host ::ng-deep .sifen-detail__card .p-inputnumber-input {
+  @include sifen.sifen-input;
+}
+
+.sifen-detail__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.sifen-detail__links a {
+  padding: 0.7rem 0.95rem;
+  border-radius: 16px;
+  border: 1px solid sifen.$sifen-border-color;
+  background: rgba(255, 255, 255, 0.92);
+  color: sifen.$sifen-primary;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+:host ::ng-deep .p-button {
+  @include sifen.sifen-button-skin;
+  border-radius: 16px;
+}
+
+:host ::ng-deep .p-tag {
+  border-radius: 999px;
+}
+
+@media (max-width: 1100px) {
+  .sifen-detail__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sifen-detail__hero {
+    flex-direction: column;
+  }
+}

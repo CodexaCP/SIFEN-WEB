@@ -1,0 +1,121 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <!-- HEADER -->
+    <div class="flex align-items-center justify-content-between mb-3">
+        <div class="flex align-items-center gap-2">
+            <button
+                pButton
+                icon="pi pi-arrow-left"
+                class="p-button-text text-500"
+                (click)="goBack()"
+                pTooltip="Volver"
+                tooltipPosition="bottom"
+            ></button>
+
+            <h4 class="m-0">Crear Servicio</h4>
+        </div>
+
+        <div class="flex align-items-center gap-3">
+            <!-- ESTADO -->
+            <span class="customer-badge status-active">
+                Nuevo
+            </span>
+
+            <!-- GUARDAR -->
+            <button
+                pButton
+                icon="pi pi-save"
+                class="p-button-text text-500"
+                (click)="submit()"
+                [loading]="loading"
+                pTooltip="Guardar servicio"
+                tooltipPosition="bottom"
+            ></button>
+        </div>
+    </div>
+
+    <!-- SUBTITULO -->
+    <h5 class="mb-3">Datos del Servicio</h5>
+
+    <!-- FORM -->
+    <form [formGroup]="form">
+        <div class="grid">
+
+            <!-- NAME -->
+            <div class="col-12 md:col-6">
+                <label>Nombre *</label>
+                <input pInputText formControlName="name" class="w-full" />
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="col-12 md:col-6">
+                <label>Categoria *</label>
+                <p-dropdown
+                    formControlName="category"
+                    [options]="categoryOptions"
+                    optionLabel="label"
+                    optionValue="value"
+                    placeholder="Seleccione una categoria"
+                    class="w-full">
+                </p-dropdown>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="col-12">
+                <label>Descripcion</label>
+                <textarea
+                    pInputTextarea
+                    formControlName="description"
+                    rows="3"
+                    class="w-full"
+                ></textarea>
+            </div>
+
+            <!-- REFERENCE CODE -->
+            <div class="col-12 md:col-6">
+                <label>Codigo de Referencia</label>
+                <input pInputText formControlName="referenceCode" class="w-full" />
+            </div>
+
+            <!-- ESTIMATED TIME -->
+            <div class="col-12 md:col-6">
+                <label>Tiempo Estimado *</label>
+                <input
+                    pInputText
+                    formControlName="estimatedTimeText"
+                    class="w-full"
+                    placeholder="Ej: 24 horas / 2 dias"
+                />
+            </div>
+
+            <!-- PRICE -->
+            <div class="col-12 md:col-6">
+                <label>Precio *</label>
+                <input
+                    type="number"
+                    pInputText
+                    formControlName="price"
+                    class="w-full"
+                />
+            </div>
+
+            <!-- COST -->
+            <div class="col-12 md:col-6">
+                <label>Costo</label>
+                <input
+                    type="number"
+                    pInputText
+                    formControlName="cost"
+                    class="w-full"
+                />
+            </div>
+
+            <label>
+  <input type="checkbox" formControlName="permiteAdjunto" />
+  Permitir adjunto
+</label>
+
+        </div>
+    </form>
+</div>

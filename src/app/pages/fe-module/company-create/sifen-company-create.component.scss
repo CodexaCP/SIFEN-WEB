@@ -1,0 +1,81 @@
+@use '../styles/sifen-theme' as sifen;
+
+:host {
+  display: block;
+}
+
+.sifen-form-page {
+  position: relative;
+  z-index: 1;
+}
+
+.sifen-form-card {
+  padding: 1.75rem;
+  @include sifen.sifen-panel-card;
+}
+
+.sifen-form-card__eyebrow {
+  color: sifen.$sifen-primary;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sifen-form-card h2 {
+  margin: 0.5rem 0 0;
+  font-size: 2rem;
+}
+
+.sifen-form-card p {
+  color: sifen.$sifen-muted;
+}
+
+.sifen-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.sifen-form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  color: sifen.$sifen-text;
+  font-weight: 700;
+}
+
+.sifen-form-grid input,
+:host ::ng-deep .sifen-form-grid .p-inputnumber-input {
+  @include sifen.sifen-input;
+}
+
+.sifen-form-card__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.sifen-form-card__error {
+  display: block;
+  margin-top: 1rem;
+  color: sifen.$sifen-danger;
+}
+
+:host ::ng-deep .p-button {
+  @include sifen.sifen-button-skin;
+  border-radius: 16px;
+}
+
+:host ::ng-deep .p-button.p-button-text {
+  background: rgba(255, 255, 255, 0.85);
+  color: sifen.$sifen-primary;
+  box-shadow: none;
+}
+
+@media (max-width: 900px) {
+  .sifen-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

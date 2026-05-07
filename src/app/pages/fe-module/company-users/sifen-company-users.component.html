@@ -1,0 +1,136 @@
+<section class="sifen-users">
+    <div class="sifen-users__hero">
+        <div>
+            <span class="sifen-users__eyebrow">Gestion de usuarios</span>
+            <h2>{{ companyName }}</h2>
+            <p>Usuarios usados: {{ usersUsageLabel }}</p>
+        </div>
+
+        <div class="sifen-users__hero-side" *ngIf="usersResult">
+            <strong>{{ usersResult.planName }}</strong>
+            <small *ngIf="usersResult.maxUsers">Maximo {{ usersResult.maxUsers }} usuarios activos</small>
+        </div>
+    </div>
+
+    <small class="sifen-users__feedback" *ngIf="feedbackMessage">{{ feedbackMessage }}</small>
+    <small class="sifen-users__feedback sifen-users__feedback--error" *ngIf="errorMessage">{{ errorMessage }}</small>
+    <div class="sifen-users__alert" *ngIf="limitReached">
+        {{ limitMessage }}
+    </div>
+    <p *ngIf="loading" class="sifen-users__muted">Cargando usuarios...</p>
+
+    <div class="sifen-users__grid">
+        <article class="sifen-users__card">
+            <div class="sifen-users__card-header">
+                <div>
+                    <h3>{{ editingUserId ? 'Editar usuario' : 'Crear usuario' }}</h3>
+                    <p>Roles permitidos: TenantAdmin, Operator, Viewer.</p>
+                </div>
+
+                <button
+                    pButton
+                    type="button"
+                    class="p-button-text"
+                    label="Nuevo"
+                    icon="pi pi-plus"
+                    (click)="startCreate()"
+                    [disabled]="saving"></button>
+            </div>
+
+            <label>
+                <span>Nombre</span>
+                <input pInputText [(ngModel)]="formModel.fullName" placeholder="Nombre y apellido" />
+            </label>
+
+            <label>
+                <span>Email</span>
+                <input pInputText [(ngModel)]="formModel.email" placeholder="usuario@empresa.com" />
+            </label>
+
+            <label *ngIf="!editingUserId">
+                <span>Password inicial</span>
+                <input pInputText [(ngModel)]="formModel.password" type="password" placeholder="Temporal123!" />
+            </label>
+
+            <label>
+                <span>Rol</span>
+                <select [(ngModel)]="formModel.role">
+                    <option *ngFor="let role of roleOptions" [value]="role">{{ role }}</option>
+                </select>
+            </label>
+
+            <label class="sifen-users__toggle">
+                <input type="checkbox" [(ngModel)]="formModel.isActive" />
+                <span>Activo</span>
+            </label>
+
+            <button
+                pButton
+                type="button"
+                [label]="editingUserId ? 'Guardar cambios' : 'Crear usuario'"
+                (click)="saveUser()"
+                [loading]="saving"
+                [disabled]="!editingUserId && limitReached && formModel.isActive"></button>
+        </article>
+
+        <article class="sifen-users__card sifen-users__card--wide">
+            <div class="sifen-users__card-header">
+                <div>
+                    <h3>Listado del tenant</h3>
+                    <p>Solo se muestran usuarios de la compania activa.</p>
+                </div>
+
+                <button
+                    pButton
+                    type="button"
+                    label="Crear usuario"
+                    icon="pi pi-user-plus"
+                    (click)="startCreate()"
+                    [disabled]="limitReached"
+                    *ngIf="usersResult?.users?.length"></button>
+            </div>
+
+            <p-table [value]="usersResult?.users || []" responsiveLayout="scroll" styleClass="sifen-table">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-user>
+                    <tr>
+                        <td>{{ user.fullName }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.role }}</td>
+                        <td>
+                            <p-tag [severity]="user.isActive ? 'success' : 'danger'" [value]="user.isActive ? 'Activo' : 'Inactivo'"></p-tag>
+                        </td>
+                        <td>
+                            <div class="sifen-users__actions">
+                                <button
+                                    pButton
+                                    type="button"
+                                    class="p-button-text p-button-sm"
+                                    icon="pi pi-pencil"
+                                    label="Editar"
+                                    (click)="editUser(user)"></button>
+                                <button
+                                    pButton
+                                    type="button"
+                                    class="p-button-text p-button-sm"
+                                    [icon]="user.isActive ? 'pi pi-ban' : 'pi pi-check'"
+                                    [label]="user.isActive ? 'Inactivar' : 'Activar'"
+                                    (click)="toggleActive(user)"
+                                    [disabled]="saving && editingUserId === user.userId"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </article>
+    </div>
+</section>

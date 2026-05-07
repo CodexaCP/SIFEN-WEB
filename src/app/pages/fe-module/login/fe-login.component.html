@@ -1,0 +1,34 @@
+<div class="fe-login-shell">
+    <div class="fe-login-panel">
+        <div class="fe-login-copy">
+            <span class="fe-login-kicker">Powered by Codexa</span>
+            <h1>SIFEN con identidad propia para emitir, diagnosticar e integrar.</h1>
+            <p>Sidebar claro, dashboard operativo, wizard de facturacion y soporte tecnico en una experiencia SaaS limpia.</p>
+            <div class="fe-login-badges">
+                <span>JWT protegido</span>
+                <span>Multi-tenant</span>
+                <span>Preview KuDE</span>
+            </div>
+        </div>
+
+        <div class="fe-login-card">
+            <div class="fe-login-card__head">
+                <strong>Entrar a SIFEN</strong>
+                <small>Usa tu cuenta actual de Codexa para continuar.</small>
+            </div>
+            <div class="fe-login-field">
+                <label for="fe-username">Usuario</label>
+                <input id="fe-username" pInputText [(ngModel)]="loginData.username" class="w-full" placeholder="admin@sifen.local" />
+            </div>
+
+            <div class="fe-login-field">
+                <label for="fe-password">Contrasena</label>
+                <input id="fe-password" [(ngModel)]="loginData.password" class="w-full fe-login-password" placeholder="Ingresa tu contrasena" type="password" />
+            </div>
+
+            <button pButton type="button" label="Entrar a SIFEN" class="w-full" [loading]="loading" (click)="login()"></button>
+
+            <small class="fe-login-error" *ngIf="errorMessage">{{ errorMessage }}</small>
+        </div>
+    </div>
+</div>

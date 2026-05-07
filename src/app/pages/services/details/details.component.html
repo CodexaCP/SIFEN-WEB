@@ -1,0 +1,134 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<div class="card">
+
+    <!-- HEADER -->
+    <div class="flex align-items-center justify-content-between mb-3">
+
+        <div class="flex align-items-center gap-2">
+            <button
+                pButton
+                icon="pi pi-arrow-left"
+                class="p-button-text text-500"
+                (click)="back()"
+            ></button>
+
+            <h4 class="m-0">Ficha del Servicio</h4>
+        </div>
+
+        <div class="flex align-items-center gap-3">
+
+            <!-- ESTADO -->
+            <span
+                class="badge"
+                [ngClass]="service.isActive ? 'active' : 'inactive'">
+                {{ service.isActive ? 'Activo' : 'Inactivo' }}
+            </span>
+
+            <!-- GUARDAR -->
+            <button
+                pButton
+                icon="pi pi-save"
+                class="p-button-text text-500"
+                (click)="save()"
+            ></button>
+
+            <!-- TOGGLE -->
+            <button
+                pButton
+                [icon]="service.isActive ? 'pi pi-ban' : 'pi pi-check'"
+                class="p-button-text text-500"
+                (click)="toggleStatus()"
+            ></button>
+
+            <button
+                *ngIf="canDelete"
+                pButton
+                icon="pi pi-trash"
+                class="p-button-danger p-button-text"
+                (click)="confirmDelete()"
+            ></button>
+
+        </div>
+    </div>
+
+    <h5 class="mb-3">Datos del Servicio</h5>
+
+    <!-- FORM -->
+    <div class="grid">
+
+        <!-- CODIGO -->
+        <div class="col-12 md:col-6">
+            <label>Codigo</label>
+            <input pInputText [(ngModel)]="service.referenceCode" class="w-full"/>
+        </div>
+
+        <!-- NOMBRE -->
+        <div class="col-12 md:col-6">
+            <label>Nombre</label>
+            <input pInputText [(ngModel)]="service.name" class="w-full"/>
+        </div>
+
+        <!-- DESCRIPCION -->
+        <div class="col-12">
+            <label>Descripcion</label>
+            <textarea pInputTextarea [(ngModel)]="service.description" class="w-full"></textarea>
+        </div>
+
+        <!-- CATEGORIA -->
+        <div class="col-12 md:col-6">
+            <label>Categoria</label>
+            <p-dropdown
+                [(ngModel)]="service.category"
+                [options]="categoryOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Seleccione una categoria"
+                class="w-full">
+            </p-dropdown>
+        </div>
+
+        <!-- TIEMPO -->
+        <div class="col-12 md:col-6">
+            <label>Tiempo estimado</label>
+            <input pInputText [(ngModel)]="service.estimatedTimeText" class="w-full"/>
+        </div>
+
+        <!-- PRECIO -->
+<div class="col-12 md:col-6">
+    <label>Precio de Venta</label>
+    <input 
+        pInputText
+        type="number"
+        [ngModel]="service.price"
+        (ngModelChange)="service.price = toNumber($event)"
+        class="w-full"/>
+</div>
+
+<!-- COSTO -->
+<div class="col-12 md:col-6">
+    <label>Costo</label>
+    <input 
+        pInputText
+        type="number"
+        [ngModel]="service.cost"
+        (ngModelChange)="service.cost = toNumber($event)"
+        class="w-full"/>
+</div>
+
+<div class="col-12 md:col-6">
+    <label>Permitir adjunto</label>
+
+    <p-inputSwitch 
+        [(ngModel)]="service.permiteAdjunto">
+    </p-inputSwitch>
+
+    <!-- Opcional: texto visual -->
+    <small class="block mt-1 text-500">
+        {{ service.permiteAdjunto ? 'Permite adjuntar archivos' : 'No permite adjuntos' }}
+    </small>
+</div>
+
+    </div>
+
+</div>

@@ -1,0 +1,169 @@
+<div class="bc-page">
+
+    <!-- HEADER -->
+    <div class="bc-header">
+        <div class="bc-toolbar">
+
+            <!-- LEFT -->
+            <div class="bc-left">
+                <h2>Sales Order</h2>
+                <small>{{ model.sellToCustomerName }}</small>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="bc-actions">
+
+                <!-- SHIPMENT -->
+                <button class="bc-action"
+                        (click)="createShipment()"
+                        [class.disabled]="model.status !== 'Released'">
+                    <i class="pi pi-send"></i>
+                    <span>Create Shipment</span>
+                </button>
+
+                <div class="bc-divider"></div>
+
+                <!-- STATUS -->
+                <div class="bc-split">
+
+                    <button class="bc-action"
+                            (click)="model.status === 'Open' ? releaseOrder() : reopenOrder()">
+                        <i class="pi pi-refresh"></i>
+                        <span>{{ model.status === 'Open' ? 'Release' : 'Reopen' }}</span>
+                    </button>
+
+                    <button class="bc-dropdown" (click)="toggleMenu()">▼</button>
+
+                    <div class="bc-menu" *ngIf="menuOpen">
+
+                        <div class="bc-menu-item"
+                             [class.disabled]="model.status !== 'Open'"
+                             (click)="releaseOrder(); toggleMenu()">
+                            ✔ Release
+                        </div>
+
+                        <div class="bc-menu-item"
+                             [class.disabled]="model.status !== 'Released'"
+                             (click)="reopenOrder(); toggleMenu()">
+                            ↻ Reopen
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="bc-content">
+
+        <div class="bc-card">
+
+            <h3>General</h3>
+
+            <div class="formgrid grid">
+
+                <!-- LEFT -->
+                <div class="col-12 md:col-6">
+
+                    <div class="field grid">
+                        <label class="col-4">Customer Name</label>
+                        <div class="col-8">
+                            <input pInputText [(ngModel)]="model.sellToCustomerName" class="w-full"/>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-4">Customer No</label>
+                        <div class="col-8">
+                            <input pInputText [(ngModel)]="model.sellToCustomerNo" class="w-full"/>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-4">Document Date</label>
+                        <div class="col-8">
+                            <p-calendar [(ngModel)]="model.documentDate" class="w-full"></p-calendar>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-4">Posting Date</label>
+                        <div class="col-8">
+                            <p-calendar [(ngModel)]="model.postingDate" class="w-full"></p-calendar>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-4">Due Date</label>
+                        <div class="col-8">
+                            <p-calendar [(ngModel)]="model.dueDate" class="w-full"></p-calendar>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-4">Requested Delivery</label>
+                        <div class="col-8">
+                            <p-calendar [(ngModel)]="model.requestedDeliveryDate" class="w-full"></p-calendar>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col-12 md:col-6">
+
+                    <div class="field grid">
+                        <label class="col-4">Status</label>
+                        <div class="col-8">
+                            <input pInputText [value]="model.status" disabled class="w-full"/>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-4">Reference No</label>
+                        <div class="col-8">
+                            <input pInputText [(ngModel)]="model.externalDocumentNo" class="w-full"/>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-6">Send Invoice</label>
+                        <div class="col-6">
+                            <p-inputSwitch [(ngModel)]="model.sendEmail"></p-inputSwitch>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-6">Backorder</label>
+                        <div class="col-6">
+                            <p-inputSwitch [(ngModel)]="model.isBackorder"></p-inputSwitch>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-6">Priority</label>
+                        <div class="col-6">
+                            <p-inputSwitch [(ngModel)]="model.shipmentPriority"></p-inputSwitch>
+                        </div>
+                    </div>
+
+                    <div class="field grid">
+                        <label class="col-6">VIP</label>
+                        <div class="col-6">
+                            <p-inputSwitch [(ngModel)]="model.vipCustomer"></p-inputSwitch>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

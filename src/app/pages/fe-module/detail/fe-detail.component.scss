@@ -1,0 +1,202 @@
+@use '../styles/sifen-theme' as sifen;
+
+.detail-shell,
+.fe-detail-grid,
+.detail-layout,
+.detail-message {
+  display: grid;
+  gap: 1rem;
+}
+
+.detail-summary,
+.detail-card {
+  @include sifen.sifen-panel-card;
+}
+
+.detail-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.4rem;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(6, 182, 212, 0.08), rgba(124, 58, 237, 0.08));
+}
+
+.detail-eyebrow {
+  @include sifen.sifen-eyebrow;
+}
+
+.detail-summary h2 {
+  margin: 0.4rem 0 0;
+}
+
+.detail-summary p,
+.detail-card p,
+.fe-status__message {
+  color: sifen.$sifen-muted;
+}
+
+.fe-detail-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.detail-layout {
+  grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+}
+
+.detail-card {
+  padding: 1.25rem;
+}
+
+.detail-card--wide {
+  min-width: 0;
+}
+
+.detail-card span {
+  display: block;
+  color: sifen.$sifen-muted;
+  font-size: 0.82rem;
+}
+
+.detail-card strong {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.detail-message {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.detail-message p {
+  margin: 0.35rem 0 0;
+}
+
+.fe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.fe-feedback {
+  color: sifen.$sifen-primary;
+}
+
+.fe-feedback--error {
+  color: sifen.$sifen-danger;
+}
+
+.fe-status {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.detail-status-stack {
+  display: grid;
+  gap: 0.8rem;
+  justify-items: end;
+}
+
+.detail-status-stack__internal {
+  padding: 0.75rem 0.9rem;
+  border-radius: 16px;
+  background: #fff;
+  text-align: right;
+}
+
+.detail-status-stack__internal span {
+  display: block;
+  color: sifen.$sifen-muted;
+  font-size: 0.75rem;
+}
+
+.detail-status-stack__internal strong {
+  color: sifen.$sifen-text;
+}
+
+.detail-table,
+.detail-log-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.detail-table__head,
+.detail-table__row {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 160px;
+  gap: 1rem;
+  align-items: start;
+}
+
+.detail-table__head {
+  color: sifen.$sifen-muted;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.detail-table__row {
+  padding: 1rem;
+  border-radius: 18px;
+  background: #fbfdff;
+  border: 1px solid sifen.$sifen-border-color;
+}
+
+.detail-log-item {
+  padding: 1rem;
+  border-radius: 18px;
+  background: #fbfdff;
+  border: 1px solid sifen.$sifen-border-color;
+}
+
+.detail-log-item__head {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.detail-log-item p {
+  margin: 0.55rem 0 0;
+}
+
+.detail-card details {
+  margin-top: 0.65rem;
+}
+
+.detail-card summary {
+  cursor: pointer;
+  color: sifen.$sifen-primary;
+  font-weight: 700;
+}
+
+:host ::ng-deep .p-tag {
+  border-radius: 999px;
+}
+
+:host ::ng-deep .p-button {
+  @include sifen.sifen-button-skin;
+  border-radius: 16px;
+}
+
+:host ::ng-deep .p-button.p-button-text,
+:host ::ng-deep .p-button.p-button-outlined {
+  @include sifen.sifen-secondary-button;
+}
+
+@media (max-width: 920px) {
+  .fe-detail-grid,
+  .detail-layout,
+  .detail-message {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-summary {
+    flex-direction: column;
+  }
+
+  .detail-table__head,
+  .detail-table__row {
+    grid-template-columns: 1fr;
+  }
+}

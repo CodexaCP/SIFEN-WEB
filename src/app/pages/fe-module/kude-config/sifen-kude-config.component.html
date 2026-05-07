@@ -1,0 +1,62 @@
+<section class="sifen-kude">
+    <div class="sifen-kude__hero">
+        <div>
+            <span class="sifen-kude__eyebrow">Configuracion KuDE</span>
+            <h2>Preview KuDE profesional</h2>
+            <p>Vista previa con datos de prueba. No es comprobante válido.</p>
+        </div>
+
+        <div class="sifen-kude__actions">
+            <button pButton type="button" label="Ver vista previa" class="p-button-text" (click)="loadPreview()" [disabled]="previewLoading"></button>
+            <button pButton type="button" label="Descargar PDF demo" class="p-button-outlined" (click)="downloadDemoPdf()"></button>
+            <button pButton type="button" label="Usar esta plantilla" (click)="save()" [loading]="saving"></button>
+        </div>
+    </div>
+
+    <small class="sifen-kude__feedback" *ngIf="feedbackMessage">{{ feedbackMessage }}</small>
+    <small class="sifen-kude__feedback sifen-kude__feedback--error" *ngIf="errorMessage">{{ errorMessage }}</small>
+
+    <div class="sifen-kude__grid">
+        <article class="sifen-kude__card">
+            <h3>Plantilla</h3>
+            <label>
+                <span>Selector</span>
+                <select [(ngModel)]="model.templateCode">
+                    <option value="codexa-standard">Codexa Standard</option>
+                </select>
+            </label>
+            <label>
+                <span>Logo URL</span>
+                <input pInputText [(ngModel)]="model.logoUrl" placeholder="https://..." />
+            </label>
+            <label>
+                <span>Primary color</span>
+                <input pInputText [(ngModel)]="model.primaryColor" placeholder="#2D9CDB" />
+            </label>
+            <label>
+                <span>Secondary color</span>
+                <input pInputText [(ngModel)]="model.secondaryColor" placeholder="#EAF6FD" />
+            </label>
+            <label>
+                <span>Footer text</span>
+                <input pInputText [(ngModel)]="model.footerText" placeholder="Consulte este comprobante en la SET" />
+            </label>
+            <label class="sifen-kude__toggle">
+                <input type="checkbox" [(ngModel)]="model.showPhone" />
+                <span>Mostrar telefono</span>
+            </label>
+            <label class="sifen-kude__toggle">
+                <input type="checkbox" [(ngModel)]="model.showEmail" />
+                <span>Mostrar email</span>
+            </label>
+        </article>
+
+        <article class="sifen-kude__card sifen-kude__card--preview">
+            <div class="sifen-kude__preview-banner">Vista previa con datos de prueba. No es comprobante válido.</div>
+            <div class="sifen-kude__preview-frame" *ngIf="previewHtml; else loadingPreview" [innerHTML]="previewHtml"></div>
+            <ng-template #loadingPreview>
+                <p class="sifen-kude__muted">{{ previewLoading ? 'Generando vista previa...' : 'Sin vista previa disponible.' }}</p>
+            </ng-template>
+        </article>
+    </div>
+</section>

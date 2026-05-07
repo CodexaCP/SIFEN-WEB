@@ -1,0 +1,320 @@
+<p-toast></p-toast>
+
+<div class="dashboard-shell">
+    <section class="dashboard-hero card">
+        <div class="hero-backdrop">
+            <span class="hero-orb orb-a"></span>
+            <span class="hero-orb orb-b"></span>
+            <span class="hero-grid"></span>
+        </div>
+
+        <div class="hero-content">
+            <span class="hero-kicker">TramiYa operativo</span>
+            <h2>{{ isManager ? 'Panel de control del modulo' : 'Tu centro de solicitudes' }}</h2>
+            <p>
+                {{ isManager
+                    ? 'Gestiona servicios, usuarios, pagos y seguimiento desde una vista clara para operacion diaria.'
+                    : 'Solicita servicios, revisa el estado de tus gestiones y consulta tus comprobantes desde un solo lugar.' }}
+            </p>
+
+            <div class="hero-inline-metrics">
+                <article class="hero-inline-card">
+                    <span>Solicitudes</span>
+                    <strong>{{ totalRequests }}</strong>
+                    <small>movimiento total</small>
+                </article>
+
+                <article class="hero-inline-card">
+                    <span>En proceso</span>
+                    <strong>{{ inProcess }}</strong>
+                    <small>gestion activa</small>
+                </article>
+
+                <article class="hero-inline-card success">
+                    <span>Validado</span>
+                    <strong>{{ totalRevenue | currency:'PYG':'symbol':'1.0-0' }}</strong>
+                    <small>ingreso confirmado</small>
+                </article>
+            </div>
+
+            <div class="hero-actions">
+                <button pButton icon="pi pi-plus" label="Nueva solicitud" (click)="goToCreateRequest()"></button>
+                <button pButton icon="pi pi-list" label="Ver solicitudes" class="p-button-outlined" (click)="goToRequests()"></button>
+                <button *ngIf="canManageServices" pButton icon="pi pi-briefcase" label="Servicios" class="p-button-text brand-text-button" (click)="goToServices()"></button>
+            </div>
+        </div>
+
+        <div class="hero-side">
+            <div class="hero-card">
+                <div class="hero-card-top">
+                    <span class="hero-card-label">Estado general</span>
+                    <span class="hero-card-chip">Hoy</span>
+                </div>
+
+                <div class="hero-card-ring">
+                    <div class="hero-card-ring-inner">
+                        <strong>{{ pendingPayments }}</strong>
+                        <small>Pagos pendientes</small>
+                    </div>
+                </div>
+
+                <div class="hero-card-track">
+                    <span [style.width.%]="totalRequests ? (pendingPayments / totalRequests) * 100 : 0"></span>
+                </div>
+            </div>
+
+            <div class="hero-note-card">
+                <span class="note-label">Pulso del modulo</span>
+                <div class="note-line">
+                    <i class="pi pi-sparkles"></i>
+                    <span>{{ isManager ? 'Vista preparada para operacion y control rapido.' : 'Todo tu seguimiento en un solo tablero.' }}</span>
+                </div>
+                <div class="note-line">
+                    <i class="pi pi-shield"></i>
+                    <span>{{ pendingPayments }} pagos pendientes y {{ inProcess }} solicitudes activas.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="quick-grid">
+        <button class="quick-action" (click)="goToCreateRequest()">
+            <div class="quick-action-top">
+                <i class="pi pi-send"></i>
+                <span class="quick-arrow">01</span>
+            </div>
+            <span>Crear solicitud</span>
+            <small>Registro rapido y carga de comprobante</small>
+        </button>
+
+        <button class="quick-action" (click)="goToRequests()">
+            <div class="quick-action-top">
+                <i class="pi pi-inbox"></i>
+                <span class="quick-arrow">02</span>
+            </div>
+            <span>Mis solicitudes</span>
+            <small>Seguimiento, detalle y estados</small>
+        </button>
+
+        <button *ngIf="canManageServices" class="quick-action" (click)="goToServices()">
+            <div class="quick-action-top">
+                <i class="pi pi-briefcase"></i>
+                <span class="quick-arrow">03</span>
+            </div>
+            <span>Servicios</span>
+            <small>Catalogo activo y control operativo</small>
+        </button>
+
+        <button *ngIf="isManager" class="quick-action" (click)="goToUsers()">
+            <div class="quick-action-top">
+                <i class="pi pi-users"></i>
+                <span class="quick-arrow">04</span>
+            </div>
+            <span>Usuarios</span>
+            <small>Gestores, customers y equipo</small>
+        </button>
+    </div>
+
+    <div class="grid">
+        <div class="col-12 md:col-6 xl:col-3">
+            <div class="metric-card card">
+                <div class="metric-top">
+                    <div class="metric-icon teal"><i class="pi pi-inbox"></i></div>
+                    <span class="metric-chip">Total</span>
+                </div>
+                <span class="metric-label">Solicitudes</span>
+                <strong>{{ totalRequests }}</strong>
+                <small>Total registradas</small>
+                <span class="metric-accent teal"></span>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6 xl:col-3">
+            <div class="metric-card card">
+                <div class="metric-top">
+                    <div class="metric-icon green"><i class="pi pi-wallet"></i></div>
+                    <span class="metric-chip success">Validado</span>
+                </div>
+                <span class="metric-label">Ingresos validados</span>
+                <strong>{{ totalRevenue | currency:'PYG':'symbol':'1.0-0' }}</strong>
+                <small>Pagos aprobados</small>
+                <span class="metric-accent green"></span>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6 xl:col-3">
+            <div class="metric-card card">
+                <div class="metric-top">
+                    <div class="metric-icon blue"><i class="pi pi-clock"></i></div>
+                    <span class="metric-chip warning">Pendiente</span>
+                </div>
+                <span class="metric-label">Pagos pendientes</span>
+                <strong>{{ pendingPayments }}</strong>
+                <small>Requieren revision</small>
+                <span class="metric-accent blue"></span>
+            </div>
+        </div>
+
+        <div class="col-12 md:col-6 xl:col-3">
+            <div class="metric-card card">
+                <div class="metric-top">
+                    <div class="metric-icon lime"><i class="pi pi-cog"></i></div>
+                    <span class="metric-chip progress">Proceso</span>
+                </div>
+                <span class="metric-label">En proceso</span>
+                <strong>{{ inProcess }}</strong>
+                <small>Solicitudes activas</small>
+                <span class="metric-accent lime"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid" *ngIf="isManager">
+        <div class="col-12 md:col-6">
+            <div class="people-card card">
+                <div class="people-copy">
+                    <span>Customers</span>
+                    <strong>{{ totalCustomers }}</strong>
+                    <small>usuarios finales activos en este tenant</small>
+                </div>
+                <div class="people-avatar"><i class="pi pi-user"></i></div>
+            </div>
+        </div>
+        <div class="col-12 md:col-6">
+            <div class="people-card card manager">
+                <div class="people-copy">
+                    <span>Equipo gestor</span>
+                    <strong>{{ totalManagers }}</strong>
+                    <small>administracion y operacion del modulo</small>
+                </div>
+                <div class="people-avatar"><i class="pi pi-shield"></i></div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card panel-card" *ngIf="cancellationReminders.length">
+                <div class="panel-header">
+                    <div>
+                        <h5>Recordatorios de devolucion</h5>
+                        <small>Solicitudes canceladas por clientes pendientes de atencion</small>
+                    </div>
+                </div>
+                <div class="flex flex-column gap-3">
+                    <div class="border-1 surface-border border-round p-3" *ngFor="let reminder of cancellationReminders">
+                        <div class="flex justify-content-between align-items-start gap-3">
+                            <div class="flex flex-column gap-2">
+                                <strong>Solicitud #{{ reminder.requestID }}</strong>
+                                <span class="text-600">{{ reminder.message }}</span>
+                            </div>
+                            <button pButton type="button" icon="pi pi-wallet" label="Confirmar reintegro" class="p-button-sm p-button-outlined" (click)="confirmRefund(reminder)"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="col-12 xl:col-7">
+            <div class="card panel-card">
+                <div class="panel-header">
+                    <div>
+                        <h5>Ultimas solicitudes</h5>
+                        <small>Movimiento reciente del modulo</small>
+                    </div>
+                    <button pButton icon="pi pi-arrow-right" label="Abrir" class="p-button-sm p-button-outlined" (click)="goToRequests()"></button>
+                </div>
+
+                <div class="table-shell">
+                <p-table [value]="recentRequests" [loading]="loading" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>ID</th>
+                            <th>Servicio</th>
+                            <th *ngIf="isManager">Cliente</th>
+                            <th>Estado</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-request>
+                        <tr>
+                            <td>#{{ request.requestID }}</td>
+                            <td>{{ request.serviceName }}</td>
+                            <td *ngIf="isManager">{{ request.firstName || '-' }} {{ request.lastName || '' }}</td>
+                            <td>
+                                <span class="status-pill" [ngClass]="request.status === 'FINALIZADO' ? 'done' : request.status === 'EN_PROCESO' ? 'progress' : 'pending'">
+                                    {{ request.status }}
+                                </span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td [attr.colspan]="isManager ? 4 : 3">
+                                <div class="empty-state">
+                                    <i class="pi pi-inbox"></i>
+                                    <span>Aun no hay solicitudes para mostrar.</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 xl:col-5">
+            <div class="card panel-card">
+                <div class="panel-header">
+                    <div>
+                        <h5>Actividad reciente</h5>
+                        <small>Senales rapidas del sistema</small>
+                    </div>
+                </div>
+
+                <ul class="activity-list" *ngIf="notifications.length; else noActivity">
+                    <li *ngFor="let item of notifications">
+                        <span class="activity-rail"></span>
+                        <span class="activity-dot"></span>
+                        <div class="activity-copy">
+                            <strong>{{ item.split(' - ')[0] }}</strong>
+                            <span>{{ item.split(' - ')[1] || item }}</span>
+                        </div>
+                    </li>
+                </ul>
+
+                <ng-template #noActivity>
+                    <div class="empty-state compact">
+                        <i class="pi pi-sparkles"></i>
+                        <span>Cuando entren solicitudes, apareceran aqui.</span>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card panel-card">
+                <div class="panel-header">
+                    <div>
+                        <h5>Estado de solicitudes</h5>
+                        <small>Vista rapida por etapa del proceso</small>
+                    </div>
+                </div>
+                <div class="status-chart-panel">
+                    <div class="status-chart">
+                        <p-chart type="doughnut" [data]="chartData" [options]="chartOptions"></p-chart>
+                    </div>
+                    <div class="status-breakdown">
+                        <div *ngFor="let item of statusBreakdown" class="status-breakdown-item" [ngClass]="item.className">
+                            <div class="status-breakdown-copy">
+                                <span>{{ item.label }}</span>
+                                <strong>{{ item.value }}</strong>
+                            </div>
+                            <div class="status-breakdown-bar">
+                                <span [style.width.%]="totalRequests ? (item.value / totalRequests) * 100 : 0"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

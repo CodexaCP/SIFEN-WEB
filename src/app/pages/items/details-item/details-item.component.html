@@ -1,0 +1,233 @@
+<div class="page">
+
+<div class="item-card">
+
+    <!-- HEADER -->
+    <div class="item-header">
+
+        <div class="header-left">
+
+            <button
+                pButton
+                icon="pi pi-arrow-left"
+                class="nav-button"
+                pTooltip="Back"
+                tooltipPosition="bottom"
+                (click)="goBack()">
+            </button>
+
+            <h2>Item Card</h2>
+
+        </div>
+
+        <div class="actions">
+
+            <button
+                pButton
+                icon="pi pi-check"
+                class="erp-button"
+                pTooltip="Save Item"
+                tooltipPosition="bottom"
+                (click)="saveItem()">
+            </button>            
+
+            <button
+                pButton
+                icon="pi pi-trash"
+                class="erp-button danger"
+                pTooltip="Delete"
+                tooltipPosition="bottom">
+            </button>
+
+            <button
+                pButton
+                icon="pi pi-info-circle"
+                class="erp-button"
+                pTooltip="Information"
+                tooltipPosition="bottom"
+                (click)="showSidebar = true">
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ITEM SECTION -->
+
+    <div class="section">
+
+        <div class="section-title">Item</div>
+
+        <div class="section-grid">
+
+            <!-- LEFT COLUMN -->
+            <div>
+
+                <div class="form-row">
+                    <label>No.</label>
+                    <input pInputText [(ngModel)]="item.itemNo">
+                </div>
+
+                <div class="form-row">
+                    <label>Description</label>
+                    <input pInputText [(ngModel)]="item.description">
+                </div>
+
+                <div class="form-row">
+                    <label>Part No.</label>
+                    <input pInputText [(ngModel)]="item.part_No">
+                </div>
+
+                <div class="form-row">
+                    <label>Active</label>
+                    <p-inputSwitch [(ngModel)]="item.isActive"></p-inputSwitch>
+                </div>
+
+                
+
+            </div>
+
+
+            <!-- RIGHT COLUMN -->
+            <div>
+
+                <div class="form-row">
+                    <label>UOM</label>
+                    <input pInputText [(ngModel)]="item.baseUOM">
+                </div>
+
+                <div class="form-row">
+                    <label>Item Category Code</label>
+                    <input pInputText [(ngModel)]="item.categoryCode">
+                </div>
+
+                <div class="form-row">
+                    <label>Alternative Code</label>
+                    <input  pInputText [(ngModel)]="item.alternative_Code">
+                </div>
+
+                <div class="form-row">
+                    <label>Type</label>
+                    <p-dropdown
+                        [options]="type"
+                        [(ngModel)]="item.itemType">
+                    </p-dropdown>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INVENTORY SECTION -->
+
+    <div class="section">
+
+        <div class="section-title">Inventory</div>
+
+        <div class="section-grid">
+
+            <!-- LEFT COLUMN -->
+            <div>
+
+                <div class="form-row">
+                    <label>Shelf No.</label>
+                    <input  disabled  pInputText>
+                </div>
+
+                <div class="form-row">
+                    <label>Quantity on Hand</label>
+                    <input pInputText [(ngModel)]="qtyOnHand" readonly class="qty-bold">
+                </div>
+
+                <div class="form-row">
+                    <label>Qty. on Purch. Order</label>
+                    <input pInputText [(ngModel)]="qtyOnPO" readonly class="qty-bold">
+                </div>
+
+                <div class="form-row">
+                    <label>Qty Available</label>
+                    <input pInputText [(ngModel)]="available" readonly class="qty-bold">
+                </div>
+
+                <div class="form-row">
+                    <label>Qty. on Prod. Order</label>
+                    <input   pInputText readonly class="qty-bold">
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT COLUMN -->
+            <div>
+
+                <div class="form-row">
+                    <label>Qty. on Component Lines</label>
+                    <input disabled pInputText>
+                </div>
+
+                <div class="form-row">
+                    <label>Qty. on Sales Order</label>
+                    <input pInputText [(ngModel)]="qtyOnSO" readonly class="qty-bold">
+                </div>
+
+                <div class="form-row">
+                    <label>Stockout Warning</label>
+                    <input  pInputText readonly class="qty-bold">
+                </div>
+
+                <div class="form-row">
+                    <label>Unit Volume</label>
+                    <input pInputText [(ngModel)]="unitVolume" readonly class="qty-bold">
+                </div>
+
+                <div class="form-row">
+                    <label>Over-Receipt Code</label>
+                    <input  pInputText readonly class="qty-bold">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+
+
+<p-sidebar 
+    [(visible)]="showSidebar" 
+    position="right"
+    [baseZIndex]="10000"
+    styleClass="bc-sidebar" >
+
+    <h3>Picture</h3>
+
+    <!-- IMAGE -->
+                <div class="item-image">
+
+    <img 
+        *ngIf="item.images?.length > 0; else noImage"
+        [src]="serverUrl + item.images[0].url"
+        alt="item"
+    />
+
+    <ng-template #noImage>
+        <div class="no-image">
+            <i class="pi pi-image"></i>
+        </div>
+    </ng-template>
+
+</div>
+
+    <!-- Upload -->
+    <input type="file" (change)="onFileSelected($event)" />
+
+</p-sidebar>
+

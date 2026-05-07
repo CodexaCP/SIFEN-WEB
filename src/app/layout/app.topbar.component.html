@@ -1,0 +1,27 @@
+<div class="layout-topbar">
+    <div class="layout-topbar-left">
+        <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+            <i class="pi pi-bars"></i>
+        </button>
+
+        <div class="brand-block">
+            <img src="assets/logo/logo.png" alt="TramiYa" class="brand-logo" />
+            <div class="brand-copy">
+                <span class="brand-title">TramiYa</span>
+                <small class="user-name">{{ displayName }}</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-topbar-menu surface-card" [ngClass]="{ 'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible }">
+        <div class="user-chip" *ngIf="session">
+            <i class="pi pi-building"></i>
+            <span>Empresa {{ session.companyId }}</span>
+        </div>
+
+        <button class="p-link layout-topbar-button" (click)="logout()">
+            <i class="pi pi-sign-out"></i>
+            <span>Salir</span>
+        </button>
+    </div>
+</div>

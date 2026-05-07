@@ -1,0 +1,115 @@
+<article class="kude-preview">
+    <header class="kude-preview__header">
+        <div class="kude-preview__brand">
+            <div class="kude-preview__logo">SF</div>
+            <div>
+                <strong>{{ model.businessName }}</strong>
+                <span>RUC {{ model.ruc }}</span>
+                <span>{{ model.address }}</span>
+                <span>{{ model.phone }} · {{ model.email }}</span>
+            </div>
+        </div>
+
+        <div class="kude-preview__meta">
+            <h3>FACTURA ELECTRÓNICA</h3>
+            <span><strong>CDC TEST:</strong> {{ model.fakeCdc }}</span>
+            <span><strong>Timbrado:</strong> TEST DEMO</span>
+            <span><strong>Establecimiento:</strong> {{ model.establishment }}</span>
+            <span><strong>Punto expedición:</strong> {{ model.expeditionPoint }}</span>
+            <span><strong>Nro. documento:</strong> {{ model.documentNumber }}</span>
+            <span><strong>Fecha emisión:</strong> {{ model.issueDate }}</span>
+        </div>
+    </header>
+
+    <section class="kude-preview__customer">
+        <div>
+            <span>Cliente</span>
+            <strong>{{ model.customerName }}</strong>
+        </div>
+        <div>
+            <span>RUC / CI</span>
+            <strong>{{ model.customerDocument }}</strong>
+        </div>
+        <div>
+            <span>Dirección</span>
+            <strong>{{ model.customerAddress || 'No especificada' }}</strong>
+        </div>
+        <div>
+            <span>Condición venta</span>
+            <strong>{{ model.saleCondition }}</strong>
+        </div>
+    </section>
+
+    <section class="kude-preview__table-card">
+        <table class="kude-preview__table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
+                    <th>Precio unitario</th>
+                    <th>IVA</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of model.items; let index = index">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.quantity | number:'1.0-2' }}</td>
+                    <td>{{ item.unitPrice | number:'1.0-0' }}</td>
+                    <td>{{ item.vatLabel }}</td>
+                    <td>{{ item.subtotal | number:'1.0-0' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="kude-preview__summary">
+        <div class="kude-preview__notes">
+            <div>
+                <span>Total en letras</span>
+                <strong>{{ model.totalInWords }}</strong>
+            </div>
+            <div>
+                <span>Observaciones</span>
+                <strong>{{ model.observations }}</strong>
+            </div>
+        </div>
+
+        <div class="kude-preview__totals">
+            <div><span>Subtotal</span><strong>{{ model.subtotal | number:'1.0-0' }}</strong></div>
+            <div><span>IVA</span><strong>{{ model.vatTotal | number:'1.0-0' }}</strong></div>
+            <div class="kude-preview__grand-total"><span>Total</span><strong>{{ model.total | number:'1.0-0' }}</strong></div>
+        </div>
+    </section>
+
+    <footer class="kude-preview__footer">
+        <div class="kude-preview__footer-card">
+            <span>Comprobante electrónico</span>
+            <strong>Documento generado en entorno TEST interno.</strong>
+        </div>
+        <div class="kude-preview__footer-card">
+            <span>Representación impresa</span>
+            <strong>Vista previa premium del plan básico Codexa.</strong>
+        </div>
+        <div class="kude-preview__qr-card">
+            <div class="kude-preview__qr">
+                <span *ngFor="let cell of qrMatrix" [class.is-filled]="isFilled(cell)"></span>
+            </div>
+            <small>QR TEST — no válido para SET</small>
+        </div>
+    </footer>
+
+    <div class="kude-preview__bottom">
+        <div class="kude-preview__bottom-brand">
+            <strong>SF</strong>
+            <span>Codexa FE</span>
+        </div>
+        <span>{{ model.phone }}</span>
+        <span>{{ model.email }}</span>
+        <span>www.codexa.test</span>
+    </div>
+
+    <div class="kude-preview__disclaimer">Vista previa con datos de prueba. No es comprobante válido.</div>
+</article>

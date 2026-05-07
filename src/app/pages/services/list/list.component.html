@@ -1,0 +1,90 @@
+<p-toast></p-toast>
+
+<div class="list-shell card">
+    <div class="list-hero">
+        <div>
+            <span>Catalogo operativo</span>
+            <h3>Servicios</h3>
+            <p>Crea, edita, activa o inactiva los servicios disponibles para customers.</p>
+        </div>
+
+        <button pButton icon="pi pi-plus" label="Nuevo servicio" (click)="goCreate()"></button>
+    </div>
+
+    <p-table
+        [value]="services"
+        dataKey="serviceID"
+        [rows]="pageSize"
+        [loading]="loading"
+        [paginator]="true"
+        [lazy]="true"
+        [totalRecords]="totalRows"
+        (onLazyLoad)="onLazyLoad($event)"
+        responsiveLayout="scroll"
+    >
+        <ng-template pTemplate="caption">
+            <div class="table-toolbar">
+                <button pButton class="p-button-outlined" icon="pi pi-filter-slash" label="Limpiar" (click)="clear()"></button>
+
+                <span class="p-input-icon-left toolbar-search">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="onSearch($event)" placeholder="Buscar por codigo, nombre o categoria" class="w-full" />
+                </span>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Categoria</th>
+                <th>Precio</th>
+                <th>Costo</th>
+                <th>Tiempo</th>
+                <th>Estado</th>
+                <th>Accion</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-s>
+            <tr>
+                <td>
+                    <a class="link text-truncate" (click)="openService(s)" [title]="s.referenceCode">
+                        {{ s.referenceCode }}
+                    </a>
+                </td>
+
+                <td>
+                    <span class="text-truncate" [title]="s.name">{{ s.name }}</span>
+                    <small class="service-desc">{{ s.description || '-' }}</small>
+                </td>
+
+                <td><span class="sy-chip">{{ s.category || "Sin categoria" }}</span></td>
+                <td>{{ s.price | currency }}</td>
+                <td>{{ s.cost !== null && s.cost !== undefined ? (s.cost | currency) : '-' }}</td>
+                <td>{{ s.estimatedTimeText }}</td>
+                <td><span class="sy-status" [ngClass]="s.isActive ? 'done' : 'danger'">{{ s.isActive ? "Activo" : "Inactivo" }}</span></td>
+                <td>
+                    <button
+                        pButton
+                        class="p-button-sm p-button-outlined"
+                        [icon]="s.isActive ? 'pi pi-ban' : 'pi pi-check-circle'"
+                        [label]="s.isActive ? 'Inactivar' : 'Activar'"
+                        (click)="toggle(s)"
+                    ></button>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8">
+                    <div class="empty-state">
+                        <i class="pi pi-briefcase"></i>
+                        <span>No hay servicios para mostrar.</span>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

@@ -1,0 +1,93 @@
+<div class="grid p-fluid">
+
+	<div class="col-12 ">
+		<div class="card">
+			<div style="text-align: center;">
+				<h5>Manufacturer</h5>
+			  </div>
+			
+			<div class="grid formgrid" style="text-align: center;">
+				<div class="col-12 md:col-4">
+					<div class="field-radiobutton">
+						<p-radioButton name="man" value="Chicago" [(ngModel)]="valRadio" id="man1"></p-radioButton>
+						<label for="man1">Siemens</label>
+					</div>
+				</div>
+				<div class="col-12 md:col-4">
+					<div class="field-radiobutton">
+						<p-radioButton name="man" value="Los Angeles" [(ngModel)]="valRadio"
+									   id="man2"></p-radioButton>
+						<label for="man2">Eaton</label>
+					</div>
+				</div>
+				<div class="col-12 md:col-4">
+					<div class="field-radiobutton">
+						<p-radioButton name="man" value="New York" [(ngModel)]="valRadio" id="man3"></p-radioButton>
+						<label for="man3">SQD</label>
+					</div>
+				</div>
+				<div class="col-12 md:col-4">
+					<div class="field-radiobutton">
+						<p-radioButton name="man" value="New York" [(ngModel)]="valRadio" id="man3"></p-radioButton>
+						<label for="man3">Man 1</label>
+					</div>
+				</div>
+				<div class="col-12 md:col-4">
+					<div class="field-radiobutton">
+						<p-radioButton name="man" value="New York" [(ngModel)]="valRadio" id="man3"></p-radioButton>
+						<label for="man3">SQD</label>
+					</div>
+				</div>
+				<div class="col-12 md:col-4">
+					<div class="field-radiobutton">
+						<p-radioButton name="man" value="New York" [(ngModel)]="valRadio" id="man3"></p-radioButton>
+						<label for="man3">SQD</label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+			
+		</div>
+
+	<div class="col-12 ">
+		<div class="card">
+			<div style="text-align: center;">
+				<h5>Data</h5>
+			  </div>
+			
+			<div class="grid formgrid componente">
+				<div class="col-12 mb-2 lg:col-4 lg:mb-0">
+					<input type="text" pInputText placeholder="Part Number #">
+				</div>
+				<div class="col-12 mb-2 lg:col-4 lg:mb-0">
+					<p-inputNumber mode="decimal" [min]="0" placeholder="Quantity">
+					</p-inputNumber>
+				</div>
+				<div class="col-12 mb-2 lg:col-4 lg:mb-0">
+					<input type="text" pInputText placeholder="Location">
+				</div>
+				<div class="col-12 mb-2 lg:col-4 lg:mb-0 componente">
+					<input type="text" pInputText placeholder="Price">
+				</div>
+				<div class="col-12 mb-2 lg:col-4 lg:mb-0 componente">
+					
+				</div>
+				<div class="col-12 mb-2 lg:col-4 lg:mb-0 componente">
+					<input type="text" pInputText placeholder="Barcode">
+				</div>
+				
+				
+			</div>
+
+			<div style="text-align: center;" class="componente">
+				<h5>Description</h5>
+			</div>
+			
+			<textarea rows="5" cols="30" placeholder="Descirption" pInputTextarea></textarea>	
+		</div>	
+	</div>
+</div>
+	
+	
+

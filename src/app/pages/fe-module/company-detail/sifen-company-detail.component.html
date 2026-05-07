@@ -1,0 +1,76 @@
+<section class="sifen-detail">
+    <div class="sifen-detail__hero" *ngIf="company as currentCompany; else loadingHeader">
+        <div>
+            <span class="sifen-detail__eyebrow">Detalle compania</span>
+            <h2>{{ currentCompany.businessName }}</h2>
+            <p>{{ currentCompany.slug }}</p>
+        </div>
+
+        <div class="sifen-detail__meta">
+            <p-tag [severity]="statusSeverity(currentCompany.status)" [value]="currentCompany.status"></p-tag>
+            <span>{{ currentCompany.planName || 'Plan base' }}</span>
+        </div>
+    </div>
+    <ng-template #loadingHeader>
+        <div class="sifen-detail__hero">
+            <div>
+                <span class="sifen-detail__eyebrow">Detalle compania</span>
+                <h2>Tenant {{ tenantId }}</h2>
+                <p>Resumen operacional SIFEN</p>
+            </div>
+        </div>
+    </ng-template>
+
+    <small class="sifen-detail__feedback" *ngIf="feedbackMessage">{{ feedbackMessage }}</small>
+    <small class="sifen-detail__feedback sifen-detail__feedback--error" *ngIf="errorMessage">{{ errorMessage }}</small>
+    <p *ngIf="loading" class="sifen-detail__muted">Cargando detalle...</p>
+
+    <div class="sifen-detail__grid" *ngIf="company as currentCompany">
+        <article class="sifen-detail__card">
+            <h3>Resumen</h3>
+            <dl>
+                <div><dt>Nombre</dt><dd>{{ currentCompany.businessName }}</dd></div>
+                <div><dt>Slug</dt><dd>{{ currentCompany.slug }}</dd></div>
+                <div><dt>Estado</dt><dd>{{ currentCompany.status }}</dd></div>
+                <div><dt>Plan</dt><dd>{{ currentCompany.planName || 'Plan base' }}</dd></div>
+            </dl>
+
+            <div class="sifen-detail__links">
+                <a [routerLink]="['/sifen/admin/companies', tenantId, 'sifen-config']">Configurar SIFEN</a>
+                <a [routerLink]="['/sifen/admin/companies', tenantId, 'kude']">Plantillas KuDE</a>
+                <a [routerLink]="['/sifen/admin/companies', tenantId, 'diagnostic']">Ver diagnostico</a>
+                <a (click)="openUsers()">Gestion de usuarios</a>
+                <a (click)="openOperations()">Operacion FE</a>
+                <a (click)="openIntegration()">Integracion API</a>
+            </div>
+        </article>
+
+        <article class="sifen-detail__card">
+            <h3>Editar plan</h3>
+            <label>
+                <span>Nombre del plan</span>
+                <input pInputText [(ngModel)]="planModel.planName" />
+            </label>
+            <label>
+                <span>Limite facturas mes</span>
+                <p-inputNumber [(ngModel)]="planModel.invoiceLimitPerMonth" [min]="1"></p-inputNumber>
+            </label>
+            <label>
+                <span>Limite usuarios</span>
+                <p-inputNumber [(ngModel)]="planModel.userLimit" [min]="1"></p-inputNumber>
+            </label>
+            <button pButton type="button" label="Guardar plan" (click)="savePlan()"></button>
+        </article>
+
+        <article class="sifen-detail__card">
+            <h3>Usuarios del tenant</h3>
+            <p>El admin principal cuenta dentro del limite total del plan. Desde la gestion de usuarios puedes crear, editar, activar e inactivar cuentas sin salir del tenant.</p>
+            <dl>
+                <div><dt>Plan actual</dt><dd>{{ currentCompany.planName || 'Plan base' }}</dd></div>
+                <div><dt>Limite usuarios</dt><dd>{{ currentCompany.userLimit || 0 }}</dd></div>
+                <div><dt>Acceso</dt><dd>TenantAdmin, Operator, Viewer</dd></div>
+            </dl>
+            <button pButton type="button" label="Abrir gestion de usuarios" (click)="openUsers()"></button>
+        </article>
+    </div>
+</section>

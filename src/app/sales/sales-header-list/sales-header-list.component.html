@@ -1,0 +1,101 @@
+<p-table 
+    #dt1
+    [value]="salesOrders"
+    dataKey="no"
+    [rows]="25"
+    [loading]="loading"
+    [paginator]="true"
+
+    [scrollable]="true"
+    scrollDirection="both"
+    scrollHeight="600px"
+
+    responsiveLayout="scroll"
+    styleClass="p-datatable-sm"
+
+    [globalFilterFields]="[
+        'no',
+        'externalDocumentNo',
+        'sellToCustomerNo',
+        'sellToCustomerName',
+        'status',
+        'locationCode'
+    ]">
+
+    <!-- TOP BAR -->
+    <ng-template pTemplate="caption">
+        <div class="flex justify-content-between">
+
+            <button pButton icon="pi pi-filter-slash"
+                    class="p-button-outlined"
+                    (click)="clear(dt1)">
+            </button>
+
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText 
+                       (input)="onGlobalFilter(dt1,$event)" 
+                       placeholder="Search"/>
+            </span>
+
+            <button pButton icon="pi pi-plus"
+                    class="p-button-outlined"
+                    routerLink="createsalesortder">
+            </button>
+
+        </div>
+    </ng-template>
+
+    <!-- HEADER -->
+    <ng-template pTemplate="header">
+        <tr>
+
+            <th pSortableColumn="no" style="min-width:140px">No</th>
+            <th pSortableColumn="externalDocumentNo" style="min-width:140px">Reference No</th>
+            <th pSortableColumn="sellToCustomerNo" style="min-width:150px">Customer No</th>
+            <th pSortableColumn="sellToCustomerName" style="min-width:220px">Customer Name</th>
+            <th pSortableColumn="postingDate" style="min-width:140px">Posting Date</th>
+            <th pSortableColumn="documentDate" style="min-width:140px">Document Date</th>
+            <th style="min-width:180px">Created At</th>
+            <th pSortableColumn="locationCode" style="min-width:140px">Location</th>
+            <th style="min-width:140px">Assigned User</th>
+            <th pSortableColumn="status" style="min-width:140px">Status</th>
+            <th style="min-width:140px">Amount</th>
+
+        </tr>
+    </ng-template>
+
+    <!-- BODY -->
+    <ng-template pTemplate="body" let-s>
+        <tr (click)="goToDetail(s)" class="row-click">
+
+            <td class="link">{{ s.no }}</td>
+
+            <td>{{ s.externalDocumentNo }}</td>
+
+            <td>{{ s.sellToCustomerNo }}</td>
+
+            <td>{{ s.sellToCustomerName }}</td>
+
+            <td>{{ s.postingDate | date:'MM/dd/yyyy' }}</td>
+
+            <td>{{ s.documentDate | date:'MM/dd/yyyy' }}</td>
+
+            <td>{{ s.systemCreatedAt | date:'MM/dd/yyyy HH:mm' }}</td>
+
+            <td>{{ s.locationCode }}</td>
+
+            <td>{{ s.assignedUserId }}</td>
+
+            <td>
+                <span class="status status-{{s.status?.toLowerCase()}}">
+                    {{ s.status }}
+                </span>
+            </td>
+
+            <td>{{ s.amount | number:'1.2-2' }}</td>
+
+        </tr>
+    </ng-template>
+
+</p-table>

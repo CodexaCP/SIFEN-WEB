@@ -1,0 +1,60 @@
+<section class="sifen-shell">
+    <aside class="sifen-shell__sidebar">
+        <div class="sifen-shell__brand">
+            <div class="sifen-shell__brand-mark">SF</div>
+            <div>
+                <span class="sifen-shell__brand-overline">Codexa SaaS</span>
+                <strong>SIFEN</strong>
+                <small>Facturación electrónica TEST</small>
+            </div>
+        </div>
+
+        <nav class="sifen-shell__nav">
+            <a *ngFor="let item of navItems" [routerLink]="item.route" routerLinkActive="is-active" [class.is-accent]="item.accent === 'primary'">
+                <i [class]="item.icon"></i>
+                <span>{{ item.label }}</span>
+            </a>
+            <a routerLink="/landing">
+                <i class="pi pi-arrow-left"></i>
+                <span>Volver a Codexa</span>
+            </a>
+        </nav>
+
+        <div class="sifen-shell__support">
+            <span class="sifen-shell__support-kicker">Necesitas ayuda?</span>
+            <p>Te guiamos con configuracion, diagnostico y emision sin tocar tu operacion actual.</p>
+            <button pButton type="button" label="Contactar soporte" icon="pi pi-life-ring" class="p-button-sm" (click)="openHelp()"></button>
+        </div>
+    </aside>
+
+    <div class="sifen-shell__main">
+        <header class="sifen-shell__topbar">
+            <div>
+                <span class="sifen-shell__kicker">Módulo SIFEN</span>
+                <h1>Consola premium FE TEST</h1>
+            </div>
+
+            <div class="sifen-shell__topbar-actions">
+                <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text" (click)="openNotifications()"></button>
+                <button pButton type="button" icon="pi pi-question-circle" class="p-button-rounded p-button-text" (click)="openHelp()"></button>
+                <div class="sifen-shell__user">
+                    <i class="pi pi-user"></i>
+                    <div>
+                        <strong>{{ displayName }}</strong>
+                        <small>{{ companyLabel }}</small>
+                    </div>
+                </div>
+                <button pButton type="button" label="Salir" class="p-button-rounded p-button-sm p-button-outlined" (click)="logout()"></button>
+            </div>
+        </header>
+
+        <div class="sifen-shell__tenant" *ngIf="activeTenantId">
+            <span>Tenant activo</span>
+            <strong>{{ activeTenantId }}</strong>
+        </div>
+
+        <main class="sifen-shell__content">
+            <router-outlet></router-outlet>
+        </main>
+    </div>
+</section>

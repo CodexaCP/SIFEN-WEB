@@ -1,0 +1,110 @@
+<p-toast></p-toast>
+
+<div class="card">
+    <div class="flex justify-content-between align-items-start gap-3 flex-wrap mb-3">
+        <div>
+            <span>Auditoría PRO</span>
+            <h3 class="mt-2 mb-2">Eventos del sistema</h3>
+            <p class="m-0">Consulta operaciones, resultados y visibilidad administrativa.</p>
+        </div>
+    </div>
+
+    <div class="grid mb-3">
+        <div class="col-12 md:col-2">
+            <label class="block mb-2">Desde</label>
+            <input pInputText type="date" [(ngModel)]="dateFromUtc" class="w-full" />
+        </div>
+        <div class="col-12 md:col-2">
+            <label class="block mb-2">Hasta</label>
+            <input pInputText type="date" [(ngModel)]="dateToUtc" class="w-full" />
+        </div>
+        <div class="col-12 md:col-2">
+            <label class="block mb-2">Username</label>
+            <input pInputText [(ngModel)]="username" class="w-full" />
+        </div>
+        <div class="col-12 md:col-2">
+            <label class="block mb-2">Compañía</label>
+            <input pInputText [(ngModel)]="companyName" class="w-full" [disabled]="!isSuperAdmin" />
+        </div>
+        <div class="col-12 md:col-2">
+            <label class="block mb-2">Módulo</label>
+            <input pInputText [(ngModel)]="module" class="w-full" />
+        </div>
+        <div class="col-12 md:col-2">
+            <label class="block mb-2">Acción</label>
+            <input pInputText [(ngModel)]="action" class="w-full" />
+        </div>
+        <div class="col-12 md:col-2">
+            <label class="block mb-2">Resultado</label>
+            <input pInputText [(ngModel)]="result" class="w-full" />
+        </div>
+        <div class="col-12 md:col-2">
+            <label class="block mb-2">Severidad</label>
+            <input pInputText [(ngModel)]="severity" class="w-full" />
+        </div>
+        <div class="col-12 md:col-2">
+            <label class="block mb-2">Visibilidad</label>
+            <p-dropdown
+                [options]="[
+                    { label: 'Visibles', value: 'visible' },
+                    { label: 'Ocultos', value: 'hidden' },
+                    { label: 'Todos', value: 'all' }
+                ]"
+                [(ngModel)]="visibility"
+                optionLabel="label"
+                optionValue="value"
+                class="w-full">
+            </p-dropdown>
+        </div>
+        <div class="col-12 flex gap-2 mt-2">
+            <button pButton label="Buscar" icon="pi pi-search" (click)="load()"></button>
+            <button pButton class="p-button-outlined" label="Limpiar" icon="pi pi-filter-slash" (click)="clear()"></button>
+        </div>
+    </div>
+
+    <p-table
+        [value]="items"
+        [loading]="loading"
+        [rows]="pageSize"
+        [paginator]="true"
+        [lazy]="true"
+        [totalRecords]="totalRows"
+        dataKey="id"
+        responsiveLayout="scroll"
+        (onLazyLoad)="onPageChange($event)">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Fecha</th>
+                <th>Usuario</th>
+                <th>Compañía</th>
+                <th>Acción</th>
+                <th>Módulo</th>
+                <th>Entidad</th>
+                <th>Resultado</th>
+                <th>Severidad</th>
+                <th *ngIf="canHide">Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-item>
+            <tr>
+                <td>{{ item.timestampUtc | date:'short' }}</td>
+                <td>{{ item.username || item.userEmail || ('Usuario #' + (item.userId || 0)) }}</td>
+                <td>{{ item.companyName || item.companyId || '-' }}</td>
+                <td><a class="cursor-pointer" (click)="goDetail(item)">{{ item.action }}</a></td>
+                <td>{{ item.module }}</td>
+                <td>{{ item.entityName }} {{ item.entityId || '' }}</td>
+                <td>{{ item.result }}</td>
+                <td><p-tag [severity]="severityClass(item.severity)" [value]="item.severity"></p-tag></td>
+                <td *ngIf="canHide">
+                    <button
+                        pButton
+                        class="p-button-text"
+                        [disabled]="item.source === 'legacy'"
+                        [label]="item.isVisibleForAdmins ? 'Ocultar' : 'Restaurar'"
+                        (click)="toggleVisibility(item)">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

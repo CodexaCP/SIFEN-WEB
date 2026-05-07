@@ -1,0 +1,205 @@
+<section class="detail-shell" *ngIf="invoice; else missing">
+    <div class="detail-feedback">
+        <small *ngIf="feedbackMessage" class="fe-feedback">{{ feedbackMessage }}</small>
+        <small *ngIf="errorMessage" class="fe-feedback fe-feedback--error">{{ errorMessage }}</small>
+    </div>
+
+    <article class="detail-summary">
+        <div>
+            <span class="detail-eyebrow">Factura FE TEST</span>
+            <h2>{{ invoice.number }}</h2>
+            <p>{{ invoice.customerName }} · {{ invoice.issuedAt | date:'short' }}</p>
+        </div>
+        <div class="detail-status-stack">
+            <div class="fe-status">
+                <p-tag [severity]="tagSeverity(statusSnapshot?.status ?? invoice.status)" [value]="statusSnapshot?.status ?? invoice.status"></p-tag>
+                <small class="fe-status__message">{{ statusMessage(statusSnapshot?.status ?? invoice.status) }}</small>
+            </div>
+            <div class="detail-status-stack__internal">
+                <span>InternalStatus</span>
+                <strong>{{ invoice.internalStatus }}</strong>
+            </div>
+        </div>
+    </article>
+
+    <div class="fe-detail-grid">
+        <article class="detail-card"><span>CDC TEST</span><strong>{{ invoice.testCdc || invoice.cdc }}</strong></article>
+        <article class="detail-card"><span>Numero</span><strong>{{ invoice.number }}</strong></article>
+        <article class="detail-card"><span>Fecha</span><strong>{{ invoice.issuedAt | date:'short' }}</strong></article>
+        <article class="detail-card"><span>Total</span><strong>{{ invoice.total | number:'1.0-0' }}</strong></article>
+        <article class="detail-card"><span>InternalStatus</span><strong>{{ invoice.internalStatus }}</strong></article>
+        <article class="detail-card"><span>RetryCount</span><strong>{{ invoice.retryCount }}</strong></article>
+    </div>
+
+    <div class="detail-layout">
+        <article class="detail-card detail-card--wide">
+            <h3>Mensaje para usuario</h3>
+            <div class="detail-message">
+                <div>
+                    <span>Estado interno</span>
+                    <p>{{ internalStatusMessage }}</p>
+                </div>
+                <div>
+                    <span>Motivo visible</span>
+                    <p>{{ effectiveReason }}</p>
+                </div>
+                <div>
+                    <span>Accion sugerida</span>
+                    <p>{{ effectiveAction }}</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="detail-card detail-card--wide">
+            <h3>Soporte técnico</h3>
+            <div class="detail-message">
+                <div>
+                    <span>CorrelationId</span>
+                    <p>{{ effectiveCorrelationId }}</p>
+                </div>
+                <div>
+                    <span>Ultimo error</span>
+                    <p>{{ invoice.lastErrorMessage || 'Sin errores internos registrados.' }}</p>
+                </div>
+                <div>
+                    <span>QR TEST</span>
+                    <p>{{ invoice.testQrText || 'QR TEST — no válido para SET' }}</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="detail-card">
+            <h3>Documento y receptor</h3>
+            <span>Tipo documento</span>
+            <p>{{ invoice.documentType }}</p>
+            <span>Establecimiento / punto</span>
+            <p>{{ invoice.establishmentCode }} / {{ invoice.expeditionPointCode }}</p>
+            <span>Cliente</span>
+            <p>{{ invoice.customerName }}</p>
+            <span>Documento</span>
+            <p>{{ invoice.customerDocument }}</p>
+            <span>Dirección</span>
+            <p>{{ invoice.customerAddress || 'Sin dirección cargada' }}</p>
+            <span>Email / teléfono</span>
+            <p>{{ invoice.customerEmail || 'Sin email' }} · {{ invoice.customerPhone || 'Sin teléfono' }}</p>
+            <span>Condición de venta</span>
+            <p>{{ invoice.saleCondition }}</p>
+        </article>
+    </div>
+
+    <article class="detail-card detail-card--wide">
+        <h3>Totales persistidos TEST</h3>
+        <div class="detail-table">
+            <div class="detail-table__head">
+                <span>Subtotal</span>
+                <span>IVA 5</span>
+                <span>IVA 10</span>
+                <span>Exenta</span>
+                <span>Total IVA</span>
+                <span>Total</span>
+            </div>
+            <div class="detail-table__row">
+                <strong>{{ invoice.subtotalAmount | number:'1.0-0' }}</strong>
+                <span>{{ invoice.vat5Amount | number:'1.0-0' }}</span>
+                <span>{{ invoice.vat10Amount | number:'1.0-0' }}</span>
+                <span>{{ invoice.exemptAmount | number:'1.0-0' }}</span>
+                <span>{{ invoice.totalVatAmount | number:'1.0-0' }}</span>
+                <span>{{ invoice.total | number:'1.0-0' }} {{ invoice.currency }}</span>
+            </div>
+        </div>
+        <p *ngIf="invoice.notes" class="detail-card__hint">Observaciones: {{ invoice.notes }}</p>
+        <p class="detail-card__hint">Vista previa con datos de prueba. No es comprobante válido.</p>
+    </article>
+
+    <article class="detail-card detail-card--wide detail-card--support">
+        <h3>Historial de eventos</h3>
+        <div class="detail-table" *ngIf="events.length > 0; else noEvents">
+            <div class="detail-table__head">
+                <span>Estado</span>
+                <span>Evento</span>
+                <span>Fecha</span>
+            </div>
+            <div class="detail-table__row" *ngFor="let event of events">
+                <strong>{{ event.newStatus }}</strong>
+                <div>
+                    <span>{{ event.message }}</span>
+                    <details *ngIf="canViewTechnicalDetails && event.technicalDetail">
+                        <summary>Soporte técnico</summary>
+                        <div>{{ event.technicalDetail }}</div>
+                    </details>
+                </div>
+                <span>{{ event.createdAt | date:'short' }}</span>
+            </div>
+        </div>
+        <ng-template #noEvents>
+            <p>Aun no hay eventos TEST registrados para esta factura.</p>
+        </ng-template>
+    </article>
+
+    <article class="detail-card detail-card--wide detail-card--support">
+        <h3>Logs tecnicos</h3>
+        <div class="detail-log-list" *ngIf="invoice.tenantLogs.length > 0; else noTenantLogs">
+            <div class="detail-log-item" *ngFor="let log of invoice.tenantLogs">
+                <div class="detail-log-item__head">
+                    <strong>{{ log.level }}</strong>
+                    <span>{{ log.source }}</span>
+                    <small>{{ log.createdAt | date:'short' }}</small>
+                </div>
+                <p>{{ log.message }}</p>
+                <details *ngIf="canViewTechnicalDetails && log.technicalDetail">
+                    <summary>Soporte técnico</summary>
+                    <div>{{ log.technicalDetail }}</div>
+                </details>
+            </div>
+        </div>
+        <ng-template #noTenantLogs>
+            <p>No hay logs tecnicos recientes para esta factura.</p>
+        </ng-template>
+    </article>
+
+    <article class="detail-card detail-card--wide">
+        <h3>Items</h3>
+        <div class="detail-table" *ngIf="invoice.items.length > 0; else noItems">
+            <div class="detail-table__head">
+                <span>#</span>
+                <span>Descripción</span>
+                <span>Cantidad</span>
+                <span>Unitario</span>
+                <span>IVA</span>
+                <span>Subtotal</span>
+            </div>
+            <div class="detail-table__row" *ngFor="let item of invoice.items">
+                <strong>{{ item.lineNumber || '-' }}</strong>
+                <span>{{ item.description }}</span>
+                <span>{{ item.quantity }}</span>
+                <span>{{ item.unitPrice | number:'1.0-0' }}</span>
+                <span>{{ item.vatRate === 0 ? 'EXENTA' : ((item.vatRate || 10) + '%') }}</span>
+                <span>{{ (item.subtotalAmount ?? item.totalAmount ?? 0) | number:'1.0-0' }}</span>
+            </div>
+        </div>
+        <ng-template #noItems>
+            <p>No hay ítems persistidos para esta factura.</p>
+        </ng-template>
+    </article>
+
+    <article class="detail-card detail-card--wide" *ngIf="previewModel">
+        <h3>Preview KuDE TEST</h3>
+        <app-sifen-kude-preview [model]="previewModel"></app-sifen-kude-preview>
+    </article>
+
+    <div class="fe-actions">
+        <button pButton type="button" label="Preparar en modo TEST" icon="pi pi-play" class="p-button-success p-button-text" (click)="prepareTest()"></button>
+        <button pButton type="button" label="Actualizar estado" icon="pi pi-sync" class="p-button-text" (click)="refreshStatus()"></button>
+        <button pButton type="button" label="Descargar XML" icon="pi pi-file" class="p-button-text" (click)="downloadXml()"></button>
+        <button pButton type="button" label="Descargar KuDE" icon="pi pi-download" class="p-button-text" (click)="downloadKude()"></button>
+        <button *ngIf="invoice.canRetry" pButton type="button" label="Reintentar" icon="pi pi-refresh" class="p-button-warning p-button-text" (click)="retry()"></button>
+        <button pButton type="button" label="Volver al listado" class="p-button-outlined" (click)="backToList()"></button>
+    </div>
+</section>
+
+<ng-template #missing>
+    <p-card header="Factura no encontrada">
+        <p>{{ errorMessage || 'La factura solicitada no existe o no esta disponible en FE.' }}</p>
+        <button pButton type="button" label="Volver al listado" (click)="backToList()"></button>
+    </p-card>
+</ng-template>

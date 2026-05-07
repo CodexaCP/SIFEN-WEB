@@ -1,0 +1,69 @@
+$sifen-primary: #2563eb;
+$sifen-cyan: #06b6d4;
+$sifen-teal: #14b8a6;
+$sifen-purple: #7c3aed;
+$sifen-success: #22c55e;
+$sifen-warning: #f59e0b;
+$sifen-danger: #ef4444;
+$sifen-text: #0f172a;
+$sifen-muted: #64748b;
+$sifen-border-color: #e2e8f0;
+$sifen-background: #f8fafc;
+$sifen-card: #ffffff;
+$sifen-white: #ffffff;
+$sifen-sidebar: #ffffff;
+$sifen-gradient: linear-gradient(135deg, #14b8a6 0%, #2563eb 55%, #7c3aed 100%);
+$sifen-soft-gradient: linear-gradient(135deg, rgba(20, 184, 166, 0.12), rgba(37, 99, 235, 0.08) 55%, rgba(124, 58, 237, 0.1));
+$sifen-panel: #ffffff;
+$sifen-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+$sifen-shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.05);
+$sifen-border: 1px solid $sifen-border-color;
+
+@mixin sifen-panel-card {
+  border: $sifen-border;
+  border-radius: 24px;
+  background: $sifen-panel;
+  box-shadow: $sifen-shadow-soft;
+}
+
+@mixin sifen-soft-panel {
+  border: $sifen-border;
+  border-radius: 20px;
+  background: $sifen-soft-gradient;
+}
+
+@mixin sifen-input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.8rem 0.95rem;
+  border-radius: 16px;
+  border: 1px solid $sifen-border-color;
+  background: #fff;
+  color: $sifen-text;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+@mixin sifen-button-skin {
+  background: $sifen-gradient;
+  border: 0;
+  color: $sifen-white;
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.22);
+}
+
+@mixin sifen-secondary-button {
+  background: #fff;
+  border: 1px solid $sifen-border-color;
+  color: $sifen-text;
+  box-shadow: none;
+}
+
+@mixin sifen-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: $sifen-primary;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}

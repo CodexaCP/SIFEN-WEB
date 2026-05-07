@@ -1,0 +1,146 @@
+@use '../styles/sifen-theme' as sifen;
+
+:host {
+  display: block;
+}
+
+.sifen-users__hero,
+.sifen-users__card {
+  @include sifen.sifen-panel-card;
+}
+
+.sifen-users__hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.sifen-users__eyebrow {
+  color: sifen.$sifen-primary;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sifen-users__hero h2 {
+  margin: 0.45rem 0;
+}
+
+.sifen-users__hero p,
+.sifen-users__hero-side small,
+.sifen-users__card p,
+.sifen-users__muted {
+  color: sifen.$sifen-muted;
+}
+
+.sifen-users__hero-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+}
+
+.sifen-users__feedback {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: sifen.$sifen-primary;
+}
+
+.sifen-users__feedback--error {
+  color: #ffc3c3;
+}
+
+.sifen-users__alert {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  background: rgba(251, 191, 36, 0.18);
+  color: sifen.$sifen-text;
+  font-weight: 700;
+}
+
+.sifen-users__grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.sifen-users__card {
+  padding: 1.5rem;
+}
+
+.sifen-users__card--wide {
+  min-width: 0;
+}
+
+.sifen-users__card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sifen-users__card h3 {
+  margin: 0;
+}
+
+.sifen-users__card label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+  font-weight: 700;
+}
+
+.sifen-users__card input,
+.sifen-users__card select {
+  @include sifen.sifen-input;
+}
+
+.sifen-users__toggle {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.sifen-users__toggle input {
+  width: auto;
+}
+
+.sifen-users__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+:host ::ng-deep .p-button {
+  @include sifen.sifen-button-skin;
+  border-radius: 16px;
+}
+
+:host ::ng-deep .p-button.p-button-text {
+  background: rgba(255, 255, 255, 0.82);
+  color: sifen.$sifen-primary;
+  box-shadow: none;
+}
+
+:host ::ng-deep .p-tag {
+  border-radius: 999px;
+}
+
+@media (max-width: 1100px) {
+  .sifen-users__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sifen-users__hero,
+  .sifen-users__card-header {
+    flex-direction: column;
+  }
+
+  .sifen-users__hero-side {
+    align-items: flex-start;
+  }
+}

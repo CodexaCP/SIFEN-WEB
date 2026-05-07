@@ -1,0 +1,69 @@
+<section class="sifen-page">
+    <article class="sifen-panel">
+        <span class="sifen-page__eyebrow">Integracion API</span>
+        <h2>Referencia tecnica limpia</h2>
+        <p>Base URL, header multi-tenant, endpoints principales, ejemplo JSON y checklist de integracion.</p>
+
+        <div class="sifen-dashboard__alert" *ngIf="!tenantId">
+            <strong>Tenant no resuelto.</strong>
+            <span>Selecciona una compania desde Companias o entra con un TenantAdmin para ver integracion con contexto real.</span>
+        </div>
+        <div class="sifen-dashboard__alert sifen-dashboard__alert--info" *ngIf="tenantId">
+            <strong>Tenant activo:</strong>
+            <span>{{ tenantId }}</span>
+        </div>
+        <small class="sifen-page__error" *ngIf="errorMessage">{{ errorMessage }}</small>
+    </article>
+
+    <div class="sifen-dashboard__grid">
+        <article class="sifen-panel">
+            <h3>Base URL</h3>
+            <p><strong>API:</strong> {{ apiUrl }}</p>
+            <p><strong>Server:</strong> {{ serverUrl }}</p>
+            <p><strong>Header X-Tenant-Id:</strong> <code>{{ tenantId || 'tenant-guid' }}</code></p>
+            <p><strong>Authorization:</strong> <code>Bearer &lt;jwt&gt;</code></p>
+        </article>
+
+        <article class="sifen-panel">
+            <h3>Endpoints</h3>
+            <ul>
+                <li><code>POST {{ apiUrl }}/fe/invoices</code></li>
+                <li><code>GET {{ apiUrl }}/fe/invoices/status/{{ '{' }}cdc{{ '}' }}</code></li>
+                <li><code>GET {{ apiUrl }}/fe/invoices/{{ '{' }}id{{ '}' }}/xml</code></li>
+                <li><code>GET {{ apiUrl }}/fe/invoices/{{ '{' }}id{{ '}' }}/kude</code></li>
+                <li><code>GET {{ serverUrl }}/invoice/</code></li>
+                <li><code>GET {{ serverUrl }}/invoice/{{ '{' }}id{{ '}' }}</code></li>
+            </ul>
+        </article>
+
+        <article class="sifen-panel sifen-integration__wide">
+            <h3>Ejemplo JSON</h3>
+            <pre>{{ samplePayload }}</pre>
+        </article>
+
+        <article class="sifen-panel">
+            <h3>Consulta por CDC</h3>
+            <p>Usa <code>GET /api/fe/invoices/status/{{ '{' }}cdc{{ '}' }}</code> para consultar estado, codigo y mensaje operativo.</p>
+            <p *ngIf="diagnostic?.transportMode === 'Diagnostic'"><strong>Modo diagnostico:</strong> no se llamara a SIFEN real.</p>
+        </article>
+
+        <article class="sifen-panel">
+            <h3>Checklist</h3>
+            <ol>
+                <li>Token valido</li>
+                <li>Tenant resuelto o header <code>X-Tenant-Id</code></li>
+                <li>Configuracion SIFEN cargada</li>
+                <li>Diagnostico en verde para el modo objetivo</li>
+                <li>Solo despues pasar a SIFEN test real</li>
+            </ol>
+        </article>
+
+        <article class="sifen-panel">
+            <h3>Ultimo error / envio</h3>
+            <p *ngIf="diagnostic?.lastError"><strong>Error:</strong> {{ diagnostic?.lastError?.statusCode }} · {{ diagnostic?.lastError?.statusMessage }}</p>
+            <p *ngIf="diagnostic?.lastSubmission"><strong>Ultimo envio:</strong> {{ diagnostic?.lastSubmission?.status }} · {{ diagnostic?.lastSubmission?.endpoint }}</p>
+            <p *ngIf="!diagnostic?.lastError && !diagnostic?.lastSubmission">El backend no expone mas trazas aqui por ahora.</p>
+            <p><strong>Advertencia:</strong> aprobacion real requiere credenciales reales y SIFEN test.</p>
+        </article>
+    </div>
+</section>

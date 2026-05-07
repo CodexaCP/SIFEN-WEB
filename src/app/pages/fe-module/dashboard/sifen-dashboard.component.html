@@ -1,0 +1,184 @@
+<section class="sifen-dashboard">
+    <article class="sifen-dashboard__hero">
+        <div class="sifen-dashboard__hero-copy">
+            <span class="sifen-dashboard__eyebrow">Dashboard SIFEN</span>
+            <h2>Hola, {{ displayName }}!</h2>
+            <p>Este es el resumen de tu facturacion electronica.</p>
+        </div>
+
+        <div class="sifen-dashboard__status-card">
+            <span>Estado SIFEN</span>
+            <strong>{{ diagnosticStatusLabel }}</strong>
+            <small>Última verificación: {{ currentDateLabel }}</small>
+        </div>
+    </article>
+
+    <div class="sifen-dashboard__alert" *ngIf="!activeTenantId">
+        <strong>Tenant no resuelto.</strong>
+        <span *ngIf="isSuperAdmin">Selecciona una compania desde Companias para abrir operacion FE o integracion con contexto real.</span>
+        <span *ngIf="!isSuperAdmin">Tu sesion no expone tenant. Vuelve a login o revisa la configuracion del usuario.</span>
+    </div>
+
+    <div class="sifen-dashboard__metrics">
+        <article class="sifen-dashboard__metric">
+            <span>Facturas emitidas TEST</span>
+            <strong>{{ issuedThisMonth }}</strong>
+            <small>Visión rápida desde el tenant activo.</small>
+        </article>
+        <article class="sifen-dashboard__metric">
+            <span>Facturas validadas TEST</span>
+            <strong>{{ validatedTestCount }}</strong>
+            <small>Checklist interno completado.</small>
+        </article>
+        <article class="sifen-dashboard__metric">
+            <span>Facturas bloqueadas / error</span>
+            <strong>{{ blockedOrErrorCount }}</strong>
+            <small>Requieren soporte o configuración.</small>
+        </article>
+        <article class="sifen-dashboard__metric">
+            <span>Por emitir / borradores</span>
+            <strong>{{ draftsCount }}</strong>
+            <small>{{ generatedCount }} ya generadas internamente.</small>
+        </article>
+        <article class="sifen-dashboard__metric sifen-dashboard__metric--wide">
+            <div class="sifen-dashboard__metric-head">
+                <span>Limite mensual</span>
+                <strong>{{ planSummary?.usedInvoicesThisMonth || 0 }} / {{ planSummary?.maxInvoicesPerMonth || 'sin limite' }}</strong>
+            </div>
+            <div class="sifen-dashboard__progress">
+                <div [style.width.%]="usagePercent"></div>
+            </div>
+            <small>{{ planSummary?.limitReached ? 'Accion requerida: alcanzaste el limite mensual.' : 'Operacion dentro del limite configurado.' }}</small>
+        </article>
+    </div>
+
+    <div class="sifen-dashboard__content">
+        <article class="sifen-dashboard__card">
+            <div class="sifen-dashboard__card-head">
+                <div>
+                    <span class="sifen-dashboard__eyebrow">Accesos rapidos</span>
+                    <h3>Acciones principales</h3>
+                </div>
+            </div>
+
+            <div class="sifen-dashboard__quick-grid">
+                <button *ngFor="let action of quickActions" type="button" (click)="openRoute(action.route)">
+                    <i [class]="action.icon"></i>
+                    <strong>{{ action.label }}</strong>
+                    <span>{{ action.description }}</span>
+                </button>
+            </div>
+        </article>
+
+        <article class="sifen-dashboard__card">
+            <div class="sifen-dashboard__card-head">
+                <div>
+                    <span class="sifen-dashboard__eyebrow">Diagnostico rapido</span>
+                    <h3>Checklist operativo</h3>
+                </div>
+                <a *ngIf="canConfigureTenant" [routerLink]="activeTenantId ? ['/sifen/admin/companies', activeTenantId, 'diagnostic'] : ['/sifen/company/diagnostic']">Abrir</a>
+            </div>
+
+            <div class="sifen-dashboard__checklist" *ngIf="diagnostic; else diagnosticPlaceholder">
+                <div>
+                    <span class="dot" [class.is-ok]="!!diagnostic?.checks?.length"></span>
+                    <span>Configuracion empresa</span>
+                </div>
+                <div>
+                    <span class="dot" [class.is-ok]="!!diagnostic?.readyForInternalValidation"></span>
+                    <span>Certificado digital</span>
+                </div>
+                <div>
+                    <span class="dot" [class.is-ok]="!(diagnostic?.missingItems || []).join(' ').toLowerCase().includes('csc')"></span>
+                    <span>CSC</span>
+                </div>
+                <div>
+                    <span class="dot" [class.is-ok]="!(diagnostic?.missingItems || []).join(' ').toLowerCase().includes('numer')"></span>
+                    <span>Numeracion</span>
+                </div>
+                <div>
+                    <span class="dot" [class.is-ok]="!!diagnostic?.readyForSifenTestAttempt"></span>
+                    <span>Conexion SIFEN</span>
+                </div>
+            </div>
+
+            <div class="sifen-dashboard__summary" [class.is-success]="diagnostic?.ready">
+                <strong>{{ diagnosticSummaryTitle }}</strong>
+                <p>{{ diagnosticSummaryText }}</p>
+            </div>
+
+            <ng-template #diagnosticPlaceholder>
+                <div class="sifen-dashboard__summary">
+                    <strong>Diagnóstico rápido</strong>
+                    <p>Diagnóstico disponible desde la ficha de empresa.</p>
+                </div>
+            </ng-template>
+        </article>
+    </div>
+
+    <div class="sifen-dashboard__content">
+        <article class="sifen-dashboard__card sifen-dashboard__card--table">
+            <div class="sifen-dashboard__card-head">
+                <div>
+                    <span class="sifen-dashboard__eyebrow">Ultimas facturas</span>
+                    <h3>Actividad reciente</h3>
+                </div>
+                <a *ngIf="canViewInvoices" routerLink="/sifen/invoices">Ver todas</a>
+            </div>
+
+            <div class="sifen-dashboard__empty" *ngIf="!recentInvoices.length">No disponible todavia.</div>
+
+            <table *ngIf="recentInvoices.length">
+                <thead>
+                    <tr>
+                        <th>Nro</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let invoice of recentInvoices">
+                        <td>{{ invoice.number }}</td>
+                        <td>{{ invoice.customerName }}</td>
+                        <td>{{ invoice.issuedAt | date:'shortDate' }}</td>
+                        <td><span class="sifen-dashboard__status-pill">{{ invoice.internalStatus || 'DRAFT' }}</span></td>
+                        <td>{{ invoice.total | number:'1.0-0' }}</td>
+                        <td><a [routerLink]="['/sifen/invoices', invoice.id]">Ver</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </article>
+
+        <article class="sifen-dashboard__card" *ngIf="isSuperAdmin">
+            <div class="sifen-dashboard__card-head">
+                <div>
+                    <span class="sifen-dashboard__eyebrow">Vista global</span>
+                    <h3>SuperAdmin</h3>
+                </div>
+                <a routerLink="/sifen/admin/companies">Administrar</a>
+            </div>
+
+            <div class="sifen-dashboard__super-grid">
+                <div>
+                    <span>Clientes activos</span>
+                    <strong>{{ globalActiveCompanies }}</strong>
+                </div>
+                <div>
+                    <span>Alertas</span>
+                    <strong>{{ globalAlerts }}</strong>
+                </div>
+                <div>
+                    <span>Estado SIFEN global</span>
+                    <strong>{{ companies.length ? 'Monitoreado' : 'No disponible todavia' }}</strong>
+                </div>
+                <div>
+                    <span>Rechazos hoy</span>
+                    <strong>{{ activeTenantId ? blockedOrErrorCount : 'No disponible todavia' }}</strong>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
