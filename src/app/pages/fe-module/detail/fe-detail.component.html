@@ -104,7 +104,7 @@
                 </div>
                 <div>
                     <span>QR TEST</span>
-                    <p>{{ invoice.testQrText || 'QR TEST — no válido para SET' }}</p>
+                    <p>{{ invoice.isFiscalPreviewValid && invoice.testQrText ? invoice.testQrText : 'No disponible: el back no marcó la vista fiscal como válida.' }}</p>
                 </div>
             </div>
         </article>

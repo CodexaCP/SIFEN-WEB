@@ -212,3 +212,13 @@
     grid-template-columns: 1fr;
   }
 }
+
+.kude-preview__draft {
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  background: #fff7ed;
+  color: #9a3412;
+  font-size: 0.85rem;
+  font-weight: 600;
+}

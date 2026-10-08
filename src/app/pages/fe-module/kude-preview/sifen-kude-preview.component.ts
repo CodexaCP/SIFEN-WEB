@@ -9,11 +9,12 @@ export interface SifenKudePreviewItem {
 }
 
 export interface SifenKudePreviewModel {
-    businessName: string;
-    ruc: string;
-    address: string;
-    phone: string;
-    email: string;
+    /** Datos del emisor: solo los reales de la configuracion fiscal; si faltan, no se inventan. */
+    businessName?: string | null;
+    ruc?: string | null;
+    address?: string | null;
+    phone?: string | null;
+    email?: string | null;
     establishment: string;
     expeditionPoint: string;
     documentNumber: string;
@@ -28,7 +29,8 @@ export interface SifenKudePreviewModel {
     total: number;
     totalInWords: string;
     observations: string;
-    fakeCdc: string;
+    /** CDC real del documento; null mientras la factura no fue emitida. */
+    cdc: string | null;
 }
 
 @Component({
@@ -38,13 +40,4 @@ export interface SifenKudePreviewModel {
 })
 export class SifenKudePreviewComponent {
     @Input() model!: SifenKudePreviewModel;
-
-    get qrMatrix(): number[] {
-        return Array.from({ length: 49 }, (_, index) => index);
-    }
-
-    isFilled(index: number): boolean {
-        const seed = (index * 17) + this.model.fakeCdc.length;
-        return seed % 3 !== 0;
-    }
 }

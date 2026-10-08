@@ -1,22 +1,22 @@
 <article class="kude-preview">
+    <p class="kude-preview__draft">Vista previa en borrador: no es el KuDE oficial. El KuDE oficial se descarga desde el back con los datos del documento firmado.</p>
     <header class="kude-preview__header">
         <div class="kude-preview__brand">
             <div class="kude-preview__logo">SF</div>
             <div>
-                <strong>{{ model.businessName }}</strong>
-                <span>RUC {{ model.ruc }}</span>
-                <span>{{ model.address }}</span>
-                <span>{{ model.phone }} · {{ model.email }}</span>
+                <strong>{{ model.businessName || 'Emisor según configuración fiscal' }}</strong>
+                <span *ngIf="model.ruc">RUC {{ model.ruc }}</span>
+                <span *ngIf="model.address">{{ model.address }}</span>
+                <span *ngIf="model.phone || model.email">{{ model.phone }}<ng-container *ngIf="model.phone && model.email"> · </ng-container>{{ model.email }}</span>
             </div>
         </div>
 
         <div class="kude-preview__meta">
             <h3>FACTURA ELECTRÓNICA</h3>
-            <span><strong>CDC TEST:</strong> {{ model.fakeCdc }}</span>
-            <span><strong>Timbrado:</strong> TEST DEMO</span>
-            <span><strong>Establecimiento:</strong> {{ model.establishment }}</span>
-            <span><strong>Punto expedición:</strong> {{ model.expeditionPoint }}</span>
-            <span><strong>Nro. documento:</strong> {{ model.documentNumber }}</span>
+            <span><strong>CDC:</strong> {{ model.cdc || 'Se asigna al emitir' }}</span>
+            <span><strong>Establecimiento:</strong> {{ model.establishment || 'Se asigna al emitir' }}</span>
+            <span><strong>Punto expedición:</strong> {{ model.expeditionPoint || 'Se asigna al emitir' }}</span>
+            <span><strong>Nro. documento:</strong> {{ model.documentNumber || 'Se asigna al emitir' }}</span>
             <span><strong>Fecha emisión:</strong> {{ model.issueDate }}</span>
         </div>
     </header>
@@ -68,7 +68,7 @@
     <section class="kude-preview__summary">
         <div class="kude-preview__notes">
             <div>
-                <span>Total en letras</span>
+                <span>Total</span>
                 <strong>{{ model.totalInWords }}</strong>
             </div>
             <div>
@@ -94,10 +94,7 @@
             <strong>Vista previa premium del plan básico Codexa.</strong>
         </div>
         <div class="kude-preview__qr-card">
-            <div class="kude-preview__qr">
-                <span *ngFor="let cell of qrMatrix" [class.is-filled]="isFilled(cell)"></span>
-            </div>
-            <small>QR TEST — no válido para SET</small>
+            <small>El QR lo genera el back al firmar el documento. Descargá el KuDE oficial para verlo.</small>
         </div>
     </footer>
 

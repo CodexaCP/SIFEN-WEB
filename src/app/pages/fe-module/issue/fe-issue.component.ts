@@ -172,18 +172,13 @@ export class FeIssueComponent {
     get previewModel(): SifenKudePreviewModel {
         const raw = this.form.getRawValue();
         return {
-            businessName: 'Codexa FE TEST',
-            ruc: '80000000-0',
-            address: 'Asunción, Paraguay',
-            phone: raw.customerPhone || '+595 981 000000',
-            email: raw.customerEmail || 'facturacion@test.codexa',
             establishment: '',
             expeditionPoint: '',
             documentNumber: '',
             issueDate: this.todayIso(),
             customerName: raw.customerName || 'Cliente de prueba',
             customerDocument: raw.customerDocument || '0000000',
-            customerAddress: raw.customerAddress || 'Sin dirección cargada',
+            customerAddress: raw.customerAddress || '',
             saleCondition: raw.saleCondition || 'Contado',
             items: this.items.controls.map((control) => {
                 const value = control.value;
@@ -198,9 +193,9 @@ export class FeIssueComponent {
             subtotal: this.subtotal,
             vatTotal: this.vatTotal,
             total: this.total,
-            totalInWords: this.toSpanishAmount(this.total),
-            observations: 'Operación de prueba generada en el entorno interno SIFEN.',
-            fakeCdc: this.buildFakeCdc()
+            totalInWords: `Gs. ${Math.round(this.total).toLocaleString('es-PY')}`,
+            observations: '',
+            cdc: null
         };
     }
 
@@ -497,14 +492,5 @@ export class FeIssueComponent {
 
     private todayIso(): string {
         return new Date().toISOString().slice(0, 10);
-    }
-
-    private buildFakeCdc(): string {
-        const tenantSeed = (this.activeTenantId || 'TEST').replace(/[^A-Z0-9]/gi, '').slice(0, 8).toUpperCase();
-        return `CDC-TEST-${tenantSeed}-0000000-${this.todayIso().replace(/-/g, '')}`;
-    }
-
-    private toSpanishAmount(value: number): string {
-        return `Gs. ${Math.round(value).toLocaleString('es-PY')} con 00/100 en entorno TEST`;
     }
 }

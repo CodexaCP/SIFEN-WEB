@@ -240,18 +240,13 @@ export class FeDetailComponent implements OnInit {
         }
 
         return {
-            businessName: 'Codexa FE TEST',
-            ruc: '80000000-0',
-            address: 'Asunción, Paraguay',
-            phone: this.invoice.customerPhone || '+595 981 000000',
-            email: this.invoice.customerEmail || 'facturacion@test.codexa',
             establishment: this.invoice.establishmentCode,
             expeditionPoint: this.invoice.expeditionPointCode,
             documentNumber: this.invoice.number,
             issueDate: this.invoice.issuedAt,
             customerName: this.invoice.customerName,
             customerDocument: this.invoice.customerDocument,
-            customerAddress: this.invoice.customerAddress || 'Sin dirección cargada',
+            customerAddress: this.invoice.customerAddress || '',
             saleCondition: this.invoice.saleCondition,
             items: this.invoice.items.map((item) => ({
                 description: item.description,
@@ -263,9 +258,9 @@ export class FeDetailComponent implements OnInit {
             subtotal: this.invoice.subtotalAmount,
             vatTotal: this.invoice.totalVatAmount,
             total: this.invoice.total,
-            totalInWords: `Gs. ${Math.round(this.invoice.total).toLocaleString('es-PY')} con 00/100 en entorno TEST`,
-            observations: this.invoice.notes || 'Operación de prueba generada en el entorno interno SIFEN.',
-            fakeCdc: this.invoice.testCdc || this.invoice.cdc
+            totalInWords: `Gs. ${Math.round(this.invoice.total).toLocaleString('es-PY')}`,
+            observations: this.invoice.notes || '',
+            cdc: this.invoice.cdc || null
         };
     }
 
