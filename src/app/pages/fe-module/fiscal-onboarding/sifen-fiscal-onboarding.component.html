@@ -11,8 +11,8 @@
 
         <small class="sifen-config__status sifen-config__status--error" *ngIf="errorMessage">{{ errorMessage }}</small>
 
-        <div class="sifen-fiscal__section">
-            <h3>1. Perfil fiscal del emisor</h3>
+        <details class="sifen-fiscal__section">
+            <summary><h3>1. Perfil fiscal del emisor</h3></summary>
             <p class="sifen-fiscal__hint">Codigos de departamento, distrito, ciudad y actividad economica segun las tablas del Manual Tecnico v150 y tu registro en Marangatu.</p>
             <small class="sifen-config__status" *ngIf="feedback.profile.success">{{ feedback.profile.success }}</small>
             <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.profile.error">{{ feedback.profile.error }}</small>
@@ -80,10 +80,10 @@
                 <button pButton type="button" class="p-button-text" label="Agregar actividad" (click)="addActivity()"></button>
                 <button pButton type="button" label="Guardar perfil fiscal" [loading]="feedback.profile.saving" (click)="saveProfile()"></button>
             </div>
-        </div>
+        </details>
 
-        <div class="sifen-fiscal__section">
-            <h3>2. Timbrado</h3>
+        <details class="sifen-fiscal__section">
+            <summary><h3>2. Timbrado</h3></summary>
             <p class="sifen-fiscal__hint">Numero de timbrado (8 digitos) y vigencia asignados por la DNIT.</p>
             <small class="sifen-config__status" *ngIf="feedback.stamp.success">{{ feedback.stamp.success }}</small>
             <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.stamp.error">{{ feedback.stamp.error }}</small>
@@ -111,10 +111,10 @@
             <div class="sifen-form-card__actions">
                 <button pButton type="button" label="Registrar timbrado" [loading]="feedback.stamp.saving" (click)="saveStamp()"></button>
             </div>
-        </div>
+        </details>
 
-        <div class="sifen-fiscal__section">
-            <h3>3. Numeracion</h3>
+        <details class="sifen-fiscal__section">
+            <summary><h3>3. Numeracion</h3></summary>
             <p class="sifen-fiscal__hint">Secuencia por timbrado, establecimiento y punto de expedicion. El back reserva los numeros de forma atomica.</p>
             <small class="sifen-config__status" *ngIf="feedback.numbering.success">{{ feedback.numbering.success }}</small>
             <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.numbering.error">{{ feedback.numbering.error }}</small>
@@ -154,10 +154,10 @@
             <div class="sifen-form-card__actions">
                 <button pButton type="button" label="Registrar numeracion" [loading]="feedback.numbering.saving" (click)="saveNumbering()"></button>
             </div>
-        </div>
+        </details>
 
-        <div class="sifen-fiscal__section">
-            <h3>4. Certificado de firma</h3>
+        <details class="sifen-fiscal__section">
+            <summary><h3>4. Certificado de firma</h3></summary>
             <p class="sifen-fiscal__hint">Solo metadata y referencias. Las referencias usan <code>env:NOMBRE_VARIABLE</code> o <code>file:/ruta</code>; nunca la password real.</p>
             <small class="sifen-config__status" *ngIf="feedback.certificate.success">{{ feedback.certificate.success }}</small>
             <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.certificate.error">{{ feedback.certificate.error }}</small>
@@ -212,6 +212,6 @@
             <div class="sifen-form-card__actions">
                 <button pButton type="button" label="Registrar certificado" [loading]="feedback.certificate.saving" (click)="saveCertificate()"></button>
             </div>
-        </div>
+        </details>
     </div>
 </section>

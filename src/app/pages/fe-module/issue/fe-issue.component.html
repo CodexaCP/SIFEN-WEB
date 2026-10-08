@@ -20,6 +20,7 @@
             <strong>Configuración pendiente.</strong>
             <span>El tenant todavía tiene checks bloqueantes en diagnóstico.</span>
         </div>
+        <div class="issue-alert issue-alert--danger" *ngIf="catalogError">{{ catalogError }}</div>
         <div class="issue-alert issue-alert--danger" *ngIf="isReadOnlyMode || planMessage">
             <strong *ngIf="isReadOnlyMode">Plan vencido.</strong>
             <span *ngIf="!isReadOnlyMode">{{ planMessage }}</span>
@@ -43,38 +44,6 @@
 
                 <div class="fe-grid">
                     <label>
-                        <span>Tipo documento</span>
-                        <select formControlName="documentType">
-                            <option *ngFor="let option of documentTypes" [value]="option">{{ option }}</option>
-                        </select>
-                        <small class="fe-errors" *ngIf="fieldError('documentType', 'Tipo documento')">{{ fieldError('documentType', 'Tipo documento') }}</small>
-                    </label>
-
-                    <label>
-                        <span>Establecimiento</span>
-                        <input pInputText formControlName="establishment" />
-                        <small class="fe-errors" *ngIf="fieldError('establishment', 'Establecimiento')">{{ fieldError('establishment', 'Establecimiento') }}</small>
-                    </label>
-
-                    <label>
-                        <span>Punto expedición</span>
-                        <input pInputText formControlName="expeditionPoint" />
-                        <small class="fe-errors" *ngIf="fieldError('expeditionPoint', 'Punto expedición')">{{ fieldError('expeditionPoint', 'Punto expedición') }}</small>
-                    </label>
-
-                    <label>
-                        <span>Número documento TEST</span>
-                        <input pInputText formControlName="documentNumber" />
-                        <small class="fe-errors" *ngIf="fieldError('documentNumber', 'Número documento TEST')">{{ fieldError('documentNumber', 'Número documento TEST') }}</small>
-                    </label>
-
-                    <label>
-                        <span>Fecha emisión</span>
-                        <input type="date" formControlName="issueDate" />
-                        <small class="fe-errors" *ngIf="fieldError('issueDate', 'Fecha emisión')">{{ fieldError('issueDate', 'Fecha emisión') }}</small>
-                    </label>
-
-                    <label>
                         <span>Condición venta</span>
                         <select formControlName="saleCondition">
                             <option *ngFor="let option of saleConditions" [value]="option">{{ option }}</option>
@@ -82,10 +51,21 @@
                     </label>
 
                     <label>
-                        <span>Tipo contribuyente</span>
-                        <select formControlName="contributorType">
-                            <option *ngFor="let option of contributorTypes" [value]="option">{{ option }}</option>
+                        <span>Tipo de transacción</span>
+                        <select formControlName="transactionType">
+                            <option [ngValue]="null" disabled>Seleccioná</option>
+                            <option *ngFor="let option of catalogs?.transactionTypes" [ngValue]="option.code">{{ option.description }}</option>
                         </select>
+                        <small class="fe-errors" *ngIf="fieldError('transactionType', 'Tipo de transacción')">{{ fieldError('transactionType', 'Tipo de transacción') }}</small>
+                    </label>
+
+                    <label>
+                        <span>Indicador de presencia</span>
+                        <select formControlName="presenceIndicator">
+                            <option [ngValue]="null" disabled>Seleccioná</option>
+                            <option *ngFor="let option of catalogs?.presenceIndicators" [ngValue]="option.code">{{ option.description }}</option>
+                        </select>
+                        <small class="fe-errors" *ngIf="fieldError('presenceIndicator', 'Indicador de presencia')">{{ fieldError('presenceIndicator', 'Indicador de presencia') }}</small>
                     </label>
 
                     <label>
@@ -105,6 +85,22 @@
                             <span>Nombre / Razón social</span>
                             <input pInputText formControlName="customerName" />
                             <small class="fe-errors" *ngIf="fieldError('customerName', 'Nombre / Razón social')">{{ fieldError('customerName', 'Nombre / Razón social') }}</small>
+                        </label>
+
+                        <label>
+                            <span>Tipo de documento</span>
+                            <select formControlName="receiverDocumentType">
+                                <option *ngFor="let option of catalogs?.receiverDocumentTypes" [ngValue]="option">{{ option === 'Ruc' ? 'RUC' : 'Cédula' }}</option>
+                            </select>
+                        </label>
+
+                        <label *ngIf="form.get('receiverDocumentType')?.value === 'Ruc'">
+                            <span>Tipo de contribuyente</span>
+                            <select formControlName="receiverTaxpayerKind">
+                                <option [ngValue]="null" disabled>Seleccioná</option>
+                                <option *ngFor="let option of catalogs?.receiverTaxpayerKinds" [ngValue]="option.code">{{ option.description }}</option>
+                            </select>
+                            <small class="fe-errors" *ngIf="submitted && form.get('receiverTaxpayerKind')?.value == null">Tipo de contribuyente es obligatorio para RUC.</small>
                         </label>
 
                         <label>
@@ -145,6 +141,21 @@
 
                 <div formArrayName="items" class="fe-items-list">
                     <div class="fe-item-row" *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+                        <label>
+                            <span>Código interno</span>
+                            <input pInputText formControlName="code" />
+                            <small class="fe-errors" *ngIf="itemError(i, 'code', 'Código interno')">{{ itemError(i, 'code', 'Código interno') }}</small>
+                        </label>
+
+                        <label>
+                            <span>Unidad de medida</span>
+                            <select formControlName="unitCode">
+                                <option [ngValue]="null" disabled>Seleccioná</option>
+                                <option *ngFor="let option of catalogs?.unitsOfMeasure" [ngValue]="option.code">{{ option.description }} ({{ option.code }})</option>
+                            </select>
+                            <small class="fe-errors" *ngIf="itemError(i, 'unitCode', 'Unidad de medida')">{{ itemError(i, 'unitCode', 'Unidad de medida') }}</small>
+                        </label>
+
                         <label class="full">
                             <span>Descripción</span>
                             <input pInputText formControlName="description" />

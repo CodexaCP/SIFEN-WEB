@@ -13,6 +13,8 @@ type FeTagSeverity = 'success' | 'warning' | 'danger' | 'info' | 'secondary';
 
 export interface FeInvoiceItem {
     lineNumber?: number;
+    code?: string;
+    unitCode?: number;
     description: string;
     quantity: number;
     unitPrice: number;
@@ -158,10 +160,30 @@ export interface FeInvoiceStatusResult {
     sifenTrackingId?: string | null;
 }
 
+export type FeReceiverDocumentType = 'Ruc' | 'Ci';
+
+export interface FeCatalogOption {
+    code: number;
+    description: string;
+}
+
+export interface FeInvoiceCatalogs {
+    transactionTypes: FeCatalogOption[];
+    presenceIndicators: FeCatalogOption[];
+    unitsOfMeasure: FeCatalogOption[];
+    receiverTaxpayerKinds: FeCatalogOption[];
+    receiverDocumentTypes: FeReceiverDocumentType[];
+    vatTypes: string[];
+}
+
 export interface FeCreateInvoicePayload {
     saleCondition: string;
     currencyCode: string;
     notes?: string;
+    transactionType: number | null;
+    presenceIndicator: number | null;
+    receiverDocumentType: FeReceiverDocumentType;
+    receiverTaxpayerKind: number | null;
     customerName: string;
     customerDocument: string;
     customerAddress?: string;
@@ -312,6 +334,10 @@ interface KudePlaceholderResponse {
 
 interface CreateSimpleInvoiceRequest {
     notes?: string;
+    transactionType?: number;
+    presenceIndicator?: number;
+    receptorTipoDocumento: FeReceiverDocumentType;
+    receptorTaxpayerKind?: number;
     receiverName: string;
     receiverDocument: string;
     receiverAddress?: string;
@@ -320,6 +346,8 @@ interface CreateSimpleInvoiceRequest {
     currencyCode: string;
     saleCondition: string;
     items: Array<{
+        code?: string;
+        unitCode?: number;
         description: string;
         quantity: number;
         unitPrice: number;
@@ -423,6 +451,10 @@ export class FeInvoiceApiService {
                 headers: this.buildTenantHeaders().set('Idempotency-Key', idempotencyKey)
             }
         );
+    }
+
+    getCatalogs(): Observable<FeInvoiceCatalogs> {
+        return this.http.get<FeInvoiceCatalogs>(`${this.apiUrl}/fe/catalogs`);
     }
 
     newIdempotencyKey(): string {
@@ -768,14 +800,20 @@ export class FeInvoiceApiService {
     private buildCreateRequest(payload: FeCreateInvoicePayload): CreateSimpleInvoiceRequest {
         return {
             notes: payload.notes?.trim() || undefined,
+            transactionType: payload.transactionType ?? undefined,
+            presenceIndicator: payload.presenceIndicator ?? undefined,
+            receptorTipoDocumento: payload.receiverDocumentType,
+            receptorTaxpayerKind: payload.receiverDocumentType === 'Ruc' ? payload.receiverTaxpayerKind ?? undefined : undefined,
             receiverName: payload.customerName.trim(),
             receiverDocument: payload.customerDocument.trim(),
-            receiverAddress: payload.customerAddress?.trim(),
-            receiverEmail: payload.customerEmail?.trim(),
-            receiverPhone: payload.customerPhone?.trim(),
+            receiverAddress: payload.customerAddress?.trim() || undefined,
+            receiverEmail: payload.customerEmail?.trim() || undefined,
+            receiverPhone: payload.customerPhone?.trim() || undefined,
             currencyCode: payload.currencyCode,
             saleCondition: payload.saleCondition,
             items: payload.items.map(item => ({
+                code: item.code?.trim() || undefined,
+                unitCode: item.unitCode,
                 description: item.description,
                 quantity: item.quantity,
                 unitPrice: item.unitPrice,

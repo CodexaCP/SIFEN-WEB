@@ -5,6 +5,8 @@ import { catchError, of, switchMap } from 'rxjs';
 import {
     FeCreateInvoiceResult,
     FeInvoiceApiService,
+    FeInvoiceCatalogs,
+    FeReceiverDocumentType,
     FePlanSummary,
     FePrepareTestResult
 } from '../services/fe-invoice-api.service';
@@ -20,27 +22,25 @@ type VatType = '10%' | '5%' | 'EXENTA';
 })
 export class FeIssueComponent {
     readonly form = this.formBuilder.group({
-        documentType: ['Factura electrónica', Validators.required],
-        establishment: ['001', Validators.required],
-        expeditionPoint: ['001', Validators.required],
-        documentNumber: [''],
-        issueDate: [this.todayIso(), Validators.required],
         saleCondition: ['Contado', Validators.required],
-        contributorType: ['Persona jurídica', Validators.required],
         currency: ['PYG', Validators.required],
+        transactionType: [null as number | null, Validators.required],
+        presenceIndicator: [null as number | null, Validators.required],
+        receiverDocumentType: ['Ruc' as FeReceiverDocumentType, Validators.required],
+        receiverTaxpayerKind: [null as number | null],
         customerName: ['', Validators.required],
         customerDocument: ['', Validators.required],
-        customerAddress: ['', Validators.required],
-        customerEmail: ['', [Validators.required, Validators.email]],
-        customerPhone: ['', Validators.required],
+        customerAddress: [''],
+        customerEmail: ['', Validators.email],
+        customerPhone: [''],
         items: this.formBuilder.array([this.createItemGroup()])
     });
 
     readonly vatOptions: VatType[] = ['10%', '5%', 'EXENTA'];
     readonly currencies = ['PYG', 'USD'];
     readonly saleConditions = ['Contado', 'Crédito'];
-    readonly contributorTypes = ['Persona jurídica', 'Persona física'];
-    readonly documentTypes = ['Factura electrónica'];
+    catalogs?: FeInvoiceCatalogs;
+    catalogError = '';
 
     submitted = false;
     submitting = false;
@@ -68,6 +68,7 @@ export class FeIssueComponent {
         });
         this.loadPlanSummary();
         this.loadDiagnostic();
+        this.loadCatalogs();
     }
 
     get items(): FormArray {
@@ -108,22 +109,18 @@ export class FeIssueComponent {
 
     get isStepOneValid(): boolean {
         const requiredKeys = [
-            'documentType',
-            'establishment',
-            'expeditionPoint',
-            'documentNumber',
-            'issueDate',
             'saleCondition',
-            'contributorType',
             'currency',
+            'transactionType',
+            'presenceIndicator',
+            'receiverDocumentType',
             'customerName',
             'customerDocument',
-            'customerAddress',
-            'customerEmail',
-            'customerPhone'
+            'customerEmail'
         ];
+        const taxpayerKindReady = this.form.get('receiverDocumentType')?.value !== 'Ruc' || this.form.get('receiverTaxpayerKind')?.value != null;
 
-        return requiredKeys.every((key) => this.form.get(key)?.valid);
+        return taxpayerKindReady && requiredKeys.every((key) => this.form.get(key)?.valid);
     }
 
     get isDiagnosticBlocked(): boolean {
@@ -180,10 +177,10 @@ export class FeIssueComponent {
             address: 'Asunción, Paraguay',
             phone: raw.customerPhone || '+595 981 000000',
             email: raw.customerEmail || 'facturacion@test.codexa',
-            establishment: raw.establishment || '001',
-            expeditionPoint: raw.expeditionPoint || '001',
-            documentNumber: raw.documentNumber || '',
-            issueDate: raw.issueDate || this.todayIso(),
+            establishment: '',
+            expeditionPoint: '',
+            documentNumber: '',
+            issueDate: this.todayIso(),
             customerName: raw.customerName || 'Cliente de prueba',
             customerDocument: raw.customerDocument || '0000000',
             customerAddress: raw.customerAddress || 'Sin dirección cargada',
@@ -294,12 +291,18 @@ export class FeIssueComponent {
         this.feInvoiceApiService.create({
             saleCondition: raw.saleCondition ?? '',
             currencyCode: raw.currency ?? '',
+            transactionType: raw.transactionType ?? null,
+            presenceIndicator: raw.presenceIndicator ?? null,
+            receiverDocumentType: raw.receiverDocumentType ?? 'Ruc',
+            receiverTaxpayerKind: raw.receiverTaxpayerKind ?? null,
             customerName: raw.customerName ?? '',
             customerDocument: raw.customerDocument ?? '',
             customerAddress: raw.customerAddress ?? '',
             customerEmail: raw.customerEmail ?? '',
             customerPhone: raw.customerPhone ?? '',
             items: (raw.items ?? []).map((item) => ({
+                code: item?.code ?? '',
+                unitCode: item?.unitCode ?? undefined,
                 description: item?.description ?? '',
                 quantity: Number(item?.quantity ?? 0),
                 unitPrice: Number(item?.unitPrice ?? 0),
@@ -347,14 +350,12 @@ export class FeIssueComponent {
 
     startNewInvoice(): void {
         this.form.reset({
-            documentType: 'Factura electrónica',
-            establishment: '001',
-            expeditionPoint: '001',
-            documentNumber: '',
-            issueDate: this.todayIso(),
             saleCondition: 'Contado',
-            contributorType: 'Persona jurídica',
             currency: 'PYG',
+            transactionType: null,
+            presenceIndicator: null,
+            receiverDocumentType: 'Ruc',
+            receiverTaxpayerKind: null,
             customerName: '',
             customerDocument: '',
             customerAddress: '',
@@ -443,8 +444,22 @@ export class FeIssueComponent {
         });
     }
 
+    private loadCatalogs(): void {
+        this.feInvoiceApiService.getCatalogs().subscribe({
+            next: (catalogs) => {
+                this.catalogs = catalogs;
+                this.catalogError = '';
+            },
+            error: (error) => {
+                this.catalogError = this.feInvoiceApiService.getErrorMessage(error, 'No se pudieron cargar los catálogos de emisión.');
+            }
+        });
+    }
+
     private createItemGroup() {
         return this.formBuilder.group({
+            code: ['', Validators.required],
+            unitCode: [null as number | null, Validators.required],
             description: ['Servicio demo FE', Validators.required],
             quantity: [1, [Validators.required, Validators.min(1)]],
             unitPrice: [100000, [Validators.required, Validators.min(1)]],
@@ -486,7 +501,7 @@ export class FeIssueComponent {
 
     private buildFakeCdc(): string {
         const tenantSeed = (this.activeTenantId || 'TEST').replace(/[^A-Z0-9]/gi, '').slice(0, 8).toUpperCase();
-        return `CDC-TEST-${tenantSeed}-${this.form.get('documentNumber')?.value || '0000000'}-${this.todayIso().replace(/-/g, '')}`;
+        return `CDC-TEST-${tenantSeed}-0000000-${this.todayIso().replace(/-/g, '')}`;
     }
 
     private toSpanishAmount(value: number): string {
