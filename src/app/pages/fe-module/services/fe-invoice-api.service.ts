@@ -21,7 +21,7 @@ export interface FeInvoiceItem {
 export interface FeInvoiceListItem {
     id: string;
     tenantId?: string;
-    cdc: string;
+    cdc: string | null;
     number: string;
     customerName: string;
     customerDocument?: string | null;
@@ -74,6 +74,7 @@ export interface FeInvoiceDetail {
     status: FeInvoiceStatus;
     statusCode?: string | null;
     statusMessage?: string | null;
+    sifenTrackingId?: string | null;
     errorCode?: string | null;
     errorCategory?: string | null;
     userMessage?: string | null;
@@ -257,6 +258,7 @@ interface InvoiceApiDetail {
     status: string;
     statusCode?: string | null;
     statusMessage?: string | null;
+    sifenTrackingId?: string | null;
     errorCode?: string | null;
     errorCategory?: string | null;
     userMessage?: string | null;
@@ -481,7 +483,7 @@ export class FeInvoiceApiService {
     getStatusShortMessage(status: FeInvoiceStatus): string {
         switch (status) {
             case 'aprobado':
-                return 'Aprobada por SIFEN.';
+                return 'Estado del documento: aceptado. El estado fiscal SIFEN aún no lo expone la API.';
             case 'rechazado':
                 return 'Rechazada. Revisa el motivo y corrige antes de reenviar.';
             case 'error':
@@ -544,7 +546,7 @@ export class FeInvoiceApiService {
         return {
             id: item.invoiceId ?? '',
             tenantId: item.tenantId,
-            cdc: item.correlationId ?? '',
+            cdc: null,
             number: item.invoiceNumber ?? '',
             customerName: item.customerName ?? '',
             customerDocument: null,
@@ -596,6 +598,7 @@ export class FeInvoiceApiService {
             status: simpleStatus,
             statusCode: item.statusCode,
             statusMessage: item.statusMessage,
+            sifenTrackingId: item.sifenTrackingId,
             errorCode: item.errorCode,
             errorCategory: item.errorCategory,
             userMessage: item.userMessage,
@@ -639,26 +642,25 @@ export class FeInvoiceApiService {
         }
     }
 
+    // Replica MapSimpleStatus del backend (InvoiceEndpoints.cs). InvoiceDetail.status llega como nombre del enum
+    // SifenDocumentStatus; los pares listados son nombres declarados en el backend con el mismo valor numerico.
     private toSimpleStatus(status: string): FeInvoiceStatus {
         switch (status) {
-            case 'Accepted':
-            case 'aprobado':
-                return 'aprobado';
-            case 'Rejected':
-            case 'rechazado':
-                return 'rechazado';
-            case 'Failed':
-            case 'error':
-                return 'error';
             case 'InternalValidation':
-            case 'validacion-interna':
                 return 'validacion-interna';
             case 'InternalValidationFailed':
-            case 'validacion-interna-fallida':
+            case 'BlockedByConfiguration':
                 return 'validacion-interna-fallida';
             case 'DraftValidatedWithoutSignature':
-            case 'borrador-validado-sin-firma':
                 return 'borrador-validado-sin-firma';
+            case 'Accepted':
+            case 'Approved':
+                return 'aprobado';
+            case 'Rejected':
+                return 'rechazado';
+            case 'Failed':
+            case 'RetryableError':
+                return 'error';
             default:
                 return 'pendiente';
         }

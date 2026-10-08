@@ -23,7 +23,7 @@
     </article>
 
     <div class="fe-detail-grid">
-        <article class="detail-card"><span>CDC TEST</span><strong>{{ invoice.testCdc || invoice.cdc }}</strong></article>
+        <article class="detail-card"><span>CDC</span><strong>{{ invoice.cdc || 'No disponible' }}</strong></article>
         <article class="detail-card"><span>Numero</span><strong>{{ invoice.number }}</strong></article>
         <article class="detail-card"><span>Fecha</span><strong>{{ invoice.issuedAt | date:'short' }}</strong></article>
         <article class="detail-card"><span>Total</span><strong>{{ invoice.total | number:'1.0-0' }}</strong></article>
@@ -46,6 +46,32 @@
                 <div>
                     <span>Accion sugerida</span>
                     <p>{{ effectiveAction }}</p>
+                </div>
+            </div>
+        </article>
+
+        <article class="detail-card detail-card--wide">
+            <h3>Estado SIFEN</h3>
+            <div class="detail-message">
+                <div>
+                    <span>Estado de transmisión</span>
+                    <p>Pendiente: la API aún no expone TransmissionState.</p>
+                </div>
+                <div>
+                    <span>Estado fiscal</span>
+                    <p>Pendiente: la API aún no expone FiscalState.</p>
+                </div>
+                <div>
+                    <span>Protocolo SIFEN (dProtAut)</span>
+                    <p>{{ invoice.sifenTrackingId || 'No disponible' }}</p>
+                </div>
+                <div>
+                    <span>Código de estado</span>
+                    <p>{{ invoice.statusCode || 'No disponible' }}</p>
+                </div>
+                <div>
+                    <span>Mensaje de estado</span>
+                    <p>{{ invoice.statusMessage || 'No disponible' }}</p>
                 </div>
             </div>
         </article>
