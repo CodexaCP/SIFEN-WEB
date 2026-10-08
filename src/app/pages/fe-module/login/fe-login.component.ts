@@ -26,8 +26,6 @@ export class FeLoginComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        console.log('SIFEN LOGIN INIT');
-
         if (this.authService.getToken() && !this.authService.isLogged()) {
             this.authService.logout();
         }

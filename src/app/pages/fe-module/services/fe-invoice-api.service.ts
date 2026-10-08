@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angul
 import { Injectable } from '@angular/core';
 import { Observable, from, map, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { extractApiErrorMessage } from '@core/utils/api-error';
 import { SifenPlatformService } from './sifen-platform.service';
 
 export type FeInvoiceStatus = 'pendiente' | 'aprobado' | 'rechazado' | 'error' | 'validacion-interna' | 'validacion-interna-fallida' | 'borrador-validado-sin-firma';
@@ -649,21 +650,7 @@ export class FeInvoiceApiService {
     }
 
     getErrorMessage(error: unknown, fallback: string): string {
-        if (error instanceof HttpErrorResponse) {
-            const payload = error.error;
-            if (payload && typeof payload === 'object') {
-                const problem = payload as { userMessage?: string; suggestedAction?: string; detail?: string; title?: string; message?: string };
-                return problem.userMessage || problem.suggestedAction || problem.detail || problem.message || problem.title || fallback;
-            }
-
-            if (typeof payload === 'string' && payload.trim()) {
-                return payload;
-            }
-
-            return error.message || fallback;
-        }
-
-        return fallback;
+        return extractApiErrorMessage(error, fallback);
     }
 
     private mapTenantListItem(item: InvoiceApiListItem): FeInvoiceListItem {

@@ -97,6 +97,7 @@ export class AuthService {
         localStorage.removeItem('remember_username');
         localStorage.removeItem(this.displayNameKey);
         localStorage.removeItem(this.sessionUserKey);
+        localStorage.removeItem('sifen_selected_tenant');
         this.clearToken();
     }
 

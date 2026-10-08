@@ -1,8 +1,9 @@
-import { HttpErrorResponse, HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, tap } from 'rxjs';
 import { AuthService, SessionUser } from '@core/service/auth.service';
 import { environment } from 'src/environments/environment';
+import { extractApiErrorMessage } from '@core/utils/api-error';
 
 export interface SifenCompanySummary {
     tenantId: string;
@@ -482,18 +483,7 @@ export class SifenPlatformService {
     }
 
     getErrorMessage(error: unknown, fallback: string): string {
-        if (error instanceof HttpErrorResponse) {
-            const message = error.error?.userMessage
-                || error.error?.suggestedAction
-                || error.error?.message
-                || error.error?.error?.message
-                || error.message;
-            if (typeof message === 'string' && message.trim()) {
-                return message;
-            }
-        }
-
-        return fallback;
+        return extractApiErrorMessage(error, fallback);
     }
 
     private mapCompany(company: any): SifenCompanyDetail {
