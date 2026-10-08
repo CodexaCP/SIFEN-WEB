@@ -394,7 +394,7 @@ export class FeIssueComponent {
         return '';
     }
 
-    itemError(index: number, controlName: 'description' | 'quantity' | 'unitPrice', label: string): string {
+    itemError(index: number, controlName: 'code' | 'unitCode' | 'description' | 'quantity' | 'unitPrice', label: string): string {
         const control = this.items.at(index).get(controlName);
         if (!this.submitted && !control?.touched) {
             return '';
