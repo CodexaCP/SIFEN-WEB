@@ -143,6 +143,10 @@ export class SifenDashboardComponent implements OnInit {
         ];
     }
 
+    trackByRoute(_: number, action: { route: string }): string {
+        return action.route;
+    }
+
     openRoute(route: string): void {
         this.router.navigate([route]);
     }

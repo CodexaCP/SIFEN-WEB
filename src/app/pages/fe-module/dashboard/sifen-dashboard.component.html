@@ -62,7 +62,7 @@
             </div>
 
             <div class="sifen-dashboard__quick-grid">
-                <button *ngFor="let action of quickActions" type="button" (click)="openRoute(action.route)">
+                <button *ngFor="let action of quickActions; trackBy: trackByRoute" type="button" (click)="openRoute(action.route)">
                     <i [class]="action.icon"></i>
                     <strong>{{ action.label }}</strong>
                     <span>{{ action.description }}</span>

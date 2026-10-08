@@ -1,6 +1,16 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FeInvoiceApiService, FeInvoiceDetail, FeInvoiceEventItem, FeInvoiceStatusResult } from '../services/fe-invoice-api.service';
+import { finalize } from 'rxjs';
+import { AuthService } from '@core/service/auth.service';
+import {
+    FeFiscalState,
+    FeInvoiceApiService,
+    FeInvoiceDetail,
+    FeInvoiceEventItem,
+    FeInvoiceStatusResult,
+    FeTransmissionState
+} from '../services/fe-invoice-api.service';
 import { SifenPlatformService } from '../services/sifen-platform.service';
 import { SifenKudePreviewModel } from '../kude-preview/sifen-kude-preview.component';
 
@@ -16,12 +26,15 @@ export class FeDetailComponent implements OnInit {
     feedbackMessage = '';
     errorMessage = '';
     loading = false;
+    consultingStatus = false;
+    statusQueryError = '';
 
     constructor(
         private readonly route: ActivatedRoute,
         private readonly router: Router,
         private readonly feInvoiceApiService: FeInvoiceApiService,
-        private readonly sifenPlatformService: SifenPlatformService
+        private readonly sifenPlatformService: SifenPlatformService,
+        private readonly authService: AuthService
     ) {}
 
     ngOnInit(): void {
@@ -51,18 +64,64 @@ export class FeDetailComponent implements OnInit {
     }
 
     refreshStatus(): void {
-        if (!this.invoice) {
+        if (!this.invoice?.cdc || this.consultingStatus) {
             return;
         }
 
-        this.feInvoiceApiService.getStatus(this.invoice.cdc).subscribe({
+        this.consultingStatus = true;
+        this.statusQueryError = '';
+        this.feInvoiceApiService.getStatus(this.invoice.cdc).pipe(
+            finalize(() => {
+                this.consultingStatus = false;
+            })
+        ).subscribe({
             next: (status) => {
                 this.statusSnapshot = status;
             },
             error: (error) => {
-                this.errorMessage = this.feInvoiceApiService.getErrorMessage(error, 'No se pudo consultar el estado FE.');
+                this.statusQueryError = this.feInvoiceApiService.getStatusQueryErrorMessage(error);
+                if (error instanceof HttpErrorResponse && error.status === 401) {
+                    this.authService.logout();
+                    this.router.navigate(['/sifen/login'], { queryParams: { returnUrl: this.router.url } });
+                }
             }
         });
+    }
+
+    get transmissionState(): FeTransmissionState | null {
+        return this.statusSnapshot?.transmissionState ?? this.invoice?.transmissionState ?? null;
+    }
+
+    get fiscalState(): FeFiscalState | null {
+        return this.statusSnapshot?.fiscalState ?? this.invoice?.fiscalState ?? null;
+    }
+
+    get sifenTrackingId(): string | null {
+        return this.statusSnapshot?.sifenTrackingId ?? this.invoice?.sifenTrackingId ?? null;
+    }
+
+    get canConsultByCdc(): boolean {
+        return !!this.invoice?.cdc && (this.transmissionState === 'Indeterminate' || this.transmissionState === 'Sending');
+    }
+
+    get canRetryInvoice(): boolean {
+        return !!this.invoice?.canRetry && this.transmissionState !== 'Indeterminate' && this.transmissionState !== 'Sending';
+    }
+
+    transmissionLabel(state: FeTransmissionState | null): string {
+        return this.feInvoiceApiService.getTransmissionStateLabel(state);
+    }
+
+    transmissionSeverity(state: FeTransmissionState | null) {
+        return this.feInvoiceApiService.getTransmissionStateSeverity(state);
+    }
+
+    fiscalLabel(state: FeFiscalState | null): string {
+        return this.feInvoiceApiService.getFiscalStateLabel(state);
+    }
+
+    fiscalSeverity(state: FeFiscalState | null) {
+        return this.feInvoiceApiService.getFiscalStateSeverity(state);
     }
 
     downloadXml(): void {
@@ -103,7 +162,7 @@ export class FeDetailComponent implements OnInit {
     }
 
     retry(): void {
-        if (!this.invoice?.canRetry) {
+        if (!this.invoice || !this.canRetryInvoice) {
             return;
         }
 

@@ -6,6 +6,11 @@ import { SifenPlatformService } from './sifen-platform.service';
 
 export type FeInvoiceStatus = 'pendiente' | 'aprobado' | 'rechazado' | 'error' | 'validacion-interna' | 'validacion-interna-fallida' | 'borrador-validado-sin-firma';
 
+// Valores exactos de SifenTransmissionState / SifenFiscalState del backend (JsonStringEnumConverter).
+export type FeTransmissionState = 'NotSent' | 'Sending' | 'Delivered' | 'NotDelivered' | 'Indeterminate';
+export type FeFiscalState = 'None' | 'Approved' | 'ApprovedWithObservations' | 'Rejected' | 'NotFoundInSifen';
+type FeTagSeverity = 'success' | 'warning' | 'danger' | 'info' | 'secondary';
+
 export interface FeInvoiceItem {
     lineNumber?: number;
     description: string;
@@ -21,7 +26,7 @@ export interface FeInvoiceItem {
 export interface FeInvoiceListItem {
     id: string;
     tenantId?: string;
-    cdc: string;
+    cdc: string | null;
     number: string;
     customerName: string;
     customerDocument?: string | null;
@@ -44,6 +49,8 @@ export interface FeInvoiceListItem {
     isRetryable: boolean;
     correlationId?: string | null;
     lastErrorMessage?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
 }
 
 export interface FeInvoiceDetail {
@@ -74,6 +81,9 @@ export interface FeInvoiceDetail {
     status: FeInvoiceStatus;
     statusCode?: string | null;
     statusMessage?: string | null;
+    sifenTrackingId?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
     errorCode?: string | null;
     errorCategory?: string | null;
     userMessage?: string | null;
@@ -143,14 +153,12 @@ export interface FeInvoiceStatusResult {
     suggestedAction?: string | null;
     isRetryable?: boolean;
     correlationId?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
+    sifenTrackingId?: string | null;
 }
 
 export interface FeCreateInvoicePayload {
-    documentType: string;
-    establishmentCode: string;
-    expeditionPointCode: string;
-    documentNumber: string;
-    issuedAt: string;
     saleCondition: string;
     currencyCode: string;
     notes?: string;
@@ -233,6 +241,9 @@ interface InvoiceApiListItem {
     lastErrorMessage?: string | null;
     createdAt?: string;
     updatedAt?: string | null;
+    cdc?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
 }
 
 interface InvoiceApiDetail {
@@ -262,6 +273,9 @@ interface InvoiceApiDetail {
     status: string;
     statusCode?: string | null;
     statusMessage?: string | null;
+    sifenTrackingId?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
     errorCode?: string | null;
     errorCategory?: string | null;
     userMessage?: string | null;
@@ -297,14 +311,6 @@ interface KudePlaceholderResponse {
 }
 
 interface CreateSimpleInvoiceRequest {
-    environment: 'Test';
-    documentType: string;
-    establishmentCode: string;
-    expeditionPointCode: string;
-    documentNumber: string;
-    securityCode: string;
-    issueDate: string;
-    emisorDireccion: string;
     notes?: string;
     receiverName: string;
     receiverDocument: string;
@@ -317,7 +323,7 @@ interface CreateSimpleInvoiceRequest {
         description: string;
         quantity: number;
         unitPrice: number;
-        vatRate: number;
+        vatRate?: number;
     }>;
 }
 
@@ -405,14 +411,31 @@ export class FeInvoiceApiService {
         });
     }
 
-    create(payload: FeCreateInvoicePayload): Observable<FeCreateInvoiceResult> {
+    /**
+     * idempotencyKey identifica la operacion de emision: reutilizarla al repetir la misma operacion
+     * y usar una nueva (newIdempotencyKey) para cada factura nueva o modificada.
+     */
+    create(payload: FeCreateInvoicePayload, idempotencyKey: string): Observable<FeCreateInvoiceResult> {
         return this.http.post<FeCreateInvoiceResult>(
             `${this.apiUrl}/fe/invoices`,
             this.buildCreateRequest(payload),
             {
-                headers: this.buildTenantHeaders()
+                headers: this.buildTenantHeaders().set('Idempotency-Key', idempotencyKey)
             }
         );
+    }
+
+    newIdempotencyKey(): string {
+        const cryptoApi = crypto as Crypto & { randomUUID?: () => string };
+        if (typeof cryptoApi.randomUUID === 'function') {
+            return cryptoApi.randomUUID();
+        }
+
+        const bytes = cryptoApi.getRandomValues(new Uint8Array(16));
+        bytes[6] = (bytes[6] & 0x0f) | 0x40;
+        bytes[8] = (bytes[8] & 0x3f) | 0x80;
+        const hex = Array.from(bytes, (value) => value.toString(16).padStart(2, '0')).join('');
+        return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
     }
 
     retry(id: string): Observable<FeRetryInvoiceResult> {
@@ -477,7 +500,7 @@ export class FeInvoiceApiService {
     getStatusShortMessage(status: FeInvoiceStatus): string {
         switch (status) {
             case 'aprobado':
-                return 'Aprobada por SIFEN.';
+                return 'Estado del documento: aceptado. La aprobación fiscal se indica en el estado fiscal SIFEN.';
             case 'rechazado':
                 return 'Rechazada. Revisa el motivo y corrige antes de reenviar.';
             case 'error':
@@ -512,6 +535,83 @@ export class FeInvoiceApiService {
         }
     }
 
+    getTransmissionStateLabel(state?: FeTransmissionState | null): string {
+        switch (state) {
+            case 'NotSent':
+                return 'No enviado';
+            case 'Sending':
+                return 'Enviando';
+            case 'Delivered':
+                return 'Transmitido';
+            case 'NotDelivered':
+                return 'No transmitido';
+            case 'Indeterminate':
+                return 'Indeterminado';
+            default:
+                return state ?? 'No disponible';
+        }
+    }
+
+    getTransmissionStateSeverity(state?: FeTransmissionState | null): FeTagSeverity {
+        switch (state) {
+            case 'Delivered':
+                return 'info';
+            case 'Sending':
+                return 'warning';
+            case 'Indeterminate':
+            case 'NotDelivered':
+                return 'danger';
+            default:
+                return 'secondary';
+        }
+    }
+
+    getFiscalStateLabel(state?: FeFiscalState | null): string {
+        switch (state) {
+            case 'None':
+                return 'Sin resultado fiscal';
+            case 'Approved':
+                return 'Aprobado por SIFEN';
+            case 'ApprovedWithObservations':
+                return 'Aprobado con observaciones';
+            case 'Rejected':
+                return 'Rechazado por SIFEN';
+            case 'NotFoundInSifen':
+                return 'No encontrado en SIFEN';
+            default:
+                return state ?? 'No disponible';
+        }
+    }
+
+    getFiscalStateSeverity(state?: FeFiscalState | null): FeTagSeverity {
+        switch (state) {
+            case 'Approved':
+                return 'success';
+            case 'ApprovedWithObservations':
+                return 'warning';
+            case 'Rejected':
+            case 'NotFoundInSifen':
+                return 'danger';
+            default:
+                return 'secondary';
+        }
+    }
+
+    getStatusQueryErrorMessage(error: unknown): string {
+        if (error instanceof HttpErrorResponse) {
+            switch (error.status) {
+                case 401:
+                    return 'Tu sesión no es válida o expiró. Vuelve a iniciar sesión.';
+                case 403:
+                    return 'No tienes autorización para consultar este documento.';
+                case 404:
+                    return 'No se encontró el documento dentro de tu alcance autorizado.';
+            }
+        }
+
+        return 'Error técnico al consultar el estado por CDC. El estado mostrado no cambió; puedes volver a intentar.';
+    }
+
     canRetryInvoice(status: FeInvoiceStatus, statusCode?: string | null): boolean {
         return status === 'error' && this.isTechnicalRetryCode(statusCode);
     }
@@ -540,7 +640,7 @@ export class FeInvoiceApiService {
         return {
             id: item.invoiceId ?? '',
             tenantId: item.tenantId,
-            cdc: item.correlationId ?? '',
+            cdc: item.cdc || null,
             number: item.invoiceNumber ?? '',
             customerName: item.customerName ?? '',
             customerDocument: null,
@@ -554,11 +654,13 @@ export class FeInvoiceApiService {
             statusMessage: item.lastErrorMessage,
             canDownloadXml: true,
             canDownloadKude: true,
-            canRetry: Boolean(item.isRetryable),
+            canRetry: Boolean(item.isRetryable) && this.allowsRetry(item.transmissionState),
             retryCount: item.retryCount ?? 0,
             isRetryable: Boolean(item.isRetryable),
             correlationId: item.correlationId,
-            lastErrorMessage: item.lastErrorMessage
+            lastErrorMessage: item.lastErrorMessage,
+            transmissionState: item.transmissionState ?? null,
+            fiscalState: item.fiscalState ?? null
         };
     }
 
@@ -592,6 +694,9 @@ export class FeInvoiceApiService {
             status: simpleStatus,
             statusCode: item.statusCode,
             statusMessage: item.statusMessage,
+            sifenTrackingId: item.sifenTrackingId,
+            transmissionState: item.transmissionState ?? null,
+            fiscalState: item.fiscalState ?? null,
             errorCode: item.errorCode,
             errorCategory: item.errorCategory,
             userMessage: item.userMessage,
@@ -614,7 +719,8 @@ export class FeInvoiceApiService {
                 totalAmount: line.totalAmount
             })),
             xmlPayload: item.xmlPayload,
-            canRetry: Boolean(item.isRetryable) || this.canRetryInvoice(simpleStatus, item.statusCode),
+            canRetry: (Boolean(item.isRetryable) || this.canRetryInvoice(simpleStatus, item.statusCode))
+                && this.allowsRetry(item.transmissionState),
             events: item.events ?? [],
             logs: item.logs ?? [],
             tenantLogs: item.tenantLogs ?? []
@@ -635,57 +741,45 @@ export class FeInvoiceApiService {
         }
     }
 
+    // Replica MapSimpleStatus del backend (InvoiceEndpoints.cs). InvoiceDetail.status llega como nombre del enum
+    // SifenDocumentStatus; los pares listados son nombres declarados en el backend con el mismo valor numerico.
     private toSimpleStatus(status: string): FeInvoiceStatus {
         switch (status) {
-            case 'Accepted':
-            case 'aprobado':
-                return 'aprobado';
-            case 'Rejected':
-            case 'rechazado':
-                return 'rechazado';
-            case 'Failed':
-            case 'error':
-                return 'error';
             case 'InternalValidation':
-            case 'validacion-interna':
                 return 'validacion-interna';
             case 'InternalValidationFailed':
-            case 'validacion-interna-fallida':
+            case 'BlockedByConfiguration':
                 return 'validacion-interna-fallida';
             case 'DraftValidatedWithoutSignature':
-            case 'borrador-validado-sin-firma':
                 return 'borrador-validado-sin-firma';
+            case 'Accepted':
+            case 'Approved':
+                return 'aprobado';
+            case 'Rejected':
+                return 'rechazado';
+            case 'Failed':
+            case 'RetryableError':
+                return 'error';
             default:
                 return 'pendiente';
         }
     }
 
     private buildCreateRequest(payload: FeCreateInvoicePayload): CreateSimpleInvoiceRequest {
-        const now = new Date();
-        const sequence = `${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
-
         return {
-            environment: 'Test',
-            documentType: payload.documentType,
-            establishmentCode: payload.establishmentCode || '001',
-            expeditionPointCode: payload.expeditionPointCode || '001',
-            documentNumber: payload.documentNumber || sequence.padStart(7, '0').slice(-7),
-            securityCode: '123456789',
-            issueDate: payload.issuedAt || now.toISOString().slice(0, 10),
-            emisorDireccion: 'TODO: configurar direccion del emisor por tenant',
-            notes: payload.notes?.trim(),
+            notes: payload.notes?.trim() || undefined,
             receiverName: payload.customerName.trim(),
             receiverDocument: payload.customerDocument.trim(),
             receiverAddress: payload.customerAddress?.trim(),
             receiverEmail: payload.customerEmail?.trim(),
             receiverPhone: payload.customerPhone?.trim(),
-            currencyCode: payload.currencyCode || 'PYG',
-            saleCondition: payload.saleCondition || 'Contado',
+            currencyCode: payload.currencyCode,
+            saleCondition: payload.saleCondition,
             items: payload.items.map(item => ({
                 description: item.description,
                 quantity: item.quantity,
                 unitPrice: item.unitPrice,
-                vatRate: item.vatRate ?? 10
+                vatRate: item.vatRate
             }))
         };
     }
@@ -730,6 +824,11 @@ export class FeInvoiceApiService {
 
         const match = disposition.match(/filename=\"?([^\";]+)\"?/i);
         return match?.[1] ?? null;
+    }
+
+    // El backend rechaza el reintento con transmision Indeterminate/Sending (requiere consulta por CDC).
+    private allowsRetry(state?: FeTransmissionState | null): boolean {
+        return state !== 'Indeterminate' && state !== 'Sending';
     }
 
     private isTechnicalRetryCode(statusCode?: string | null): boolean {

@@ -23,7 +23,7 @@
     </article>
 
     <div class="fe-detail-grid">
-        <article class="detail-card"><span>CDC TEST</span><strong>{{ invoice.testCdc || invoice.cdc }}</strong></article>
+        <article class="detail-card"><span>CDC</span><strong>{{ invoice.cdc || 'No disponible' }}</strong></article>
         <article class="detail-card"><span>Numero</span><strong>{{ invoice.number }}</strong></article>
         <article class="detail-card"><span>Fecha</span><strong>{{ invoice.issuedAt | date:'short' }}</strong></article>
         <article class="detail-card"><span>Total</span><strong>{{ invoice.total | number:'1.0-0' }}</strong></article>
@@ -48,6 +48,47 @@
                     <p>{{ effectiveAction }}</p>
                 </div>
             </div>
+        </article>
+
+        <article class="detail-card detail-card--wide">
+            <h3>Documento electrónico</h3>
+            <div class="detail-message">
+                <div>
+                    <span>CDC</span>
+                    <p>{{ invoice.cdc || 'No disponible' }}</p>
+                </div>
+                <div>
+                    <span>Estado interno</span>
+                    <p>{{ invoice.internalStatus }}</p>
+                </div>
+                <div>
+                    <span>Transmisión</span>
+                    <p><p-tag [severity]="transmissionSeverity(transmissionState)" [value]="transmissionLabel(transmissionState)"></p-tag></p>
+                </div>
+                <div>
+                    <span>Estado fiscal SIFEN</span>
+                    <p><p-tag [severity]="fiscalSeverity(fiscalState)" [value]="fiscalLabel(fiscalState)"></p-tag></p>
+                </div>
+                <div>
+                    <span>Protocolo SIFEN (dProtAut)</span>
+                    <p>{{ sifenTrackingId || 'No disponible' }}</p>
+                </div>
+                <div>
+                    <span>Código de estado</span>
+                    <p>{{ statusSnapshot?.statusCode || invoice.statusCode || 'No disponible' }}</p>
+                </div>
+                <div>
+                    <span>Mensaje de estado</span>
+                    <p>{{ statusSnapshot?.statusMessage || invoice.statusMessage || 'No disponible' }}</p>
+                </div>
+            </div>
+            <p *ngIf="transmissionState === 'Indeterminate'" class="detail-card__hint">
+                Estado de transmisión indeterminado: no se pudo determinar con certeza si SIFEN recibió o procesó el documento. No reenvíes la factura. La consulta por CDC muestra el estado que el backend tiene registrado para este documento.
+            </p>
+            <button *ngIf="canConsultByCdc" pButton type="button" icon="pi pi-search" class="p-button-outlined"
+                [label]="consultingStatus ? 'Consultando…' : 'Consultar estado por CDC'"
+                [loading]="consultingStatus" [disabled]="consultingStatus" (click)="refreshStatus()"></button>
+            <small *ngIf="statusQueryError" class="fe-feedback fe-feedback--error">{{ statusQueryError }}</small>
         </article>
 
         <article class="detail-card detail-card--wide">
@@ -189,10 +230,10 @@
 
     <div class="fe-actions">
         <button pButton type="button" label="Preparar en modo TEST" icon="pi pi-play" class="p-button-success p-button-text" (click)="prepareTest()"></button>
-        <button pButton type="button" label="Actualizar estado" icon="pi pi-sync" class="p-button-text" (click)="refreshStatus()"></button>
+        <button pButton type="button" label="Actualizar estado" icon="pi pi-sync" class="p-button-text" [disabled]="consultingStatus" (click)="refreshStatus()"></button>
         <button pButton type="button" label="Descargar XML" icon="pi pi-file" class="p-button-text" (click)="downloadXml()"></button>
         <button pButton type="button" label="Descargar KuDE" icon="pi pi-download" class="p-button-text" (click)="downloadKude()"></button>
-        <button *ngIf="invoice.canRetry" pButton type="button" label="Reintentar" icon="pi pi-refresh" class="p-button-warning p-button-text" (click)="retry()"></button>
+        <button *ngIf="canRetryInvoice" pButton type="button" label="Reintentar" icon="pi pi-refresh" class="p-button-warning p-button-text" (click)="retry()"></button>
         <button pButton type="button" label="Volver al listado" class="p-button-outlined" (click)="backToList()"></button>
     </div>
 </section>
