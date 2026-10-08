@@ -98,7 +98,7 @@
                     <th>Total</th>
                     <th>Moneda</th>
                     <th>Estado</th>
-                    <th>CorrelationId</th>
+                    <th>CDC / SIFEN</th>
                     <th>Reintentos</th>
                     <th>Ultimo error</th>
                     <th>Acciones</th>
@@ -121,7 +121,13 @@
                             <small class="fe-status__message">{{ internalStatusMessage(invoice.internalStatus) }}</small>
                         </div>
                     </td>
-                    <td class="fe-cdc">{{ invoice.correlationId || 'Sin correlationId' }}</td>
+                    <td>
+                        <div class="fe-status">
+                            <span class="fe-cdc">{{ invoice.cdc || 'Sin CDC' }}</span>
+                            <p-tag [severity]="transmissionSeverity(invoice)" [value]="'Transmisión: ' + transmissionLabel(invoice)"></p-tag>
+                            <p-tag [severity]="fiscalSeverity(invoice)" [value]="'Fiscal: ' + fiscalLabel(invoice)"></p-tag>
+                        </div>
+                    </td>
                     <td>{{ invoice.retryCount || 0 }}</td>
                     <td>{{ invoice.lastErrorMessage || 'Sin error' }}</td>
                     <td>

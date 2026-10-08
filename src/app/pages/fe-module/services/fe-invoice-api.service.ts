@@ -6,6 +6,11 @@ import { SifenPlatformService } from './sifen-platform.service';
 
 export type FeInvoiceStatus = 'pendiente' | 'aprobado' | 'rechazado' | 'error' | 'validacion-interna' | 'validacion-interna-fallida' | 'borrador-validado-sin-firma';
 
+// Valores exactos de SifenTransmissionState / SifenFiscalState del backend (JsonStringEnumConverter).
+export type FeTransmissionState = 'NotSent' | 'Sending' | 'Delivered' | 'NotDelivered' | 'Indeterminate';
+export type FeFiscalState = 'None' | 'Approved' | 'ApprovedWithObservations' | 'Rejected' | 'NotFoundInSifen';
+type FeTagSeverity = 'success' | 'warning' | 'danger' | 'info' | 'secondary';
+
 export interface FeInvoiceItem {
     lineNumber?: number;
     description: string;
@@ -44,6 +49,8 @@ export interface FeInvoiceListItem {
     isRetryable: boolean;
     correlationId?: string | null;
     lastErrorMessage?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
 }
 
 export interface FeInvoiceDetail {
@@ -75,6 +82,8 @@ export interface FeInvoiceDetail {
     statusCode?: string | null;
     statusMessage?: string | null;
     sifenTrackingId?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
     errorCode?: string | null;
     errorCategory?: string | null;
     userMessage?: string | null;
@@ -144,6 +153,9 @@ export interface FeInvoiceStatusResult {
     suggestedAction?: string | null;
     isRetryable?: boolean;
     correlationId?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
+    sifenTrackingId?: string | null;
 }
 
 export interface FeCreateInvoicePayload {
@@ -229,6 +241,9 @@ interface InvoiceApiListItem {
     lastErrorMessage?: string | null;
     createdAt?: string;
     updatedAt?: string | null;
+    cdc?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
 }
 
 interface InvoiceApiDetail {
@@ -259,6 +274,8 @@ interface InvoiceApiDetail {
     statusCode?: string | null;
     statusMessage?: string | null;
     sifenTrackingId?: string | null;
+    transmissionState?: FeTransmissionState | null;
+    fiscalState?: FeFiscalState | null;
     errorCode?: string | null;
     errorCategory?: string | null;
     userMessage?: string | null;
@@ -483,7 +500,7 @@ export class FeInvoiceApiService {
     getStatusShortMessage(status: FeInvoiceStatus): string {
         switch (status) {
             case 'aprobado':
-                return 'Estado del documento: aceptado. El estado fiscal SIFEN aún no lo expone la API.';
+                return 'Estado del documento: aceptado. La aprobación fiscal se indica en el estado fiscal SIFEN.';
             case 'rechazado':
                 return 'Rechazada. Revisa el motivo y corrige antes de reenviar.';
             case 'error':
@@ -518,6 +535,83 @@ export class FeInvoiceApiService {
         }
     }
 
+    getTransmissionStateLabel(state?: FeTransmissionState | null): string {
+        switch (state) {
+            case 'NotSent':
+                return 'No enviado';
+            case 'Sending':
+                return 'Enviando';
+            case 'Delivered':
+                return 'Transmitido';
+            case 'NotDelivered':
+                return 'No transmitido';
+            case 'Indeterminate':
+                return 'Indeterminado';
+            default:
+                return state ?? 'No disponible';
+        }
+    }
+
+    getTransmissionStateSeverity(state?: FeTransmissionState | null): FeTagSeverity {
+        switch (state) {
+            case 'Delivered':
+                return 'info';
+            case 'Sending':
+                return 'warning';
+            case 'Indeterminate':
+            case 'NotDelivered':
+                return 'danger';
+            default:
+                return 'secondary';
+        }
+    }
+
+    getFiscalStateLabel(state?: FeFiscalState | null): string {
+        switch (state) {
+            case 'None':
+                return 'Sin resultado fiscal';
+            case 'Approved':
+                return 'Aprobado por SIFEN';
+            case 'ApprovedWithObservations':
+                return 'Aprobado con observaciones';
+            case 'Rejected':
+                return 'Rechazado por SIFEN';
+            case 'NotFoundInSifen':
+                return 'No encontrado en SIFEN';
+            default:
+                return state ?? 'No disponible';
+        }
+    }
+
+    getFiscalStateSeverity(state?: FeFiscalState | null): FeTagSeverity {
+        switch (state) {
+            case 'Approved':
+                return 'success';
+            case 'ApprovedWithObservations':
+                return 'warning';
+            case 'Rejected':
+            case 'NotFoundInSifen':
+                return 'danger';
+            default:
+                return 'secondary';
+        }
+    }
+
+    getStatusQueryErrorMessage(error: unknown): string {
+        if (error instanceof HttpErrorResponse) {
+            switch (error.status) {
+                case 401:
+                    return 'Tu sesión no es válida o expiró. Vuelve a iniciar sesión.';
+                case 403:
+                    return 'No tienes autorización para consultar este documento.';
+                case 404:
+                    return 'No se encontró el documento dentro de tu alcance autorizado.';
+            }
+        }
+
+        return 'Error técnico al consultar el estado por CDC. El estado mostrado no cambió; puedes volver a intentar.';
+    }
+
     canRetryInvoice(status: FeInvoiceStatus, statusCode?: string | null): boolean {
         return status === 'error' && this.isTechnicalRetryCode(statusCode);
     }
@@ -546,7 +640,7 @@ export class FeInvoiceApiService {
         return {
             id: item.invoiceId ?? '',
             tenantId: item.tenantId,
-            cdc: null,
+            cdc: item.cdc || null,
             number: item.invoiceNumber ?? '',
             customerName: item.customerName ?? '',
             customerDocument: null,
@@ -560,11 +654,13 @@ export class FeInvoiceApiService {
             statusMessage: item.lastErrorMessage,
             canDownloadXml: true,
             canDownloadKude: true,
-            canRetry: Boolean(item.isRetryable),
+            canRetry: Boolean(item.isRetryable) && this.allowsRetry(item.transmissionState),
             retryCount: item.retryCount ?? 0,
             isRetryable: Boolean(item.isRetryable),
             correlationId: item.correlationId,
-            lastErrorMessage: item.lastErrorMessage
+            lastErrorMessage: item.lastErrorMessage,
+            transmissionState: item.transmissionState ?? null,
+            fiscalState: item.fiscalState ?? null
         };
     }
 
@@ -599,6 +695,8 @@ export class FeInvoiceApiService {
             statusCode: item.statusCode,
             statusMessage: item.statusMessage,
             sifenTrackingId: item.sifenTrackingId,
+            transmissionState: item.transmissionState ?? null,
+            fiscalState: item.fiscalState ?? null,
             errorCode: item.errorCode,
             errorCategory: item.errorCategory,
             userMessage: item.userMessage,
@@ -621,7 +719,8 @@ export class FeInvoiceApiService {
                 totalAmount: line.totalAmount
             })),
             xmlPayload: item.xmlPayload,
-            canRetry: Boolean(item.isRetryable) || this.canRetryInvoice(simpleStatus, item.statusCode),
+            canRetry: (Boolean(item.isRetryable) || this.canRetryInvoice(simpleStatus, item.statusCode))
+                && this.allowsRetry(item.transmissionState),
             events: item.events ?? [],
             logs: item.logs ?? [],
             tenantLogs: item.tenantLogs ?? []
@@ -725,6 +824,11 @@ export class FeInvoiceApiService {
 
         const match = disposition.match(/filename=\"?([^\";]+)\"?/i);
         return match?.[1] ?? null;
+    }
+
+    // El backend rechaza el reintento con transmision Indeterminate/Sending (requiere consulta por CDC).
+    private allowsRetry(state?: FeTransmissionState | null): boolean {
+        return state !== 'Indeterminate' && state !== 'Sending';
     }
 
     private isTechnicalRetryCode(statusCode?: string | null): boolean {

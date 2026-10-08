@@ -139,6 +139,22 @@ export class FeListComponent implements OnInit {
         }
     }
 
+    transmissionLabel(invoice: FeInvoiceListItem): string {
+        return this.feInvoiceApiService.getTransmissionStateLabel(invoice.transmissionState);
+    }
+
+    transmissionSeverity(invoice: FeInvoiceListItem) {
+        return this.feInvoiceApiService.getTransmissionStateSeverity(invoice.transmissionState);
+    }
+
+    fiscalLabel(invoice: FeInvoiceListItem): string {
+        return this.feInvoiceApiService.getFiscalStateLabel(invoice.fiscalState);
+    }
+
+    fiscalSeverity(invoice: FeInvoiceListItem) {
+        return this.feInvoiceApiService.getFiscalStateSeverity(invoice.fiscalState);
+    }
+
     internalStatusLabel(internalStatus?: string): string {
         return internalStatus || 'DRAFT';
     }
