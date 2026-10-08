@@ -27,7 +27,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
       if (error instanceof HttpErrorResponse && error.status === 401 && !isPublicAuthEndpoint && token) {
         authService.logout();
         const currentUrl = router.url;
-        const loginRoute = currentUrl.startsWith('/sifen') ? '/sifen/login' : '/auth';
+        const loginRoute = '/sifen/login';
         if (!currentUrl.startsWith(loginRoute)) {
           router.navigate([loginRoute], { queryParams: { returnUrl: currentUrl } });
         }

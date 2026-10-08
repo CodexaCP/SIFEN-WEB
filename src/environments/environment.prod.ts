@@ -3,5 +3,5 @@ export const environment = {
   apiUrl: 'https://localhost:7177/api',
   serverUrl: 'https://localhost:7177',
   whatsAppPhone: '595986645450',
-  appName: 'TramiYa'
+  appName: 'Codexa'
 };

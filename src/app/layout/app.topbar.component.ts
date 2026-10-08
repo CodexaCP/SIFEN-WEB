@@ -30,6 +30,6 @@ export class AppTopBarComponent {
 
     logout() {
         this.authService.logout();
-        this.router.navigate(['/auth']);
+        this.router.navigate(['/sifen/login']);
     }
 }

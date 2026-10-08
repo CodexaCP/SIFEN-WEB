@@ -20,7 +20,6 @@ import { AccessComponent } from './auth/access/access.component';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
-import { ListComponent } from './pages/services/list/list.component';
 
 
 
