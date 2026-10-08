@@ -45,3 +45,41 @@
 .sifen-fiscal__section[open] summary {
   margin-bottom: 0.75rem;
 }
+
+.sifen-fiscal__readiness {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  align-items: center;
+}
+
+.sifen-fiscal__readiness ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+}
+
+.sifen-fiscal__readiness li,
+.sifen-fiscal__readiness strong {
+  color: #b91c1c;
+}
+
+.sifen-fiscal__readiness .is-ready {
+  color: #15803d;
+}
+
+.sifen-fiscal__registered {
+  margin: 0 0 1rem;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+}
+
+.sifen-fiscal__section summary small {
+  margin-left: 0.5rem;
+  color: #64748b;
+}

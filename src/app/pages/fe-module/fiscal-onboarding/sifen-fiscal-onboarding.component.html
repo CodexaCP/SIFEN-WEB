@@ -11,8 +11,30 @@
 
         <small class="sifen-config__status sifen-config__status--error" *ngIf="errorMessage">{{ errorMessage }}</small>
 
+        <div class="sifen-fiscal__readiness">
+            <label>
+                <span>Ambiente a revisar</span>
+                <select [(ngModel)]="viewEnvironment" (ngModelChange)="load()">
+                    <option value="Test">Test</option>
+                    <option value="Production">Production</option>
+                </select>
+            </label>
+            <small *ngIf="loading">Cargando...</small>
+            <ng-container *ngIf="readiness && !loading">
+                <strong [class.is-ready]="readiness.isReadyForSifenTest">
+                    {{ readiness.isReadyForSifenTest ? 'Lista para emitir en este ambiente' : 'Faltan datos para emitir en este ambiente' }}
+                </strong>
+                <ul>
+                    <li *ngFor="let check of readiness.checks" [class.is-ready]="check.isReady" [title]="check.summary">
+                        <i [class]="check.isReady ? 'pi pi-check' : 'pi pi-times'"></i>
+                        {{ readinessLabel(check.name) }}
+                    </li>
+                </ul>
+            </ng-container>
+        </div>
+
         <details class="sifen-fiscal__section">
-            <summary><h3>1. Perfil fiscal del emisor</h3></summary>
+            <summary><h3>1. Perfil fiscal del emisor</h3> <small *ngIf="setup?.profile as p">RUC {{ p.rucNumber }}-{{ p.rucCheckDigit }} · {{ p.legalName }}</small></summary>
             <p class="sifen-fiscal__hint">Codigos de departamento, distrito, ciudad y actividad economica segun las tablas del Manual Tecnico v150 y tu registro en Marangatu.</p>
             <small class="sifen-config__status" *ngIf="feedback.profile.success">{{ feedback.profile.success }}</small>
             <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.profile.error">{{ feedback.profile.error }}</small>
@@ -83,8 +105,13 @@
         </details>
 
         <details class="sifen-fiscal__section">
-            <summary><h3>2. Timbrado</h3></summary>
+            <summary><h3>2. Timbrado</h3> <small>{{ setup?.stamps?.length || 0 }} registrado(s)</small></summary>
             <p class="sifen-fiscal__hint">Numero de timbrado (8 digitos) y vigencia asignados por la DNIT.</p>
+            <ul class="sifen-fiscal__registered" *ngIf="setup?.stamps?.length">
+                <li *ngFor="let item of setup!.stamps">
+                    {{ item.stampingNumber }} · desde {{ item.validFrom }}{{ item.validTo ? ' hasta ' + item.validTo : '' }}{{ item.isActive ? '' : ' · inactivo' }}
+                </li>
+            </ul>
             <small class="sifen-config__status" *ngIf="feedback.stamp.success">{{ feedback.stamp.success }}</small>
             <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.stamp.error">{{ feedback.stamp.error }}</small>
             <div class="sifen-config__grid">
@@ -114,8 +141,13 @@
         </details>
 
         <details class="sifen-fiscal__section">
-            <summary><h3>3. Numeracion</h3></summary>
+            <summary><h3>3. Numeracion</h3> <small>{{ setup?.numberingSequences?.length || 0 }} registrada(s)</small></summary>
             <p class="sifen-fiscal__hint">Secuencia por timbrado, establecimiento y punto de expedicion. El back reserva los numeros de forma atomica.</p>
+            <ul class="sifen-fiscal__registered" *ngIf="setup?.numberingSequences?.length">
+                <li *ngFor="let item of setup!.numberingSequences">
+                    Timbrado {{ item.stampingNumber }} · tipo {{ item.documentTypeCode }} · {{ item.establishmentCode }}-{{ item.expeditionPointCode }}{{ item.series ? ' serie ' + item.series : '' }} · proximo {{ item.nextNumber }}{{ item.isActive ? '' : ' · inactiva' }}
+                </li>
+            </ul>
             <small class="sifen-config__status" *ngIf="feedback.numbering.success">{{ feedback.numbering.success }}</small>
             <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.numbering.error">{{ feedback.numbering.error }}</small>
             <div class="sifen-config__grid">
@@ -157,8 +189,13 @@
         </details>
 
         <details class="sifen-fiscal__section">
-            <summary><h3>4. Certificado de firma</h3></summary>
+            <summary><h3>4. Certificado de firma</h3> <small>{{ setup?.certificates?.length || 0 }} registrado(s)</small></summary>
             <p class="sifen-fiscal__hint">Solo metadata y referencias. Las referencias usan <code>env:NOMBRE_VARIABLE</code> o <code>file:/ruta</code>; nunca la password real.</p>
+            <ul class="sifen-fiscal__registered" *ngIf="setup?.certificates?.length">
+                <li *ngFor="let item of setup!.certificates">
+                    {{ item.purpose === 'MutualTls' ? 'TLS mutuo' : 'Firma XML' }} · {{ item.alias }} · {{ item.subject }} · vence {{ item.validTo | date: 'yyyy-MM-dd' }}{{ item.isActive ? '' : ' · inactivo' }}
+                </li>
+            </ul>
             <small class="sifen-config__status" *ngIf="feedback.certificate.success">{{ feedback.certificate.success }}</small>
             <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.certificate.error">{{ feedback.certificate.error }}</small>
             <div class="sifen-config__grid">

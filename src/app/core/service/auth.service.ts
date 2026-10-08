@@ -8,20 +8,6 @@ export interface LoginPayload {
     password: string;
 }
 
-export interface RegisterPayload {
-    username: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    email: string;
-    companyId?: number;
-}
-
-export interface ChangePasswordPayload {
-    currentPassword: string;
-    newPassword: string;
-}
-
 export interface LoginResponse {
     token: string;
     mustChangePassword: boolean;
@@ -49,14 +35,6 @@ export class AuthService {
 
     login(payload: LoginPayload): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.baseUrl}/auth/login`, payload);
-    }
-
-    register(payload: RegisterPayload): Observable<LoginResponse> {
-        return this.http.post<LoginResponse>(`${this.baseUrl}/auth/register`, payload);
-    }
-
-    changePassword(payload: ChangePasswordPayload) {
-        return this.http.post(`${this.baseUrl}/auth/change-password`, payload);
     }
 
     me() {

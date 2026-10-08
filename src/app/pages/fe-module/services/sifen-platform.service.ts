@@ -192,6 +192,71 @@ export interface SifenCertificateMetadataPayload {
     validTo: string;
 }
 
+export interface SifenFiscalSetup {
+    tenantId: string;
+    environment: SifenEnvironmentName;
+    profile: {
+        rucNumber: string;
+        rucCheckDigit: string;
+        legalName: string;
+        tradeName: string | null;
+        taxpayerType: 1 | 2 | null;
+        address: string | null;
+        houseNumber: string | null;
+        departmentCode: string | null;
+        departmentDescription: string | null;
+        districtCode: string | null;
+        districtDescription: string | null;
+        cityCode: string | null;
+        cityDescription: string | null;
+        phone: string | null;
+        email: string | null;
+        economicActivities: SifenEconomicActivity[];
+    } | null;
+    stamps: { id: string; stampingNumber: string; validFrom: string; validTo: string | null; isActive: boolean }[];
+    numberingSequences: {
+        id: string;
+        stampingNumber: string;
+        documentTypeCode: string;
+        establishmentCode: string;
+        expeditionPointCode: string;
+        series: string;
+        nextNumber: number;
+        isActive: boolean;
+    }[];
+    certificates: {
+        id: string;
+        purpose: 'XmlSignature' | 'MutualTls';
+        alias: string;
+        subject: string;
+        fingerprintSha256: string;
+        serialNumber: string;
+        certificateSecretReference: string;
+        certificatePasswordSecretReference: string;
+        validFrom: string;
+        validTo: string;
+        isActive: boolean;
+    }[];
+}
+
+export interface SifenTenantLogItem {
+    id: string;
+    invoiceId: string | null;
+    correlationId: string | null;
+    level: string;
+    source: string;
+    message: string;
+    technicalDetail: string | null;
+    createdAt: string;
+}
+
+export interface SifenReadinessReport {
+    tenantId: string;
+    environment: SifenEnvironmentName;
+    isReadyForSifenTest: boolean;
+    checks: { name: string; isReady: boolean; summary: string }[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class SifenPlatformService {
     private readonly apiUrl = environment.apiUrl;
@@ -352,6 +417,19 @@ export class SifenPlatformService {
                 readySummary: diagnostic?.readySummary ?? diagnostic?.summary ?? null
             }))
         );
+    }
+
+    getFiscalSetup(tenantId: string, environment: SifenEnvironmentName = 'Test'): Observable<SifenFiscalSetup> {
+        return this.http.get<SifenFiscalSetup>(`${this.onboardingUrl}/tenants/${tenantId}/fiscal-setup`, { params: { environment } });
+    }
+
+    getTenantLogs(tenantId: string, level?: string): Observable<SifenTenantLogItem[]> {
+        const params: Record<string, string> = level ? { level } : {};
+        return this.http.get<SifenTenantLogItem[]>(`${this.apiUrl}/fe/tenants/${tenantId}/logs`, { params });
+    }
+
+    getReadiness(tenantId: string, environment: SifenEnvironmentName = 'Test'): Observable<SifenReadinessReport> {
+        return this.http.get<SifenReadinessReport>(`${this.onboardingUrl}/tenants/${tenantId}/readiness`, { params: { environment } });
     }
 
     registerFiscalProfile(tenantId: string, payload: SifenFiscalProfilePayload): Observable<void> {

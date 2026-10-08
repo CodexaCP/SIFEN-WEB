@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SifenDiagnosticResult, SifenPlatformService } from '../services/sifen-platform.service';
+import { SifenDiagnosticResult, SifenPlatformService, SifenTenantLogItem } from '../services/sifen-platform.service';
 
 @Component({
     selector: 'app-sifen-company-diagnostic',
@@ -12,6 +12,8 @@ export class SifenCompanyDiagnosticComponent implements OnInit {
     diagnostic?: SifenDiagnosticResult;
     loading = false;
     errorMessage = '';
+    logs: SifenTenantLogItem[] = [];
+    logsError = '';
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -26,6 +28,24 @@ export class SifenCompanyDiagnosticComponent implements OnInit {
         }
         this.sifenPlatformService.setSelectedTenant(this.tenantId);
         this.loadDiagnostic();
+        this.loadLogs();
+    }
+
+    loadLogs(): void {
+        this.logsError = '';
+        this.sifenPlatformService.getTenantLogs(this.tenantId).subscribe({
+            next: (logs) => {
+                this.logs = logs.slice(0, 30);
+            },
+            error: (error) => {
+                this.logs = [];
+                this.logsError = this.sifenPlatformService.getErrorMessage(error, 'No se pudieron cargar los eventos del tenant.');
+            }
+        });
+    }
+
+    trackByLog(_: number, item: SifenTenantLogItem): string {
+        return item.id;
     }
 
     loadDiagnostic(): void {

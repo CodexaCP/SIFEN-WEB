@@ -64,6 +64,19 @@
                     </div>
                 </div>
             </article>
+
+            <article>
+                <h3>Ultimos eventos</h3>
+                <small class="sifen-diagnostic__error" *ngIf="logsError">{{ logsError }}</small>
+                <ul *ngIf="!logsError">
+                    <li *ngFor="let log of logs; trackBy: trackByLog" [title]="log.technicalDetail || ''">
+                        <strong>{{ log.createdAt | date: 'yyyy-MM-dd HH:mm' }} · {{ log.level }}</strong>
+                        {{ log.source }}: {{ log.message }}
+                        <a *ngIf="log.invoiceId" [routerLink]="['/sifen/invoices', log.invoiceId]">ver factura</a>
+                    </li>
+                    <li *ngIf="!logs.length">Sin eventos registrados.</li>
+                </ul>
+            </article>
         </div>
     </div>
 </section>

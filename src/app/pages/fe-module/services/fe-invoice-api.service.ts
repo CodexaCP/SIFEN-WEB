@@ -472,7 +472,7 @@ export class FeInvoiceApiService {
     }
 
     retry(id: string): Observable<FeRetryInvoiceResult> {
-        return this.http.post<FeRetryInvoiceResult>(`${this.serverUrl}/invoice/${id}/retry`, {}, {
+        return this.http.post<FeRetryInvoiceResult>(`${this.apiUrl}/fe/invoices/${id}/retry`, {}, {
             headers: this.buildTenantHeaders()
         });
     }

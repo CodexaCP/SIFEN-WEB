@@ -9,9 +9,7 @@ export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = localStorage.getItem('token');
   const url = req.url.toLowerCase();
-  const isLoginEndpoint = url.includes('/auth/login');
-  const isPublicRegisterEndpoint = url.endsWith('/auth/register');
-  const isPublicAuthEndpoint = isLoginEndpoint || isPublicRegisterEndpoint;
+  const isPublicAuthEndpoint = url.includes('/auth/login');
 
   const request = isPublicAuthEndpoint || !token
     ? req
