@@ -96,10 +96,10 @@
                     <span>Descripcion actividad</span>
                     <input pInputText [(ngModel)]="activity.description" />
                 </label>
-                <button pButton type="button" class="p-button-text" label="Quitar" (click)="removeActivity(i)"></button>
+                <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-text sifen-icon-btn p-button-danger" pTooltip="Quitar actividad" tooltipPosition="top" aria-label="Quitar actividad" (click)="removeActivity(i)"></button>
             </div>
             <div class="sifen-form-card__actions">
-                <button pButton type="button" class="p-button-text" label="Agregar actividad" (click)="addActivity()"></button>
+                <button pButton type="button" icon="pi pi-plus" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Agregar actividad" tooltipPosition="top" aria-label="Agregar actividad" (click)="addActivity()"></button>
                 <button pButton type="button" label="Guardar perfil fiscal" [loading]="feedback.profile.saving" (click)="saveProfile()"></button>
             </div>
         </details>

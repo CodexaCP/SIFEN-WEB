@@ -229,12 +229,12 @@
     </article>
 
     <div class="fe-actions">
-        <button pButton type="button" label="Preparar en modo TEST" icon="pi pi-play" class="p-button-success p-button-text" (click)="prepareTest()"></button>
-        <button pButton type="button" label="Actualizar estado" icon="pi pi-sync" class="p-button-text" [disabled]="consultingStatus" (click)="refreshStatus()"></button>
-        <button pButton type="button" label="Descargar XML" icon="pi pi-file" class="p-button-text" (click)="downloadXml()"></button>
-        <button pButton type="button" label="Descargar KuDE" icon="pi pi-download" class="p-button-text" (click)="downloadKude()"></button>
-        <button *ngIf="canRetryInvoice" pButton type="button" label="Reintentar" icon="pi pi-refresh" class="p-button-warning p-button-text" (click)="retry()"></button>
-        <button pButton type="button" label="Volver al listado" class="p-button-outlined" (click)="backToList()"></button>
+        <button pButton type="button" icon="pi pi-play" class="p-button-rounded p-button-text sifen-icon-btn p-button-success" pTooltip="Preparar en modo TEST" tooltipPosition="top" aria-label="Preparar en modo TEST" (click)="prepareTest()"></button>
+        <button pButton type="button" icon="pi pi-sync" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Actualizar estado" tooltipPosition="top" aria-label="Actualizar estado" [disabled]="consultingStatus" (click)="refreshStatus()"></button>
+        <button pButton type="button" icon="pi pi-code" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Descargar XML" tooltipPosition="top" aria-label="Descargar XML" (click)="downloadXml()"></button>
+        <button pButton type="button" icon="pi pi-file-pdf" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Descargar KuDE" tooltipPosition="top" aria-label="Descargar KuDE" (click)="downloadKude()"></button>
+        <button *ngIf="canRetryInvoice" pButton type="button" icon="pi pi-refresh" class="p-button-rounded p-button-text p-button-warning sifen-icon-btn" pTooltip="Reintentar" tooltipPosition="top" aria-label="Reintentar" (click)="retry()"></button>
+        <button pButton type="button" icon="pi pi-arrow-left" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Volver al listado" tooltipPosition="top" aria-label="Volver al listado" (click)="backToList()"></button>
     </div>
 </section>
 

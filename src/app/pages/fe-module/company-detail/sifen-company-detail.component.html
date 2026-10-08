@@ -71,7 +71,7 @@
                 <div><dt>Limite usuarios</dt><dd>{{ currentCompany.userLimit || 0 }}</dd></div>
                 <div><dt>Acceso</dt><dd>TenantAdmin, Operator, Viewer</dd></div>
             </dl>
-            <button pButton type="button" label="Abrir gestion de usuarios" (click)="openUsers()"></button>
+            <button pButton type="button" icon="pi pi-users" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Gestionar usuarios" tooltipPosition="top" aria-label="Gestionar usuarios" (click)="openUsers()"></button>
         </article>
     </div>
 </section>

@@ -7,7 +7,7 @@
                 <p>Supervisa empresas, plan, estado SIFEN y acceso operativo sin romper el arbol actual.</p>
             </div>
 
-            <button pButton type="button" label="Crear compania" icon="pi pi-plus" (click)="openCreate()"></button>
+            <button pButton type="button" icon="pi pi-plus" class="p-button-rounded sifen-icon-btn--primary" pTooltip="Crear compania" tooltipPosition="left" aria-label="Crear compania" (click)="openCreate()"></button>
         </div>
 
         <div class="sifen-company-summary">
@@ -58,10 +58,31 @@
                     <td>No disponible todavia</td>
                     <td>{{ company.invoiceLimitPerMonth || 0 }} / {{ company.userLimit || 0 }}</td>
                     <td>
-                        <button pButton type="button" class="p-button-text p-button-sm" icon="pi pi-arrow-right" label="Detalle" (click)="openDetail(company)"></button>
+                        <div class="sifen-row-actions">
+                            <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Detalle" tooltipPosition="top" aria-label="Detalle" (click)="openDetail(company)"></button>
+                            <button pButton type="button" icon="pi pi-users" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Usuarios" tooltipPosition="top" aria-label="Usuarios" (click)="open(company, 'users')"></button>
+                            <button pButton type="button" icon="pi pi-file-edit" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Configuracion fiscal" tooltipPosition="top" aria-label="Configuracion fiscal" (click)="open(company, 'fiscal')"></button>
+                            <button pButton type="button" icon="pi pi-heart" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Diagnostico" tooltipPosition="top" aria-label="Diagnostico" (click)="open(company, 'diagnostic')"></button>
+                            <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger sifen-icon-btn" pTooltip="Eliminar compania" tooltipPosition="top" aria-label="Eliminar compania" (click)="askDelete(company)"></button>
+                        </div>
                     </td>
                 </tr>
             </ng-template>
         </p-table>
     </section>
+
+    <p-dialog header="Eliminar compania" [(visible)]="deleteVisible" [modal]="true" [style]="{ width: '28rem' }" [closable]="!deleting" (onHide)="closeDelete()">
+        <ng-container *ngIf="deleteTarget">
+            <p>Se eliminara <strong>{{ deleteTarget.businessName }}</strong> con todos sus usuarios, configuracion fiscal y facturas. Esta accion no se puede deshacer.</p>
+            <label class="sifen-delete__field">
+                <span>Escribe <code>{{ deleteTarget.slug }}</code> para confirmar</span>
+                <input pInputText [(ngModel)]="deleteConfirmation" autocomplete="off" />
+            </label>
+            <small class="sifen-page__error" *ngIf="deleteError">{{ deleteError }}</small>
+        </ng-container>
+        <ng-template pTemplate="footer">
+            <button pButton type="button" icon="pi pi-times" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Cancelar" aria-label="Cancelar" [disabled]="deleting" (click)="closeDelete()"></button>
+            <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger" pTooltip="Eliminar definitivamente" aria-label="Eliminar definitivamente" [loading]="deleting" [disabled]="!canConfirmDelete" (click)="confirmDelete()"></button>
+        </ng-template>
+    </p-dialog>
 </div>

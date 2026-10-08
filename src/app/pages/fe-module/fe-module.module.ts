@@ -8,6 +8,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
 import { FeModuleRoutingModule } from './fe-module-routing.module';
 import { SifenCompanyCreateComponent } from './company-create/sifen-company-create.component';
 import { SifenCompanyDetailComponent } from './company-detail/sifen-company-detail.component';
@@ -62,7 +64,9 @@ import { SifenTestComponent } from './test/sifen-test.component';
         InputTextModule,
         InputNumberModule,
         PaginatorModule,
-        TagModule
+        TagModule,
+        TooltipModule,
+        DialogModule
     ]
 })
 export class FeModuleModule {

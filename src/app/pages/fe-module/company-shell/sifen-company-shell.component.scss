@@ -228,12 +228,66 @@
   background: sifen.$sifen-accent-gradient;
 }
 
-:host ::ng-deep .p-button.p-button-outlined,
-:host ::ng-deep .p-button.p-button-text {
+:host ::ng-deep .sifen-shell__topbar .p-button.p-button-outlined,
+:host ::ng-deep .sifen-shell__topbar .p-button.p-button-text {
   background: rgba(255, 255, 255, 0.16);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow: none;
+}
+
+:host ::ng-deep .sifen-shell__content .p-button.p-button-text,
+:host ::ng-deep .sifen-shell__content .p-button.p-button-outlined {
+  background: transparent;
+  color: sifen.$sifen-c2;
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+
+:host ::ng-deep .sifen-shell__content .p-button.p-button-outlined {
+  border-color: rgba(19, 133, 182, 0.35);
+}
+
+:host ::ng-deep .sifen-shell__content .p-button.p-button-text.p-button-danger {
+  color: #dc2626;
+}
+
+:host ::ng-deep .sifen-shell__content .p-button.p-button-text.p-button-warning {
+  color: #d97706;
+}
+
+:host ::ng-deep .sifen-shell__content .p-button.p-button-text.p-button-success {
+  color: #4fae35;
+}
+
+:host ::ng-deep .p-button.sifen-icon-btn,
+:host ::ng-deep .p-button.sifen-icon-btn--primary,
+:host ::ng-deep .sifen-shell__topbar .p-button.p-button-rounded {
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  justify-content: center;
+}
+
+:host ::ng-deep .sifen-shell__content .p-button.sifen-icon-btn:not(:disabled):hover {
+  background: rgba(19, 133, 182, 0.1);
+}
+
+:host ::ng-deep .p-button.sifen-icon-btn--primary {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+:host ::ng-deep .p-button.sifen-icon-btn--primary .pi,
+:host ::ng-deep .p-button.sifen-icon-btn .pi {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+:host ::ng-deep .sifen-row-actions {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.15rem;
 }
 
 @media (max-width: 900px) {

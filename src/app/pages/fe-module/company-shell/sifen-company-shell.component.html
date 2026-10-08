@@ -31,8 +31,8 @@
             </div>
 
             <div class="sifen-shell__topbar-actions">
-                <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text" (click)="openNotifications()"></button>
-                <button pButton type="button" icon="pi pi-question-circle" class="p-button-rounded p-button-text" (click)="openHelp()"></button>
+                <button pButton type="button" icon="pi pi-bell" class="p-button-rounded p-button-text" pTooltip="Notificaciones" tooltipPosition="bottom" aria-label="Notificaciones" (click)="openNotifications()"></button>
+                <button pButton type="button" icon="pi pi-question-circle" class="p-button-rounded p-button-text" pTooltip="Ayuda" tooltipPosition="bottom" aria-label="Ayuda" (click)="openHelp()"></button>
                 <div class="sifen-shell__user">
                     <i class="pi pi-user"></i>
                     <div>
@@ -40,7 +40,7 @@
                         <small>{{ companyLabel }}</small>
                     </div>
                 </div>
-                <button pButton type="button" label="Salir" class="p-button-rounded p-button-sm p-button-outlined" (click)="logout()"></button>
+                <button pButton type="button" icon="pi pi-sign-out" class="p-button-rounded p-button-outlined" pTooltip="Salir" tooltipPosition="bottom" aria-label="Salir" (click)="logout()"></button>
             </div>
         </header>
 

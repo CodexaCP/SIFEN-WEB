@@ -128,3 +128,13 @@ td small {
     flex-direction: column;
   }
 }
+
+.sifen-delete__field {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1rem;
+}
+
+.sifen-delete__field input {
+  width: 100%;
+}

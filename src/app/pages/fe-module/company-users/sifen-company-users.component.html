@@ -30,8 +30,10 @@
                 <button
                     pButton
                     type="button"
-                    class="p-button-text"
-                    label="Nuevo"
+                    class="p-button-rounded p-button-text sifen-icon-btn"
+                    pTooltip="Nuevo usuario"
+                    tooltipPosition="top"
+                    aria-label="Nuevo usuario"
                     icon="pi pi-plus"
                     (click)="startCreate()"
                     [disabled]="saving"></button>
@@ -83,7 +85,10 @@
                 <button
                     pButton
                     type="button"
-                    label="Crear usuario"
+                    class="p-button-rounded sifen-icon-btn--primary"
+                    pTooltip="Crear usuario"
+                    tooltipPosition="left"
+                    aria-label="Crear usuario"
                     icon="pi pi-user-plus"
                     (click)="startCreate()"
                     [disabled]="limitReached"
@@ -114,16 +119,20 @@
                                 <button
                                     pButton
                                     type="button"
-                                    class="p-button-text p-button-sm"
+                                    class="p-button-rounded p-button-text sifen-icon-btn"
                                     icon="pi pi-pencil"
-                                    label="Editar"
+                                    pTooltip="Editar"
+                                    tooltipPosition="top"
+                                    aria-label="Editar"
                                     (click)="editUser(user)"></button>
                                 <button
                                     pButton
                                     type="button"
-                                    class="p-button-text p-button-sm"
+                                    class="p-button-rounded p-button-text sifen-icon-btn"
                                     [icon]="user.isActive ? 'pi pi-ban' : 'pi pi-check'"
-                                    [label]="user.isActive ? 'Inactivar' : 'Activar'"
+                                    [pTooltip]="user.isActive ? 'Inactivar' : 'Activar'"
+                                    tooltipPosition="top"
+                                    [attr.aria-label]="user.isActive ? 'Inactivar' : 'Activar'"
                                     (click)="toggleActive(user)"
                                     [disabled]="saving && editingUserId === user.userId"></button>
                             </div>

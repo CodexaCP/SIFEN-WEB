@@ -25,7 +25,7 @@
         <small class="sifen-diagnostic__error" *ngIf="errorMessage">{{ errorMessage }}</small>
         <p *ngIf="loading" class="sifen-diagnostic__muted">Cargando diagnostico...</p>
         <div class="sifen-diagnostic__status" *ngIf="tenantId">
-            <button pButton type="button" label="Ejecutar diagnostico" icon="pi pi-sync" class="p-button-text" (click)="loadDiagnostic()"></button>
+            <button pButton type="button" icon="pi pi-sync" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Ejecutar diagnostico" tooltipPosition="top" aria-label="Ejecutar diagnostico" (click)="loadDiagnostic(); loadLogs()"></button>
         </div>
 
         <div class="sifen-diagnostic__grid" *ngIf="diagnostic as currentDiagnostic">

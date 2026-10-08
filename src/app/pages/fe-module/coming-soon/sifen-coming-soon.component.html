@@ -9,8 +9,8 @@
         <p>Esta sección todavía no está habilitada en el entorno TEST. Puedes volver atrás y continuar navegando por el módulo SIFEN.</p>
 
         <div class="sifen-coming__actions">
-            <button pButton type="button" label="Volver atrás" class="p-button-outlined" (click)="goBack()"></button>
-            <button pButton type="button" label="Ir al dashboard" icon="pi pi-arrow-right" (click)="goToDashboard()"></button>
+            <button pButton type="button" icon="pi pi-arrow-left" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Volver atras" tooltipPosition="top" aria-label="Volver atras" (click)="goBack()"></button>
+            <button pButton type="button" icon="pi pi-home" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Ir al inicio" tooltipPosition="top" aria-label="Ir al inicio" (click)="goToDashboard()"></button>
         </div>
     </article>
 </section>

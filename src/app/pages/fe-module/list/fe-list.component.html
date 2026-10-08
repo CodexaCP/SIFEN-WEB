@@ -6,7 +6,7 @@
             <p>Listado seguro por tenant para revisar facturas, estados internos, eventos y errores sin usar SIFEN real.</p>
         </div>
 
-        <button pButton type="button" label="Nueva factura" icon="pi pi-plus" (click)="openIssue()" [disabled]="isReadOnlyMode || !canIssueInvoices"></button>
+        <button pButton type="button" icon="pi pi-plus" class="p-button-rounded sifen-icon-btn--primary" pTooltip="Nueva factura" tooltipPosition="left" aria-label="Nueva factura" (click)="openIssue()" [disabled]="isReadOnlyMode || !canIssueInvoices"></button>
     </div>
 
     <div class="fe-banner fe-banner--info" *ngIf="diagnostic?.transportMode === 'Diagnostic'">
@@ -80,8 +80,8 @@
             </label>
 
             <div class="fe-filters__actions">
-                <button pButton type="button" label="Buscar" icon="pi pi-search" (click)="applyFilters()"></button>
-                <button pButton type="button" label="Limpiar filtros" class="p-button-outlined" (click)="clearFilters()"></button>
+                <button pButton type="button" icon="pi pi-search" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Buscar" tooltipPosition="top" aria-label="Buscar" (click)="applyFilters()"></button>
+                <button pButton type="button" icon="pi pi-filter-slash" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Limpiar filtros" tooltipPosition="top" aria-label="Limpiar filtros" (click)="clearFilters()"></button>
             </div>
         </div>
 
@@ -132,10 +132,10 @@
                     <td>{{ invoice.lastErrorMessage || 'Sin error' }}</td>
                     <td>
                         <div class="fe-actions">
-                            <button pButton type="button" label="Ver" class="p-button-text p-button-sm" (click)="openDetail(invoice)"></button>
-                            <button pButton type="button" label="XML" class="p-button-text p-button-sm" (click)="downloadXml(invoice)" [disabled]="!invoice.canDownloadXml"></button>
-                            <button pButton type="button" label="KuDE" class="p-button-text p-button-sm" (click)="downloadKude(invoice)" [disabled]="!invoice.canDownloadKude"></button>
-                            <button *ngIf="invoice.canRetry && !isReadOnlyMode" pButton type="button" label="Reintentar" class="p-button-text p-button-sm p-button-warning" (click)="retry(invoice)"></button>
+                            <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Ver detalle" tooltipPosition="top" aria-label="Ver detalle" (click)="openDetail(invoice)"></button>
+                            <button pButton type="button" icon="pi pi-code" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Descargar XML" tooltipPosition="top" aria-label="Descargar XML" (click)="downloadXml(invoice)" [disabled]="!invoice.canDownloadXml"></button>
+                            <button pButton type="button" icon="pi pi-file-pdf" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Descargar KuDE" tooltipPosition="top" aria-label="Descargar KuDE" (click)="downloadKude(invoice)" [disabled]="!invoice.canDownloadKude"></button>
+                            <button *ngIf="invoice.canRetry && !isReadOnlyMode" pButton type="button" icon="pi pi-refresh" class="p-button-rounded p-button-text p-button-warning sifen-icon-btn" pTooltip="Reintentar" tooltipPosition="top" aria-label="Reintentar" (click)="retry(invoice)"></button>
                         </div>
                     </td>
                 </tr>

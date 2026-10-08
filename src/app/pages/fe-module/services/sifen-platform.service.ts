@@ -307,6 +307,10 @@ export class SifenPlatformService {
         );
     }
 
+    deleteCompany(tenantId: string, confirmationSlug: string): Observable<void> {
+        return this.http.delete<void>(`${this.apiUrl}/platform/companies/${tenantId}`, { params: { confirm: confirmationSlug } });
+    }
+
     updatePlan(tenantId: string, payload: SifenPlanUpdatePayload): Observable<void> {
         return this.http.put<void>(`${this.apiUrl}/platform/companies/${tenantId}/plan`, payload);
     }

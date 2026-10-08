@@ -7,8 +7,8 @@
         </div>
 
         <div class="sifen-kude__actions">
-            <button pButton type="button" label="Ver vista previa" class="p-button-text" (click)="loadPreview()" [disabled]="previewLoading"></button>
-            <button pButton type="button" label="Descargar PDF demo" class="p-button-outlined" (click)="downloadDemoPdf()"></button>
+            <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Ver vista previa" tooltipPosition="top" aria-label="Ver vista previa" (click)="loadPreview()" [disabled]="previewLoading"></button>
+            <button pButton type="button" icon="pi pi-file-pdf" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Descargar PDF demo" tooltipPosition="top" aria-label="Descargar PDF demo" (click)="downloadDemoPdf()"></button>
             <button pButton type="button" label="Usar esta plantilla" (click)="save()" [loading]="saving"></button>
         </div>
     </div>

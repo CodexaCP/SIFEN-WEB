@@ -49,7 +49,7 @@
         <small class="sifen-form-card__error" *ngIf="errorMessage">{{ errorMessage }}</small>
 
         <div class="sifen-form-card__actions">
-            <button pButton type="button" label="Volver" class="p-button-text" routerLink="/sifen/admin/companies"></button>
+            <button pButton type="button" icon="pi pi-arrow-left" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Volver" tooltipPosition="top" aria-label="Volver" routerLink="/sifen/admin/companies"></button>
             <button pButton type="button" label="Crear compania" [loading]="loading" (click)="save()"></button>
         </div>
     </div>

@@ -136,7 +136,7 @@
                         <span class="issue-eyebrow">Paso 2</span>
                         <h3>Ítems</h3>
                     </div>
-                    <button pButton type="button" icon="pi pi-plus" label="Agregar línea" class="p-button-text" (click)="addItem()"></button>
+                    <button pButton type="button" icon="pi pi-plus" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Agregar linea" tooltipPosition="top" aria-label="Agregar linea" (click)="addItem()"></button>
                 </div>
 
                 <div formArrayName="items" class="fe-items-list">
@@ -187,7 +187,7 @@
                         </div>
 
                         <div class="fe-item-row__actions">
-                            <button pButton type="button" icon="pi pi-trash" class="p-button-text p-button-danger" (click)="removeItem(i)" [disabled]="items.length === 1"></button>
+                            <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-text sifen-icon-btn p-button-danger" pTooltip="Quitar linea" tooltipPosition="top" aria-label="Quitar linea" (click)="removeItem(i)" [disabled]="items.length === 1"></button>
                         </div>
                     </div>
                 </div>
@@ -249,9 +249,9 @@
                     <small *ngIf="prepareResult?.correlationId">Codigo de seguimiento: {{ prepareResult!.correlationId }}</small>
 
                     <div class="issue-result__actions">
-                        <button pButton type="button" label="Ver detalle factura" class="p-button-outlined" (click)="openDetail()" [disabled]="!createdInvoice"></button>
-                        <button pButton type="button" label="Volver listado" class="p-button-outlined" (click)="goToList()"></button>
-                        <button pButton type="button" label="Nueva factura" (click)="startNewInvoice()"></button>
+                        <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Ver detalle factura" tooltipPosition="top" aria-label="Ver detalle factura" (click)="openDetail()" [disabled]="!createdInvoice"></button>
+                        <button pButton type="button" icon="pi pi-list" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Volver al listado" tooltipPosition="top" aria-label="Volver al listado" (click)="goToList()"></button>
+                        <button pButton type="button" icon="pi pi-plus" class="p-button-rounded p-button-text sifen-icon-btn" pTooltip="Nueva factura" tooltipPosition="top" aria-label="Nueva factura" (click)="startNewInvoice()"></button>
                     </div>
                 </div>
             </section>
