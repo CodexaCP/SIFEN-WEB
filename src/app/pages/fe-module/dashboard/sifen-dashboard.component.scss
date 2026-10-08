@@ -16,8 +16,31 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) 280px;
     gap: 1rem;
-    padding: 1.5rem;
-    background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(6, 182, 212, 0.08) 48%, rgba(124, 58, 237, 0.08));
+    padding: 1.75rem;
+    border: 0;
+    background: linear-gradient(135deg, sifen.$sifen-c1 0%, #17a2b3 55%, sifen.$sifen-c2 100%);
+    color: #fff;
+}
+
+.sifen-dashboard__hero .sifen-dashboard__eyebrow,
+.sifen-dashboard__hero p {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.sifen-dashboard__hero h2 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 900;
+}
+
+.sifen-dashboard__hero .sifen-dashboard__status-card {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow: none;
+    color: #fff;
+}
+
+.sifen-dashboard__hero .sifen-dashboard__status-card small {
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .sifen-dashboard__eyebrow {
@@ -84,6 +107,27 @@
     display: block;
     margin-top: 0.35rem;
     font-size: 1.55rem;
+}
+
+.sifen-dashboard__metric:nth-child(1),
+.sifen-dashboard__metric:nth-child(2) {
+    border: 0;
+    color: #fff;
+}
+
+.sifen-dashboard__metric:nth-child(1) {
+    background: linear-gradient(135deg, sifen.$sifen-c2 0%, #0f6f99 100%);
+}
+
+.sifen-dashboard__metric:nth-child(2) {
+    background: linear-gradient(135deg, sifen.$sifen-c3 0%, #4fae35 100%);
+}
+
+.sifen-dashboard__metric:nth-child(1) span,
+.sifen-dashboard__metric:nth-child(1) small,
+.sifen-dashboard__metric:nth-child(2) span,
+.sifen-dashboard__metric:nth-child(2) small {
+    color: rgba(255, 255, 255, 0.88);
 }
 
 .sifen-dashboard__metric--wide {
@@ -228,7 +272,7 @@
     align-items: center;
     padding: 0.4rem 0.75rem;
     border-radius: 999px;
-    background: rgba(37, 99, 235, 0.08);
+    background: rgba(19, 133, 182, 0.08);
     color: sifen.$sifen-primary;
     font-size: 0.78rem;
     font-weight: 800;
@@ -241,7 +285,28 @@
         grid-template-columns: 1fr;
     }
 
-    .sifen-dashboard__metric--wide {
+    .sifen-dashboard__metric:nth-child(1),
+.sifen-dashboard__metric:nth-child(2) {
+    border: 0;
+    color: #fff;
+}
+
+.sifen-dashboard__metric:nth-child(1) {
+    background: linear-gradient(135deg, sifen.$sifen-c2 0%, #0f6f99 100%);
+}
+
+.sifen-dashboard__metric:nth-child(2) {
+    background: linear-gradient(135deg, sifen.$sifen-c3 0%, #4fae35 100%);
+}
+
+.sifen-dashboard__metric:nth-child(1) span,
+.sifen-dashboard__metric:nth-child(1) small,
+.sifen-dashboard__metric:nth-child(2) span,
+.sifen-dashboard__metric:nth-child(2) small {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.sifen-dashboard__metric--wide {
         grid-column: auto;
     }
 }

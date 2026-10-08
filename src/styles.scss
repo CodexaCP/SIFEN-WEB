@@ -12,13 +12,16 @@ $gutter: 1rem;
 @import "assets/demo/styles/code.scss";
 
 :root {
-  --brand-teal: #14b8a6;
-  --brand-green: #4fbe66;
-  --brand-blue: #0f8da3;
-  --brand-blue-strong: #0799a6;
+  --brand-c1: #1AB7AF;
+  --brand-c2: #1385B6;
+  --brand-c3: #6AC64A;
+  --brand-teal: var(--brand-c1);
+  --brand-green: var(--brand-c3);
+  --brand-blue: var(--brand-c2);
+  --brand-blue-strong: #0f6f99;
   --brand-ink: #11324a;
   --brand-soft: #eef9f5;
-  --primary-color: #0799a6;
+  --primary-color: #1385B6;
   --primary-color-text: #ffffff;
 }
 

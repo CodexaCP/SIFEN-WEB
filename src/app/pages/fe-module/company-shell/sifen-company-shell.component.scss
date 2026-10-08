@@ -9,20 +9,27 @@
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr);
   background:
-    radial-gradient(circle at top right, rgba(20, 184, 166, 0.14), transparent 24rem),
-    radial-gradient(circle at bottom left, rgba(124, 58, 237, 0.1), transparent 22rem),
+    radial-gradient(circle at top right, rgba(26, 183, 175, 0.14), transparent 24rem),
+    radial-gradient(circle at bottom left, rgba(106, 198, 74, 0.1), transparent 22rem),
     sifen.$sifen-background;
   color: sifen.$sifen-text;
+  font-family: 'Lato', 'Segoe UI', sans-serif;
 }
 
 .sifen-shell__sidebar {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  min-height: 100vh;
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+  min-height: calc(100vh - 2rem);
+  margin: 1rem 0 1rem 1rem;
   padding: 1.5rem 1.25rem;
+  border-radius: 20px;
   background: sifen.$sifen-sidebar;
-  border-right: 1px solid sifen.$sifen-border-color;
+  color: #fff;
+  box-shadow: 0 18px 42px rgba(19, 133, 182, 0.18);
 }
 
 .sifen-shell__brand {
@@ -38,17 +45,17 @@
   width: 3rem;
   height: 3rem;
   border-radius: 18px;
-  background: sifen.$sifen-gradient;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: #fff;
   font-size: 1.4rem;
   font-weight: 800;
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.22);
 }
 
 .sifen-shell__brand-overline {
   display: block;
   margin-bottom: 0.15rem;
-  color: sifen.$sifen-muted;
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -64,7 +71,7 @@
 }
 
 .sifen-shell__brand small {
-  color: sifen.$sifen-muted;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .sifen-shell__nav {
@@ -78,11 +85,16 @@
   align-items: center;
   gap: 0.85rem;
   padding: 0.9rem 1rem;
-  border-radius: 16px;
-  color: sifen.$sifen-text;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.92);
   text-decoration: none;
   font-weight: 700;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.sifen-shell__nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .sifen-shell__nav a::before {
@@ -95,25 +107,22 @@
 }
 
 .sifen-shell__nav a.is-active {
-  background: rgba(37, 99, 235, 0.08);
-  color: sifen.$sifen-primary;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
 }
 
 .sifen-shell__nav a.is-accent {
-  background: rgba(37, 99, 235, 0.04);
-}
-
-.sifen-shell__nav a.is-active::before {
-  background: sifen.$sifen-primary;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .sifen-shell__support {
   margin-top: auto;
   padding: 1.25rem;
-  border-radius: 24px;
-  background: sifen.$sifen-gradient;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.12);
   color: #fff;
-  box-shadow: 0 20px 44px rgba(37, 99, 235, 0.18);
 }
 
 .sifen-shell__support-kicker {
@@ -151,7 +160,7 @@
   border-radius: 24px;
   background: sifen.$sifen-gradient;
   color: #fff;
-  box-shadow: 0 18px 42px rgba(37, 99, 235, 0.18);
+  box-shadow: 0 18px 42px rgba(19, 133, 182, 0.18);
 }
 
 .sifen-shell__topbar h1 {
@@ -205,7 +214,18 @@
 
 :host ::ng-deep .p-button {
   @include sifen.sifen-button-skin;
-  border-radius: 16px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+:host ::ng-deep .sifen-shell__support .p-button {
+  background: #fff;
+  color: sifen.$sifen-c2;
+  box-shadow: none;
+}
+
+:host ::ng-deep .p-button.p-button-success {
+  background: sifen.$sifen-accent-gradient;
 }
 
 :host ::ng-deep .p-button.p-button-outlined,
@@ -222,7 +242,9 @@
   }
 
   .sifen-shell__sidebar {
+    position: static;
     min-height: auto;
+    margin: 1rem 1rem 0;
   }
 
   .sifen-shell__topbar {

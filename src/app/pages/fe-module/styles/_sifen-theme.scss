@@ -1,22 +1,26 @@
-$sifen-primary: #2563eb;
-$sifen-cyan: #06b6d4;
-$sifen-teal: #14b8a6;
-$sifen-purple: #7c3aed;
-$sifen-success: #22c55e;
+$sifen-c1: #1AB7AF;
+$sifen-c2: #1385B6;
+$sifen-c3: #6AC64A;
+$sifen-primary: $sifen-c2;
+$sifen-cyan: $sifen-c1;
+$sifen-teal: $sifen-c1;
+$sifen-purple: $sifen-c3;
+$sifen-success: $sifen-c3;
 $sifen-warning: #f59e0b;
 $sifen-danger: #ef4444;
-$sifen-text: #0f172a;
+$sifen-text: #11324a;
 $sifen-muted: #64748b;
 $sifen-border-color: #e2e8f0;
-$sifen-background: #f8fafc;
+$sifen-background: #f3f8fa;
 $sifen-card: #ffffff;
 $sifen-white: #ffffff;
-$sifen-sidebar: #ffffff;
-$sifen-gradient: linear-gradient(135deg, #14b8a6 0%, #2563eb 55%, #7c3aed 100%);
-$sifen-soft-gradient: linear-gradient(135deg, rgba(20, 184, 166, 0.12), rgba(37, 99, 235, 0.08) 55%, rgba(124, 58, 237, 0.1));
+$sifen-sidebar: linear-gradient(170deg, $sifen-c1 0%, $sifen-c2 100%);
+$sifen-gradient: linear-gradient(135deg, $sifen-c1 0%, $sifen-c2 100%);
+$sifen-accent-gradient: linear-gradient(135deg, $sifen-c3 0%, $sifen-c1 100%);
+$sifen-soft-gradient: linear-gradient(135deg, rgba(26, 183, 175, 0.12), rgba(19, 133, 182, 0.08) 55%, rgba(106, 198, 74, 0.1));
 $sifen-panel: #ffffff;
-$sifen-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
-$sifen-shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.05);
+$sifen-shadow: 0 24px 60px rgba(17, 50, 74, 0.08);
+$sifen-shadow-soft: 0 12px 32px rgba(17, 50, 74, 0.06);
 $sifen-border: 1px solid $sifen-border-color;
 
 @mixin sifen-panel-card {
@@ -47,7 +51,7 @@ $sifen-border: 1px solid $sifen-border-color;
   background: $sifen-gradient;
   border: 0;
   color: $sifen-white;
-  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.22);
+  box-shadow: 0 12px 26px rgba(19, 133, 182, 0.22);
 }
 
 @mixin sifen-secondary-button {

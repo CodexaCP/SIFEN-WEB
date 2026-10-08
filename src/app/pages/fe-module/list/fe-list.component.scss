@@ -23,7 +23,7 @@
   justify-content: space-between;
   gap: 1rem;
   align-items: center;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(6, 182, 212, 0.08), rgba(124, 58, 237, 0.08));
+  background: linear-gradient(135deg, rgba(19, 133, 182, 0.08), rgba(26, 183, 175, 0.08), rgba(106, 198, 74, 0.08));
 }
 
 .fe-eyebrow {
@@ -49,8 +49,8 @@
 }
 
 .fe-banner--info {
-  border-color: rgba(37, 99, 235, 0.18);
-  background: rgba(37, 99, 235, 0.05);
+  border-color: rgba(19, 133, 182, 0.18);
+  background: rgba(19, 133, 182, 0.05);
 }
 
 .fe-banner--warning {
@@ -188,7 +188,7 @@
 }
 
 :host ::ng-deep .p-tag.p-tag-info {
-  background: rgba(37, 99, 235, 0.12);
+  background: rgba(19, 133, 182, 0.12);
   color: sifen.$sifen-primary;
 }
 

@@ -1,11 +1,12 @@
 @use '../styles/sifen-theme' as sifen;
 
 :host {
+  font-family: 'Lato', 'Segoe UI', sans-serif;
   display: block;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(20, 184, 166, 0.18), transparent 24rem),
-    radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.14), transparent 22rem),
+    radial-gradient(circle at top left, rgba(26, 183, 175, 0.18), transparent 24rem),
+    radial-gradient(circle at bottom right, rgba(106, 198, 74, 0.14), transparent 22rem),
     #f8fafc;
 }
 
