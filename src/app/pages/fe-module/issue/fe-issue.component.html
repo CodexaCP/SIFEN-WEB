@@ -8,7 +8,7 @@
             </div>
             <div class="issue-transport">
                 <strong>{{ diagnostic?.mode || 'TEST_INTERNAL' }}</strong>
-                <small>{{ activeTenantId || 'Sin tenant activo' }}</small>
+                <small>{{ activeTenantId ? (activeTenantName || 'Empresa seleccionada') : 'Sin empresa activa' }}</small>
             </div>
         </div>
 
@@ -245,8 +245,8 @@
                         <strong>{{ resultTitle }}</strong>
                     </div>
                     <p>{{ prepareResult?.message || 'La factura fue creada y quedó lista para el flujo TEST interno.' }}</p>
-                    <small *ngIf="createdInvoice">Factura ID: {{ createdInvoice.id }}</small>
-                    <small *ngIf="prepareResult">CorrelationId: {{ prepareResult.correlationId }}</small>
+                    <small *ngIf="createdInvoice?.cdc">CDC: {{ createdInvoice!.cdc }}</small>
+                    <small *ngIf="prepareResult?.correlationId">Codigo de seguimiento: {{ prepareResult!.correlationId }}</small>
 
                     <div class="issue-result__actions">
                         <button pButton type="button" label="Ver detalle factura" class="p-button-outlined" (click)="openDetail()" [disabled]="!createdInvoice"></button>

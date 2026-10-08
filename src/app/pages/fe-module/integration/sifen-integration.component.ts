@@ -39,6 +39,10 @@ export class SifenIntegrationComponent implements OnInit {
     diagnostic?: SifenDiagnosticResult;
     errorMessage = '';
 
+    get tenantName(): string {
+        return this.sifenPlatformService.getActiveTenantName() || 'la empresa seleccionada';
+    }
+
     constructor(private readonly sifenPlatformService: SifenPlatformService) {}
 
     ngOnInit(): void {

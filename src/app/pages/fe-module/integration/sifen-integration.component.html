@@ -9,8 +9,8 @@
             <span>Selecciona una compania desde Companias o entra con un TenantAdmin para ver integracion con contexto real.</span>
         </div>
         <div class="sifen-dashboard__alert sifen-dashboard__alert--info" *ngIf="tenantId">
-            <strong>Tenant activo:</strong>
-            <span>{{ tenantId }}</span>
+            <strong>Empresa activa:</strong>
+            <span>{{ tenantName }}</span>
         </div>
         <small class="sifen-page__error" *ngIf="errorMessage">{{ errorMessage }}</small>
     </article>

@@ -262,6 +262,7 @@ export class SifenPlatformService {
     private readonly apiUrl = environment.apiUrl;
     private readonly onboardingUrl = `${environment.apiUrl.replace(/\/api\/?$/, '')}/internal/onboarding`;
     private readonly selectedTenantKey = 'sifen_selected_tenant';
+    private readonly selectedTenantNameKey = 'sifen_selected_tenant_name';
 
     constructor(
         private readonly http: HttpClient,
@@ -425,7 +426,10 @@ export class SifenPlatformService {
 
     getTenantLogs(tenantId: string, level?: string): Observable<SifenTenantLogItem[]> {
         const params: Record<string, string> = level ? { level } : {};
-        return this.http.get<SifenTenantLogItem[]>(`${this.apiUrl}/fe/tenants/${tenantId}/logs`, { params });
+        return this.http.get<SifenTenantLogItem[]>(`${this.apiUrl}/fe/tenants/${tenantId}/logs`, {
+            params,
+            headers: this.buildTenantHeadersFor(tenantId)
+        });
     }
 
     getReadiness(tenantId: string, environment: SifenEnvironmentName = 'Test'): Observable<SifenReadinessReport> {
@@ -663,14 +667,54 @@ export class SifenPlatformService {
         return this.authService.getSession();
     }
 
-    setSelectedTenant(tenantId: string): void {
-        if (tenantId?.trim()) {
-            localStorage.setItem(this.selectedTenantKey, tenantId.trim());
+    setSelectedTenant(tenantId: string, tenantName?: string | null): void {
+        const id = tenantId?.trim();
+        if (!id) {
+            return;
+        }
+
+        localStorage.setItem(this.selectedTenantKey, id);
+        if (tenantName?.trim()) {
+            localStorage.setItem(this.selectedTenantNameKey, JSON.stringify({ id, name: tenantName.trim() }));
         }
     }
 
     clearSelectedTenant(): void {
         localStorage.removeItem(this.selectedTenantKey);
+        localStorage.removeItem(this.selectedTenantNameKey);
+    }
+
+    /** Nombre visible de la empresa activa; nunca expone el id interno. */
+    getActiveTenantName(): string | null {
+        const tenantId = this.getActiveTenantId();
+        if (!tenantId) {
+            return null;
+        }
+
+        const session = this.getSessionUser();
+        if (session?.tenantName && String(session.tenantId ?? '').trim() === tenantId) {
+            return session.tenantName;
+        }
+
+        try {
+            const stored = JSON.parse(localStorage.getItem(this.selectedTenantNameKey) || 'null');
+            return stored?.id === tenantId && stored?.name ? String(stored.name) : null;
+        } catch {
+            return null;
+        }
+    }
+
+    /** Resuelve y guarda el nombre de la empresa activa cuando la sesion no lo trae (usuarios plataforma). */
+    ensureActiveTenantName(): void {
+        const tenantId = this.getActiveTenantId();
+        if (!tenantId || this.getActiveTenantName() || !this.isSuperAdminRole(this.getSessionUser()?.role)) {
+            return;
+        }
+
+        this.getCompany(tenantId).subscribe({
+            next: (company) => this.setSelectedTenant(tenantId, company.businessName),
+            error: () => undefined
+        });
     }
 
     getActiveTenantId(): string | null {

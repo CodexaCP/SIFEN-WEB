@@ -54,6 +54,10 @@ export class FeIssueComponent {
     prepareResult?: FePrepareTestResult;
     private idempotencyKey: string | null = null;
 
+    get activeTenantName(): string | null {
+        return this.sifenPlatformService.getActiveTenantName();
+    }
+
     constructor(
         private readonly formBuilder: FormBuilder,
         private readonly feInvoiceApiService: FeInvoiceApiService,

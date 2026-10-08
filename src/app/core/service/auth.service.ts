@@ -17,6 +17,7 @@ export interface SessionUser {
     userId: number | string;
     companyId: number | string | null;
     tenantId?: string | null;
+    tenantName?: string | null;
     role: string;
     fullName?: string;
     displayName?: string;
@@ -76,6 +77,7 @@ export class AuthService {
         localStorage.removeItem(this.displayNameKey);
         localStorage.removeItem(this.sessionUserKey);
         localStorage.removeItem('sifen_selected_tenant');
+        localStorage.removeItem('sifen_selected_tenant_name');
         this.clearToken();
     }
 

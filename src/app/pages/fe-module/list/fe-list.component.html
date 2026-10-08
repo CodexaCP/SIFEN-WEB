@@ -37,7 +37,7 @@
         <article>
             <span>Estado de operacion</span>
             <strong>{{ isReadOnlyMode ? 'Solo lectura' : 'Operativo' }}</strong>
-            <small>{{ activeTenantId || 'No disponible todavia' }}</small>
+            <small>{{ activeTenantId ? (activeTenantName || 'Empresa seleccionada') : 'No disponible todavia' }}</small>
         </article>
     </div>
 

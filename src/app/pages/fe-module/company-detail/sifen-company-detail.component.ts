@@ -39,6 +39,7 @@ export class SifenCompanyDetailComponent implements OnInit {
         this.sifenPlatformService.getCompany(this.tenantId).subscribe({
             next: (company) => {
                 this.company = company;
+                this.sifenPlatformService.setSelectedTenant(this.tenantId, company.businessName);
                 this.planModel = {
                     planName: company.planName || 'Plan base',
                     invoiceLimitPerMonth: company.invoiceLimitPerMonth || 150,

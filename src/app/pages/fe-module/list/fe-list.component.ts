@@ -29,6 +29,10 @@ export class FeListComponent implements OnInit {
         to: ''
     };
 
+    get activeTenantName(): string | null {
+        return this.sifenPlatformService.getActiveTenantName();
+    }
+
     constructor(
         private readonly feInvoiceApiService: FeInvoiceApiService,
         private readonly router: Router,

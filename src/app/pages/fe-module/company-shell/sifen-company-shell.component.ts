@@ -21,7 +21,9 @@ export class SifenCompanyShellComponent {
         private readonly authService: AuthService,
         private readonly router: Router,
         private readonly sifenPlatformService: SifenPlatformService
-    ) {}
+    ) {
+        this.sifenPlatformService.ensureActiveTenantName();
+    }
 
     get displayName(): string {
         return this.authService.getSession()?.fullName || this.authService.getSession()?.displayName || 'Usuario';
@@ -29,7 +31,7 @@ export class SifenCompanyShellComponent {
 
     get companyLabel(): string {
         const session = this.authService.getSession() as any;
-        return session?.companyName || session?.businessName || (this.activeTenantId ? `Tenant ${this.activeTenantId}` : 'Sin compania activa');
+        return session?.companyName || session?.businessName || this.activeTenantName || (this.activeTenantId ? 'Empresa seleccionada' : 'Sin compania activa');
     }
 
     get isSuperAdmin(): boolean {
@@ -38,6 +40,10 @@ export class SifenCompanyShellComponent {
 
     get activeTenantId(): string | null {
         return this.sifenPlatformService.getActiveTenantId();
+    }
+
+    get activeTenantName(): string | null {
+        return this.sifenPlatformService.getActiveTenantName();
     }
 
     get canManageTenantUsers(): boolean {

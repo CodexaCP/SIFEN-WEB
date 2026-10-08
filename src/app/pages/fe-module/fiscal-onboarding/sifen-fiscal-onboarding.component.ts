@@ -95,6 +95,10 @@ export class SifenFiscalOnboardingComponent implements OnInit {
         certificate: { saving: false, success: '', error: '' }
     };
 
+    get tenantName(): string {
+        return this.sifenPlatformService.getActiveTenantName() || 'la empresa seleccionada';
+    }
+
     constructor(
         private readonly route: ActivatedRoute,
         private readonly sifenPlatformService: SifenPlatformService

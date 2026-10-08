@@ -34,6 +34,10 @@ export class SifenConfigComponent implements OnInit {
     errorMessage = '';
     successMessage = '';
 
+    get tenantName(): string {
+        return this.sifenPlatformService.getActiveTenantName() || 'la empresa seleccionada';
+    }
+
     constructor(
         private readonly route: ActivatedRoute,
         private readonly sifenPlatformService: SifenPlatformService

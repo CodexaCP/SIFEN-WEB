@@ -485,7 +485,9 @@ export class FeInvoiceApiService {
 
     getPlanSummary(tenantId?: string | null): Observable<FePlanSummary> {
         const resolvedTenantId = tenantId || this.sifenPlatformService.getActiveTenantId();
-        return this.http.get<FePlanSummary>(`${this.apiUrl}/fe/plan/${resolvedTenantId}`);
+        return this.http.get<FePlanSummary>(`${this.apiUrl}/fe/plan/${resolvedTenantId}`, {
+            headers: resolvedTenantId ? new HttpHeaders({ 'X-Tenant-Id': resolvedTenantId }) : new HttpHeaders()
+        });
     }
 
     downloadXml(id: string): Observable<FeDownloadedFile> {

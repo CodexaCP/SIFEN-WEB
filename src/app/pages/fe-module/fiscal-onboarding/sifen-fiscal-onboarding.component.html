@@ -3,7 +3,7 @@
         <div class="sifen-config__header">
             <div>
                 <span class="sifen-config__eyebrow">Configuracion fiscal</span>
-                <h2>Alta fiscal del tenant {{ tenantId }}</h2>
+                <h2>Alta fiscal de {{ tenantName }}</h2>
                 <p>Datos que el back exige para emitir: perfil fiscal, timbrado, numeracion y certificado. Primero guarda RUC y razon social en Config SIFEN.</p>
             </div>
             <a [routerLink]="['/sifen/admin/companies', tenantId, 'diagnostic']">Ver diagnostico</a>

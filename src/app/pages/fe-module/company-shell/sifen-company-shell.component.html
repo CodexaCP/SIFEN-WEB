@@ -45,8 +45,8 @@
         </header>
 
         <div class="sifen-shell__tenant" *ngIf="activeTenantId">
-            <span>Tenant activo</span>
-            <strong>{{ activeTenantId }}</strong>
+            <span>Empresa activa</span>
+            <strong>{{ activeTenantName || 'Empresa seleccionada' }}</strong>
         </div>
 
         <main class="sifen-shell__content">
