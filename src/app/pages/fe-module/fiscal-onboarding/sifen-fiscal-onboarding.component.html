@@ -1,0 +1,217 @@
+<section class="sifen-config">
+    <div class="sifen-config__card">
+        <div class="sifen-config__header">
+            <div>
+                <span class="sifen-config__eyebrow">Configuracion fiscal</span>
+                <h2>Alta fiscal del tenant {{ tenantId }}</h2>
+                <p>Datos que el back exige para emitir: perfil fiscal, timbrado, numeracion y certificado. Primero guarda RUC y razon social en Config SIFEN.</p>
+            </div>
+            <a [routerLink]="['/sifen/admin/companies', tenantId, 'diagnostic']">Ver diagnostico</a>
+        </div>
+
+        <small class="sifen-config__status sifen-config__status--error" *ngIf="errorMessage">{{ errorMessage }}</small>
+
+        <div class="sifen-fiscal__section">
+            <h3>1. Perfil fiscal del emisor</h3>
+            <p class="sifen-fiscal__hint">Codigos de departamento, distrito, ciudad y actividad economica segun las tablas del Manual Tecnico v150 y tu registro en Marangatu.</p>
+            <small class="sifen-config__status" *ngIf="feedback.profile.success">{{ feedback.profile.success }}</small>
+            <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.profile.error">{{ feedback.profile.error }}</small>
+            <div class="sifen-config__grid">
+                <label>
+                    <span>Tipo de contribuyente</span>
+                    <select [(ngModel)]="profile.taxpayerType">
+                        <option [ngValue]="1">Persona fisica</option>
+                        <option [ngValue]="2">Persona juridica</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Direccion</span>
+                    <input pInputText [(ngModel)]="profile.address" />
+                </label>
+                <label>
+                    <span>Numero de casa</span>
+                    <input pInputText [(ngModel)]="profile.houseNumber" />
+                </label>
+                <label>
+                    <span>Telefono</span>
+                    <input pInputText [(ngModel)]="profile.phone" />
+                </label>
+                <label>
+                    <span>Email</span>
+                    <input pInputText [(ngModel)]="profile.email" />
+                </label>
+                <label>
+                    <span>Codigo departamento</span>
+                    <input pInputText [(ngModel)]="profile.departmentCode" />
+                </label>
+                <label>
+                    <span>Departamento</span>
+                    <input pInputText [(ngModel)]="profile.departmentDescription" />
+                </label>
+                <label>
+                    <span>Codigo distrito</span>
+                    <input pInputText [(ngModel)]="profile.districtCode" />
+                </label>
+                <label>
+                    <span>Distrito</span>
+                    <input pInputText [(ngModel)]="profile.districtDescription" />
+                </label>
+                <label>
+                    <span>Codigo ciudad</span>
+                    <input pInputText [(ngModel)]="profile.cityCode" />
+                </label>
+                <label>
+                    <span>Ciudad</span>
+                    <input pInputText [(ngModel)]="profile.cityDescription" />
+                </label>
+            </div>
+            <div class="sifen-config__grid sifen-fiscal__activity" *ngFor="let activity of profile.economicActivities; let i = index">
+                <label>
+                    <span>Codigo actividad</span>
+                    <input pInputText [(ngModel)]="activity.code" />
+                </label>
+                <label>
+                    <span>Descripcion actividad</span>
+                    <input pInputText [(ngModel)]="activity.description" />
+                </label>
+                <button pButton type="button" class="p-button-text" label="Quitar" (click)="removeActivity(i)"></button>
+            </div>
+            <div class="sifen-form-card__actions">
+                <button pButton type="button" class="p-button-text" label="Agregar actividad" (click)="addActivity()"></button>
+                <button pButton type="button" label="Guardar perfil fiscal" [loading]="feedback.profile.saving" (click)="saveProfile()"></button>
+            </div>
+        </div>
+
+        <div class="sifen-fiscal__section">
+            <h3>2. Timbrado</h3>
+            <p class="sifen-fiscal__hint">Numero de timbrado (8 digitos) y vigencia asignados por la DNIT.</p>
+            <small class="sifen-config__status" *ngIf="feedback.stamp.success">{{ feedback.stamp.success }}</small>
+            <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.stamp.error">{{ feedback.stamp.error }}</small>
+            <div class="sifen-config__grid">
+                <label>
+                    <span>Ambiente</span>
+                    <select [(ngModel)]="stamp.environment">
+                        <option value="Test">Test</option>
+                        <option value="Production">Production</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Timbrado</span>
+                    <input pInputText [(ngModel)]="stamp.stampingNumber" (ngModelChange)="onStampNumberChange($event)" maxlength="8" />
+                </label>
+                <label>
+                    <span>Inicio de vigencia</span>
+                    <input type="date" [(ngModel)]="stamp.validFrom" />
+                </label>
+                <label>
+                    <span>Fin de vigencia (opcional)</span>
+                    <input type="date" [(ngModel)]="stamp.validTo" />
+                </label>
+            </div>
+            <div class="sifen-form-card__actions">
+                <button pButton type="button" label="Registrar timbrado" [loading]="feedback.stamp.saving" (click)="saveStamp()"></button>
+            </div>
+        </div>
+
+        <div class="sifen-fiscal__section">
+            <h3>3. Numeracion</h3>
+            <p class="sifen-fiscal__hint">Secuencia por timbrado, establecimiento y punto de expedicion. El back reserva los numeros de forma atomica.</p>
+            <small class="sifen-config__status" *ngIf="feedback.numbering.success">{{ feedback.numbering.success }}</small>
+            <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.numbering.error">{{ feedback.numbering.error }}</small>
+            <div class="sifen-config__grid">
+                <label>
+                    <span>Ambiente</span>
+                    <select [(ngModel)]="numbering.environment">
+                        <option value="Test">Test</option>
+                        <option value="Production">Production</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Timbrado</span>
+                    <input pInputText [(ngModel)]="numbering.stampingNumber" maxlength="8" />
+                </label>
+                <label>
+                    <span>Tipo de documento</span>
+                    <input pInputText [(ngModel)]="numbering.documentTypeCode" maxlength="2" />
+                </label>
+                <label>
+                    <span>Serie (opcional)</span>
+                    <input pInputText [(ngModel)]="numbering.series" />
+                </label>
+                <label>
+                    <span>Establecimiento</span>
+                    <input pInputText [(ngModel)]="numbering.establishmentCode" maxlength="3" />
+                </label>
+                <label>
+                    <span>Punto de expedicion</span>
+                    <input pInputText [(ngModel)]="numbering.expeditionPointCode" maxlength="3" />
+                </label>
+                <label>
+                    <span>Primer numero</span>
+                    <input type="number" min="1" [(ngModel)]="numbering.firstNumber" />
+                </label>
+            </div>
+            <div class="sifen-form-card__actions">
+                <button pButton type="button" label="Registrar numeracion" [loading]="feedback.numbering.saving" (click)="saveNumbering()"></button>
+            </div>
+        </div>
+
+        <div class="sifen-fiscal__section">
+            <h3>4. Certificado de firma</h3>
+            <p class="sifen-fiscal__hint">Solo metadata y referencias. Las referencias usan <code>env:NOMBRE_VARIABLE</code> o <code>file:/ruta</code>; nunca la password real.</p>
+            <small class="sifen-config__status" *ngIf="feedback.certificate.success">{{ feedback.certificate.success }}</small>
+            <small class="sifen-config__status sifen-config__status--error" *ngIf="feedback.certificate.error">{{ feedback.certificate.error }}</small>
+            <div class="sifen-config__grid">
+                <label>
+                    <span>Ambiente</span>
+                    <select [(ngModel)]="certificate.environment">
+                        <option value="Test">Test</option>
+                        <option value="Production">Production</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Uso</span>
+                    <select [(ngModel)]="certificate.purpose">
+                        <option value="XmlSignature">Firma XML</option>
+                        <option value="MutualTls">TLS mutuo</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Alias</span>
+                    <input pInputText [(ngModel)]="certificate.alias" />
+                </label>
+                <label>
+                    <span>Subject</span>
+                    <input pInputText [(ngModel)]="certificate.subject" placeholder="CN=..." />
+                </label>
+                <label>
+                    <span>Huella SHA-256</span>
+                    <input pInputText [(ngModel)]="certificate.fingerprintSha256" />
+                </label>
+                <label>
+                    <span>Numero de serie</span>
+                    <input pInputText [(ngModel)]="certificate.serialNumber" />
+                </label>
+                <label>
+                    <span>Referencia del certificado</span>
+                    <input pInputText [(ngModel)]="certificate.certificateSecretReference" placeholder="file:/ruta/certificado.p12" />
+                </label>
+                <label>
+                    <span>Referencia de la password</span>
+                    <input pInputText [(ngModel)]="certificate.certificatePasswordSecretReference" placeholder="env:SIFEN_CERT_PASSWORD" />
+                </label>
+                <label>
+                    <span>Valido desde</span>
+                    <input type="date" [(ngModel)]="certificate.validFrom" />
+                </label>
+                <label>
+                    <span>Valido hasta</span>
+                    <input type="date" [(ngModel)]="certificate.validTo" />
+                </label>
+            </div>
+            <div class="sifen-form-card__actions">
+                <button pButton type="button" label="Registrar certificado" [loading]="feedback.certificate.saving" (click)="saveCertificate()"></button>
+            </div>
+        </div>
+    </div>
+</section>

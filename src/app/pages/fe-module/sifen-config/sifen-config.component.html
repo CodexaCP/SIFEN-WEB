@@ -40,7 +40,7 @@
             </label>
             <label>
                 <span>CSC secret reference</span>
-                <input pInputText [(ngModel)]="model.cscSecretReference" placeholder="vault://sifen/csc" />
+                <input pInputText [(ngModel)]="model.cscSecretReference" placeholder="env:SIFEN_CSC_CODEXA" />
             </label>
             <label>
                 <span>Establecimiento</span>
@@ -60,11 +60,11 @@
             </label>
             <label>
                 <span>Certificado secret reference</span>
-                <input pInputText [(ngModel)]="model.certificateSecretReference" placeholder="vault://sifen/cert" />
+                <input pInputText [(ngModel)]="model.certificateSecretReference" placeholder="file:/ruta/certificado.p12" />
             </label>
             <label>
                 <span>Certificado password reference</span>
-                <input pInputText [(ngModel)]="model.certificatePasswordSecretReference" placeholder="vault://sifen/cert-password" />
+                <input pInputText [(ngModel)]="model.certificatePasswordSecretReference" placeholder="env:SIFEN_CERT_PASSWORD" />
             </label>
             <label>
                 <span>Certificado alias</span>

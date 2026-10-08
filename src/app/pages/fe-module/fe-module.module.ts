@@ -26,6 +26,7 @@ import { SifenKudeConfigComponent } from './kude-config/sifen-kude-config.compon
 import { FeListComponent } from './list/fe-list.component';
 import { FeLoginComponent } from './login/fe-login.component';
 import { SifenConfigComponent } from './sifen-config/sifen-config.component';
+import { SifenFiscalOnboardingComponent } from './fiscal-onboarding/sifen-fiscal-onboarding.component';
 import { SifenTestComponent } from './test/sifen-test.component';
 
 @NgModule({
@@ -42,6 +43,7 @@ import { SifenTestComponent } from './test/sifen-test.component';
         SifenCompanyUsersComponent,
         SifenComingSoonComponent,
         SifenConfigComponent,
+        SifenFiscalOnboardingComponent,
         SifenCompanyDiagnosticComponent,
         SifenDashboardComponent,
         SifenIntegrationComponent,

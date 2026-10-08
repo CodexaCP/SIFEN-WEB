@@ -18,6 +18,7 @@ import { FeIssueComponent } from './issue/fe-issue.component';
 import { SifenKudeConfigComponent } from './kude-config/sifen-kude-config.component';
 import { FeListComponent } from './list/fe-list.component';
 import { SifenConfigComponent } from './sifen-config/sifen-config.component';
+import { SifenFiscalOnboardingComponent } from './fiscal-onboarding/sifen-fiscal-onboarding.component';
 import { SifenTestComponent } from './test/sifen-test.component';
 
 const routes: Routes = [
@@ -55,6 +56,7 @@ const routes: Routes = [
                     { path: 'companies/:tenantId', component: SifenCompanyDetailComponent },
                     { path: 'companies/:tenantId/users', component: SifenCompanyUsersComponent },
                     { path: 'companies/:tenantId/sifen-config', component: SifenConfigComponent },
+                    { path: 'companies/:tenantId/fiscal', component: SifenFiscalOnboardingComponent },
                     { path: 'companies/:tenantId/kude', component: SifenKudeConfigComponent },
                     { path: 'companies/:tenantId/diagnostic', component: SifenCompanyDiagnosticComponent }
                 ]

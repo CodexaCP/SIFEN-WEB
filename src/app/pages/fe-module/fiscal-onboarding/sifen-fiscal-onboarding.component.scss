@@ -1,0 +1,27 @@
+.sifen-fiscal__section {
+  margin-top: 1.5rem;
+}
+
+.sifen-fiscal__section h3 {
+  margin: 0 0 0.35rem;
+}
+
+.sifen-fiscal__hint {
+  margin: 0 0 1rem;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.sifen-fiscal__activity {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 900px) {
+  .sifen-fiscal__activity {
+    grid-template-columns: 1fr;
+  }
+}

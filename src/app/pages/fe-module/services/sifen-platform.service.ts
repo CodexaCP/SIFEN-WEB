@@ -139,9 +139,62 @@ export interface SifenConfigModel {
     readySummary?: string | null;
 }
 
+export type SifenEnvironmentName = 'Test' | 'Production';
+
+export interface SifenEconomicActivity {
+    code: string;
+    description: string;
+}
+
+export interface SifenFiscalProfilePayload {
+    taxpayerType: 1 | 2;
+    address: string;
+    houseNumber: string;
+    departmentCode: string;
+    departmentDescription: string;
+    districtCode: string;
+    districtDescription: string;
+    cityCode: string;
+    cityDescription: string;
+    phone: string;
+    email: string;
+    economicActivities: SifenEconomicActivity[];
+}
+
+export interface SifenFiscalStampPayload {
+    environment: SifenEnvironmentName;
+    stampingNumber: string;
+    validFrom: string;
+    validTo: string;
+}
+
+export interface SifenNumberingSequencePayload {
+    environment: SifenEnvironmentName;
+    stampingNumber: string;
+    documentTypeCode: string;
+    establishmentCode: string;
+    expeditionPointCode: string;
+    series: string;
+    firstNumber: number | null;
+}
+
+export interface SifenCertificateMetadataPayload {
+    environment: SifenEnvironmentName;
+    purpose: 'XmlSignature' | 'MutualTls';
+    alias: string;
+    subject: string;
+    fingerprintSha256: string;
+    serialNumber: string;
+    certificateSecretReference: string;
+    certificatePasswordSecretReference: string;
+    validFrom: string;
+    validTo: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SifenPlatformService {
     private readonly apiUrl = environment.apiUrl;
+    private readonly onboardingUrl = `${environment.apiUrl.replace(/\/api\/?$/, '')}/internal/onboarding`;
     private readonly selectedTenantKey = 'sifen_selected_tenant';
 
     constructor(
@@ -298,6 +351,48 @@ export class SifenPlatformService {
                 readySummary: diagnostic?.readySummary ?? diagnostic?.summary ?? null
             }))
         );
+    }
+
+    registerFiscalProfile(tenantId: string, payload: SifenFiscalProfilePayload): Observable<void> {
+        return this.http.post<void>(`${this.onboardingUrl}/tenants/${tenantId}/fiscal-profile`, {
+            taxpayerType: payload.taxpayerType,
+            address: payload.address,
+            houseNumber: payload.houseNumber || null,
+            departmentCode: payload.departmentCode || null,
+            departmentDescription: payload.departmentDescription || null,
+            districtCode: payload.districtCode || null,
+            districtDescription: payload.districtDescription || null,
+            cityCode: payload.cityCode || null,
+            cityDescription: payload.cityDescription || null,
+            phone: payload.phone || null,
+            email: payload.email || null,
+            economicActivities: payload.economicActivities.filter((activity) => activity.code.trim() || activity.description.trim())
+        });
+    }
+
+    registerFiscalStamp(tenantId: string, payload: SifenFiscalStampPayload): Observable<void> {
+        return this.http.post<void>(`${this.onboardingUrl}/tenants/${tenantId}/fiscal-stamps`, {
+            environment: payload.environment,
+            stampingNumber: payload.stampingNumber,
+            validFrom: payload.validFrom,
+            validTo: payload.validTo || null
+        });
+    }
+
+    registerNumberingSequence(tenantId: string, payload: SifenNumberingSequencePayload): Observable<void> {
+        return this.http.post<void>(`${this.onboardingUrl}/tenants/${tenantId}/numbering-sequences`, {
+            environment: payload.environment,
+            stampingNumber: payload.stampingNumber,
+            documentTypeCode: payload.documentTypeCode || null,
+            establishmentCode: payload.establishmentCode,
+            expeditionPointCode: payload.expeditionPointCode,
+            series: payload.series || null,
+            firstNumber: payload.firstNumber ?? null
+        });
+    }
+
+    registerCertificateMetadata(tenantId: string, payload: SifenCertificateMetadataPayload): Observable<void> {
+        return this.http.post<void>(`${this.onboardingUrl}/tenants/${tenantId}/certificates`, payload);
     }
 
     getSifenConfig(tenantId: string): Observable<SifenConfigModel> {
