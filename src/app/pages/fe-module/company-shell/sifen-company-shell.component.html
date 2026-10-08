@@ -10,7 +10,7 @@
         </div>
 
         <nav class="sifen-shell__nav">
-            <a *ngFor="let item of navItems" [routerLink]="item.route" routerLinkActive="is-active" [class.is-accent]="item.accent === 'primary'">
+            <a *ngFor="let item of navItems; trackBy: trackByRoute" [routerLink]="item.route" routerLinkActive="is-active" [class.is-accent]="item.accent === 'primary'">
                 <i [class]="item.icon"></i>
                 <span>{{ item.label }}</span>
             </a>

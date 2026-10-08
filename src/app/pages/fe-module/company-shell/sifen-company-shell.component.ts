@@ -75,6 +75,10 @@ export class SifenCompanyShellComponent {
         return items.filter((item) => item.visible);
     }
 
+    trackByRoute(_: number, item: SifenNavItem): string {
+        return item.route;
+    }
+
     openHelp(): void {
         this.router.navigate(['/sifen/help']);
     }
