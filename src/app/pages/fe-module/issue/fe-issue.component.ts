@@ -23,7 +23,7 @@ export class FeIssueComponent {
         documentType: ['Factura electrónica', Validators.required],
         establishment: ['001', Validators.required],
         expeditionPoint: ['001', Validators.required],
-        documentNumber: ['', Validators.required],
+        documentNumber: [''],
         issueDate: [this.todayIso(), Validators.required],
         saleCondition: ['Contado', Validators.required],
         contributorType: ['Persona jurídica', Validators.required],
@@ -52,6 +52,7 @@ export class FeIssueComponent {
     currentStep = 1;
     createdInvoice?: FeCreateInvoiceResult;
     prepareResult?: FePrepareTestResult;
+    private idempotencyKey: string | null = null;
 
     constructor(
         private readonly formBuilder: FormBuilder,
@@ -60,7 +61,11 @@ export class FeIssueComponent {
         private readonly sifenPlatformService: SifenPlatformService
     ) {
         this.activeTenantId = this.sifenPlatformService.getActiveTenantId();
-        this.form.patchValue({ documentNumber: this.suggestDocumentNumber() });
+        this.form.valueChanges.subscribe(() => {
+            if (!this.submitting) {
+                this.idempotencyKey = null;
+            }
+        });
         this.loadPlanSummary();
         this.loadDiagnostic();
     }
@@ -177,7 +182,7 @@ export class FeIssueComponent {
             email: raw.customerEmail || 'facturacion@test.codexa',
             establishment: raw.establishment || '001',
             expeditionPoint: raw.expeditionPoint || '001',
-            documentNumber: raw.documentNumber || this.suggestDocumentNumber(),
+            documentNumber: raw.documentNumber || '',
             issueDate: raw.issueDate || this.todayIso(),
             customerName: raw.customerName || 'Cliente de prueba',
             customerDocument: raw.customerDocument || '0000000',
@@ -284,16 +289,11 @@ export class FeIssueComponent {
         this.submitting = true;
         this.prepareResult = undefined;
         this.createdInvoice = undefined;
+        this.idempotencyKey ??= this.feInvoiceApiService.newIdempotencyKey();
 
         this.feInvoiceApiService.create({
-            documentType: raw.documentType ?? 'Factura electrónica',
-            establishmentCode: raw.establishment ?? '001',
-            expeditionPointCode: raw.expeditionPoint ?? '001',
-            documentNumber: raw.documentNumber ?? this.suggestDocumentNumber(),
-            issuedAt: raw.issueDate ?? this.todayIso(),
-            saleCondition: raw.saleCondition ?? 'Contado',
-            currencyCode: raw.currency ?? 'PYG',
-            notes: 'Operación de prueba generada en el entorno interno SIFEN.',
+            saleCondition: raw.saleCondition ?? '',
+            currencyCode: raw.currency ?? '',
             customerName: raw.customerName ?? '',
             customerDocument: raw.customerDocument ?? '',
             customerAddress: raw.customerAddress ?? '',
@@ -305,9 +305,10 @@ export class FeIssueComponent {
                 unitPrice: Number(item?.unitPrice ?? 0),
                 vatRate: this.toVatRate(item?.vatType)
             }))
-        }).pipe(
+        }, this.idempotencyKey).pipe(
             switchMap((invoice) => {
                 this.createdInvoice = invoice;
+                this.idempotencyKey = null;
                 return this.feInvoiceApiService.prepareTest(invoice.id).pipe(
                     catchError((error) => {
                         this.submitError = this.feInvoiceApiService.getErrorMessage(error, 'La factura se creó pero falló la preparación TEST.');
@@ -349,7 +350,7 @@ export class FeIssueComponent {
             documentType: 'Factura electrónica',
             establishment: '001',
             expeditionPoint: '001',
-            documentNumber: this.suggestDocumentNumber(),
+            documentNumber: '',
             issueDate: this.todayIso(),
             saleCondition: 'Contado',
             contributorType: 'Persona jurídica',
@@ -372,6 +373,7 @@ export class FeIssueComponent {
         this.submitError = '';
         this.createdInvoice = undefined;
         this.prepareResult = undefined;
+        this.idempotencyKey = null;
     }
 
     fieldError(controlName: string, label: string): string {
@@ -476,11 +478,6 @@ export class FeIssueComponent {
         }
 
         return 10;
-    }
-
-    private suggestDocumentNumber(): string {
-        const now = new Date();
-        return `${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`.padStart(7, '0').slice(-7);
     }
 
     private todayIso(): string {

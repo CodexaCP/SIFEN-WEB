@@ -146,11 +146,6 @@ export interface FeInvoiceStatusResult {
 }
 
 export interface FeCreateInvoicePayload {
-    documentType: string;
-    establishmentCode: string;
-    expeditionPointCode: string;
-    documentNumber: string;
-    issuedAt: string;
     saleCondition: string;
     currencyCode: string;
     notes?: string;
@@ -297,14 +292,6 @@ interface KudePlaceholderResponse {
 }
 
 interface CreateSimpleInvoiceRequest {
-    environment: 'Test';
-    documentType: string;
-    establishmentCode: string;
-    expeditionPointCode: string;
-    documentNumber: string;
-    securityCode: string;
-    issueDate: string;
-    emisorDireccion: string;
     notes?: string;
     receiverName: string;
     receiverDocument: string;
@@ -317,7 +304,7 @@ interface CreateSimpleInvoiceRequest {
         description: string;
         quantity: number;
         unitPrice: number;
-        vatRate: number;
+        vatRate?: number;
     }>;
 }
 
@@ -405,14 +392,31 @@ export class FeInvoiceApiService {
         });
     }
 
-    create(payload: FeCreateInvoicePayload): Observable<FeCreateInvoiceResult> {
+    /**
+     * idempotencyKey identifica la operacion de emision: reutilizarla al repetir la misma operacion
+     * y usar una nueva (newIdempotencyKey) para cada factura nueva o modificada.
+     */
+    create(payload: FeCreateInvoicePayload, idempotencyKey: string): Observable<FeCreateInvoiceResult> {
         return this.http.post<FeCreateInvoiceResult>(
             `${this.apiUrl}/fe/invoices`,
             this.buildCreateRequest(payload),
             {
-                headers: this.buildTenantHeaders()
+                headers: this.buildTenantHeaders().set('Idempotency-Key', idempotencyKey)
             }
         );
+    }
+
+    newIdempotencyKey(): string {
+        const cryptoApi = crypto as Crypto & { randomUUID?: () => string };
+        if (typeof cryptoApi.randomUUID === 'function') {
+            return cryptoApi.randomUUID();
+        }
+
+        const bytes = cryptoApi.getRandomValues(new Uint8Array(16));
+        bytes[6] = (bytes[6] & 0x0f) | 0x40;
+        bytes[8] = (bytes[8] & 0x3f) | 0x80;
+        const hex = Array.from(bytes, (value) => value.toString(16).padStart(2, '0')).join('');
+        return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
     }
 
     retry(id: string): Observable<FeRetryInvoiceResult> {
@@ -661,31 +665,20 @@ export class FeInvoiceApiService {
     }
 
     private buildCreateRequest(payload: FeCreateInvoicePayload): CreateSimpleInvoiceRequest {
-        const now = new Date();
-        const sequence = `${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
-
         return {
-            environment: 'Test',
-            documentType: payload.documentType,
-            establishmentCode: payload.establishmentCode || '001',
-            expeditionPointCode: payload.expeditionPointCode || '001',
-            documentNumber: payload.documentNumber || sequence.padStart(7, '0').slice(-7),
-            securityCode: '123456789',
-            issueDate: payload.issuedAt || now.toISOString().slice(0, 10),
-            emisorDireccion: 'TODO: configurar direccion del emisor por tenant',
-            notes: payload.notes?.trim(),
+            notes: payload.notes?.trim() || undefined,
             receiverName: payload.customerName.trim(),
             receiverDocument: payload.customerDocument.trim(),
             receiverAddress: payload.customerAddress?.trim(),
             receiverEmail: payload.customerEmail?.trim(),
             receiverPhone: payload.customerPhone?.trim(),
-            currencyCode: payload.currencyCode || 'PYG',
-            saleCondition: payload.saleCondition || 'Contado',
+            currencyCode: payload.currencyCode,
+            saleCondition: payload.saleCondition,
             items: payload.items.map(item => ({
                 description: item.description,
                 quantity: item.quantity,
                 unitPrice: item.unitPrice,
-                vatRate: item.vatRate ?? 10
+                vatRate: item.vatRate
             }))
         };
     }
